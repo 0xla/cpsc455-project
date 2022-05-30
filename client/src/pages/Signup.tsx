@@ -10,9 +10,9 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Lock} from "@material-ui/icons";
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {useNavigate} from "react-router-dom";
+
 
 function Copyright(props: any) {
     return (
@@ -29,7 +29,8 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function SignUp() {
+
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,17 +40,18 @@ export default function SignIn() {
         const password = data.get('password');
 
         try {
-            await tryLogin(username, password);
+            await trySignup(username, password);
             navigate("/homepage")
-        } catch (err) {
-            console.log("Error signing in")
-        }
-    };
 
-    const tryLogin = async (username: File | string | null, password: File | string | null) => {
+        } catch (err) {
+            console.log("Error signing up")
+        }
+    }
+
+    const trySignup = async (username: FormDataEntryValue | null, password: FormDataEntryValue | null) => {
         let response: any;
         try {
-            response = await fetch("http://localhost:5000/api/users/login", {
+            response = await fetch("http://localhost:5000/api/users/register", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +67,6 @@ export default function SignIn() {
         }
 
         const data = await response.json()
-        console.log(data)
 
         if (data.errors) {
             Object.values(data.errors).forEach((err) => {
@@ -75,13 +76,14 @@ export default function SignIn() {
             })
             throw new Error(data.message)
         }
-
     }
 
+
     return (
+
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
-                <CssBaseline />
+                <CssBaseline/>
                 <Box
                     sx={{
                         marginTop: 8,
@@ -90,60 +92,60 @@ export default function SignIn() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        {<Lock/>}
+                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Sign up
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            label="Username"
-                            name="username"
-                            autoComplete="username"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
+                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="username"
+                                    label="Username"
+                                    name="username"
+                                    autoComplete="username"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="new-password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControlLabel
+                                    control={<Checkbox value="allowExtraEmails" color="primary"/>}
+                                    label="I want to receive inspiration, marketing promotions and updates via email."
+                                />
+                            </Grid>
+                        </Grid>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{mt: 3, mb: 2}}
                         >
-                            Sign In
+                            Sign Up
                         </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
+                        <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/" variant="body2">
-                                    {"Don't have an account? Sign Up"}
+                                <Link href="/signIn" variant="body2">
+                                    Already have an account? Sign in
                                 </Link>
                             </Grid>
                         </Grid>
                     </Box>
                 </Box>
-                <Copyright sx={{ mt: 8, mb: 4 }} />
+                <Copyright sx={{mt: 5}}/>
             </Container>
         </ThemeProvider>
     );
