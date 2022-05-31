@@ -1,5 +1,5 @@
 /**
- * Error codes for authentication logic.
+ * Error handling for authentication logic.
  */
 
 export const handleAuthErrors = (err) => {
@@ -29,3 +29,4 @@ export const handleAuthErrors = (err) => {
     }
     return errors;
 }
+

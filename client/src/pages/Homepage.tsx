@@ -1,6 +1,3 @@
-import React, {useEffect} from 'react';
-
-
 
 const Homepage = () => {
     return (
@@ -11,7 +8,5 @@ const Homepage = () => {
     );
 
 }
-
-
 
 export default Homepage;

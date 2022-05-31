@@ -18,7 +18,7 @@ function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
+            <Link color="inherit" href="#">
                 SocialMediaApp
             </Link>{' '}
             {new Date().getFullYear()}
@@ -67,6 +67,7 @@ export default function SignUp() {
         }
 
         const data = await response.json()
+        localStorage.setItem("authToken", data.token);
 
         if (data.errors) {
             Object.values(data.errors).forEach((err) => {
@@ -119,12 +120,6 @@ export default function SignUp() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary"/>}
-                                    label="I want to receive inspiration, marketing promotions and updates via email."
                                 />
                             </Grid>
                         </Grid>

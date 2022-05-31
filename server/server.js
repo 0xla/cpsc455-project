@@ -4,10 +4,7 @@ import cors from "cors"; // Allows for Cross Origin Resource Sharing
 import mongoose from "mongoose"; //Mongoose is a MongoDB library
 import dotenv from "dotenv"; // .env for environment variables
 
-
-
 const app = express();
-
 dotenv.config();
 const port = process.env.PORT || 5000;
 app.use(cors());
