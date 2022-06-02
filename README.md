@@ -14,6 +14,13 @@ Note to not use a password that you would normally use with other apps.
 
 4. To start the server locally, run npm start in the server directory.
 
+# Group Members
+
+Lakshya Agarwal - i6d2d - lakshy01
+Daniel Crookall - j3o1b - danielc3
+Esther Hsueh - e9x8k - snow113
+Steven Wong - a4a3b - sww8
+
 # Project Specs
 
 ## Project description
