@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -12,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {useNavigate} from "react-router-dom";
+import {useFormik} from "formik";
+import {validationSchema} from "../Validation/SignUpValidation";
 
 
 function Copyright(props: any) {
@@ -33,14 +33,26 @@ export default function SignUp() {
 
     const navigate = useNavigate();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const username = data.get('username');
-        const password = data.get('password');
+    const formik: any = useFormik( {
+        initialValues: {
+            username: "",
+            email: "",
+            password: ""
+        },
+        onSubmit: async (values) => {
+            await handleSubmit(values);
+
+        },
+        validationSchema: validationSchema
+    })
+
+    const handleSubmit = async (values: any) => {
+        const username = values.username;
+        const email = values.email;
+        const password = values.password;
 
         try {
-            await trySignup(username, password);
+            await trySignup(username, email, password);
             navigate("/homepage")
 
         } catch (err) {
@@ -48,7 +60,7 @@ export default function SignUp() {
         }
     }
 
-    const trySignup = async (username: FormDataEntryValue | null, password: FormDataEntryValue | null) => {
+    const trySignup = async (username: string, email: string, password: string) => {
         let response: any;
         try {
             response = await fetch("http://localhost:5000/api/users/register", {
@@ -58,6 +70,7 @@ export default function SignUp() {
                 },
                 body: JSON.stringify({
                     username,
+                    email,
                     password
                 })
             })
@@ -99,7 +112,7 @@ export default function SignUp() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
+                    <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{mt: 3}}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <TextField
@@ -109,6 +122,24 @@ export default function SignUp() {
                                     label="Username"
                                     name="username"
                                     autoComplete="username"
+                                    value={formik.values.username}
+                                    onChange = {formik.handleChange}
+                                    error={formik.touched.username && Boolean(formik.errors.username)} // avoids form loading and showing errors without form being touched
+                                    helperText={formik.touched.username && formik.errors.username}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    value={formik.values.email}
+                                    onChange = {formik.handleChange}
+                                    error={formik.touched.email && Boolean(formik.errors.email)} // avoids form loading and showing errors without form being touched
+                                    helperText={formik.touched.email && formik.errors.email}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -120,6 +151,10 @@ export default function SignUp() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
+                                    value={formik.values.password}
+                                    onChange = {formik.handleChange}
+                                    error={formik.touched.password && Boolean(formik.errors.password)}
+                                    helperText={formik.touched.password && formik.errors.password}
                                 />
                             </Grid>
                         </Grid>

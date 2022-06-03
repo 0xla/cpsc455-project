@@ -3,7 +3,7 @@
  */
 
 export const handleAuthErrors = (err) => {
-    let errors = {username: "", password: ""};
+    let errors = {username: "", email: "", password: ""};
 
     if(err.message === "Incorrect username"){
         errors.username = "That username is not registered";

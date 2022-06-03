@@ -13,10 +13,11 @@ import {handleAuthErrors} from "../errors/authErrors.js";
  * @param Responds with created user's id and jwt token, or validation errors.
  */
 export const registerUser = async (req, res, next) => {
-    const {username, password} = req.body;
+    const {username, email, password} = req.body;
     try {
         const user = await User.create({
             username: username,
+            email: email,
             password: password
         })
         sendToken(user,200,res);
@@ -41,9 +42,9 @@ export const registerUser = async (req, res, next) => {
  */
 
 export const loginUser = async (req, res, next) => {
-    const {username, password} = req.body;
+    const {usernameOrEmail, password} = req.body;
     try {
-        const user = await User.login(username,password);
+        const user = await User.login(usernameOrEmail,password);
         sendToken(user,200,res);
     } catch(err) {
         const errors = handleAuthErrors(err);

@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import isEmail from "validator/es/lib/isEmail";
-
-
 
 const userSchema = new mongoose.Schema(
     {
@@ -17,7 +14,7 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
-            validate: [isEmail, "Please enter a valid email"]
+            match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
         },
         password: {
             type: String,
@@ -41,11 +38,13 @@ userSchema.pre('save', async function (next) {
 
 // static method to login in user
 
-userSchema.statics.login = async function (username, email, password) {
-    const user = await this.findOne({username});
-    const emailAddress = await this.findOne({email});
+userSchema.statics.login = async function (usernameOrEmail, password) {
+    console.log(usernameOrEmail)
+    console.log(password)
+    const user = await this.findOne({usernameOrEmail});
+    console.log("user is " + user)
 
-    if (user && emailAddress) {
+    if (user) {
        const auth = await bcrypt.compare(password, user.password);
        if (auth) {
            return user;

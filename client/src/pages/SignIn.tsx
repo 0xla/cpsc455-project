@@ -46,7 +46,6 @@ export default function SignInSide() {
     const formik: any = useFormik( {
         initialValues: {
             username: "",
-            email: "",
             password: ""
         },
         onSubmit: async (values) => {
@@ -59,19 +58,20 @@ export default function SignInSide() {
     const navigate = useNavigate();
 
     const handleSubmit = async (values: any) => {
-        const username = values.username;
+        const usernameOrEmail = values.username;
         const password = values.password;
-        const email = values.email;
+        console.log(usernameOrEmail)
+        console.log(password)
 
         try {
-            await tryLogin(username, email, password);
+            await tryLogin(usernameOrEmail, password);
             navigate("/homepage")
         } catch (err) {
             console.log("Error signing in")
         }
     };
 
-    const tryLogin = async (username: string , email : string, password: string) => {
+    const tryLogin = async (usernameOrEmail: string, password: string) => {
         let response: any;
         try {
             response = await fetch("http://localhost:5000/api/users/login", {
@@ -80,8 +80,7 @@ export default function SignInSide() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username,
-                    email,
+                    usernameOrEmail,
                     password
                 })
             })
@@ -145,7 +144,7 @@ export default function SignInSide() {
                                 required
                                 fullWidth
                                 id="username"
-                                label="Username"
+                                label="Username or email"
                                 name="username"
                                 autoComplete="username"
                                 autoFocus
@@ -153,20 +152,6 @@ export default function SignInSide() {
                                 onChange = {formik.handleChange}
                                 error={formik.touched.username && Boolean(formik.errors.username)} // avoids form loading and showing errors without form being touched
                                 helperText={formik.touched.username && formik.errors.username}
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                                value={formik.values.email}
-                                onChange = {formik.handleChange}
-                                error={formik.touched.email && Boolean(formik.errors.email)}
-                                helperText={formik.touched.email && formik.errors.email}
                             />
                             <TextField
                                 margin="normal"
@@ -206,7 +191,5 @@ export default function SignInSide() {
                 </Grid>
             </Grid>
         </ThemeProvider>
-
-
     );
 }
