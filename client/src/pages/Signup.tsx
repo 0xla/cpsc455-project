@@ -1,4 +1,4 @@
-import * as React from 'react';
+// Material UI Imports
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,10 +9,14 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {useNavigate} from "react-router-dom";
+
+// Form validation imports
 import {useFormik} from "formik";
 import {validationSchema} from "../Validation/SignUpValidation";
 
+// React Imports
+import * as React from 'react';
+import {useNavigate} from "react-router-dom";
 
 function Copyright(props: any) {
     return (
