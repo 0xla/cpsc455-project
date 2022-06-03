@@ -1,5 +1,6 @@
-import User from "../models/user.model.js";
-import {handleAuthErrors} from "../errors/authErrors.js";
+import User from "../models/user.model";
+import {handleAuthErrors} from "../errors/authErrors";
+import {Request, Response} from 'express';
 
 
 /**
@@ -12,7 +13,7 @@ import {handleAuthErrors} from "../errors/authErrors.js";
  *        }
  * @param Responds with created user's id and jwt token, or validation errors.
  */
-export const registerUser = async (req, res, next) => {
+export const registerUser = async (req :Request, res :Response) => {
     const {username, email, password} = req.body;
     try {
         const user = await User.create({
@@ -41,7 +42,8 @@ export const registerUser = async (req, res, next) => {
  * @param Responds with user's id and jwt token, or validation errors.
  */
 
-export const loginUser = async (req, res, next) => {
+export const loginUser = async (req :Request, res :Response) => {
+    console.log(req.body)
     const {usernameOrEmail, password} = req.body;
     try {
         const user = await User.login(usernameOrEmail,password);
@@ -57,7 +59,7 @@ export const loginUser = async (req, res, next) => {
 
 }
 
-const sendToken = (user, statusCode, res) => {
+const sendToken = (user: any, statusCode: any, res: Response) => {
     const token = user.getSignedToken();
     res.status(statusCode).json({success: true, token, user: user._id})
 }

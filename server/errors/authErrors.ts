@@ -2,7 +2,7 @@
  * Error handling for authentication logic.
  */
 
-export const handleAuthErrors = (err) => {
+export const handleAuthErrors = (err: any) => {
     let errors = {username: "", email: "", password: ""};
 
     if(err.message === "Incorrect username"){
@@ -22,7 +22,9 @@ export const handleAuthErrors = (err) => {
     // validation errors
 
     if (err.message.includes('user validation failed')) {
+        // @ts-ignore
         Object.values(err.errors).forEach( ({properties}) => {
+            // @ts-ignore
             errors[properties.path] = properties.message;
         })
 

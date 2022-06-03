@@ -40,7 +40,6 @@ userSchema.pre('save', async function (next) {
 
 userSchema.statics.login = async function (usernameOrEmail, password) {
     console.log(usernameOrEmail)
-    console.log(password)
     const user = await this.findOne({usernameOrEmail});
     console.log("user is " + user)
 
@@ -56,6 +55,7 @@ userSchema.statics.login = async function (usernameOrEmail, password) {
 }
 
 userSchema.methods.getSignedToken = function () {
+    // @ts-ignore
     return jwt.sign({id: this._id}, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: process.env.JWT_EXPIRE
     })
@@ -63,5 +63,5 @@ userSchema.methods.getSignedToken = function () {
 
 
 const User = mongoose.model("user", userSchema)
-export default User
+export default User as any
 

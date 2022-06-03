@@ -1,4 +1,4 @@
-import router from "./router.js";
+import router from "./router";
 import express from "express"; // Express web server framework
 import cors from "cors"; // Allows for Cross Origin Resource Sharing
 import mongoose from "mongoose"; //Mongoose is a MongoDB library
@@ -15,6 +15,7 @@ app.use("/", router)
 const uri = process.env.ATLAS_URI;
 
 //Start MongoDB connection
+// @ts-ignore
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
