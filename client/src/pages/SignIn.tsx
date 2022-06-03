@@ -1,25 +1,35 @@
 import * as React from 'react';
+
+// Material UI Imports
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Lock} from "@material-ui/icons";
+import {Alert} from "@mui/material";
+
+// Form validation imports
+import {useFormik} from "formik";
+import {validationSchema} from "../Validation/SignInValidation";
+
+// React Imports
 import {useNavigate} from "react-router-dom";
+import {useState} from "react";
+
+
 
 function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="#">
-                SocialMediaApp
+            <Link color="inherit" href="https://mui.com/">
+                Your Website
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -29,24 +39,39 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function SignInSide() {
+
+    const [invalidLogin, setInvalidLogin] = useState(false);
+
+    const formik: any = useFormik( {
+        initialValues: {
+            username: "",
+            email: "",
+            password: ""
+        },
+        onSubmit: async (values) => {
+            await handleSubmit(values);
+
+        },
+        validationSchema: validationSchema
+    })
+
     const navigate = useNavigate();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const username = data.get('username');
-        const password = data.get('password');
+    const handleSubmit = async (values: any) => {
+        const username = values.username;
+        const password = values.password;
+        const email = values.email;
 
         try {
-            await tryLogin(username, password);
+            await tryLogin(username, email, password);
             navigate("/homepage")
         } catch (err) {
             console.log("Error signing in")
         }
     };
 
-    const tryLogin = async (username: File | string | null, password: File | string | null) => {
+    const tryLogin = async (username: string , email : string, password: string) => {
         let response: any;
         try {
             response = await fetch("http://localhost:5000/api/users/login", {
@@ -56,6 +81,7 @@ export default function SignIn() {
                 },
                 body: JSON.stringify({
                     username,
+                    email,
                     password
                 })
             })
@@ -71,7 +97,7 @@ export default function SignIn() {
         if (data.errors) {
             Object.values(data.errors).forEach((err) => {
                 if (err !== "") {
-                    alert(err)
+                    setInvalidLogin(true)
                 }
             })
             throw new Error(data.message)
@@ -81,62 +107,106 @@ export default function SignIn() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
+            <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
-                <Box
+                <Grid
+                    item
+                    xs={false}
+                    sm={4}
+                    md={7}
                     sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
+                        backgroundImage: 'url(https://source.unsplash.com/random)',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundColor: (t) =>
+                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
                     }}
-                >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        {<Lock/>}
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="username"
-                            label="Username"
-                            name="username"
-                            autoComplete="username"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Sign In
-                        </Button>
-                        <Grid container>
-                            <Grid item>
-                                <Link href="/" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
+                />
+                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                    <Box
+                        sx={{
+                            my: 8,
+                            mx: 4,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <Lock/>
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="username"
+                                label="Username"
+                                name="username"
+                                autoComplete="username"
+                                autoFocus
+                                value={formik.values.username}
+                                onChange = {formik.handleChange}
+                                error={formik.touched.username && Boolean(formik.errors.username)} // avoids form loading and showing errors without form being touched
+                                helperText={formik.touched.username && formik.errors.username}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                                value={formik.values.email}
+                                onChange = {formik.handleChange}
+                                error={formik.touched.email && Boolean(formik.errors.email)}
+                                helperText={formik.touched.email && formik.errors.email}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                value={formik.values.password}
+                                onChange = {formik.handleChange}
+                                error={formik.touched.password && Boolean(formik.errors.password)}
+                                helperText={formik.touched.password && formik.errors.password}
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Sign In
+                            </Button>
+                            <Grid container>
+                                <Grid item>
+                                    <Link href="/" variant="body2">
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
                             </Grid>
-                        </Grid>
+                            {invalidLogin && <Alert variant="filled" severity="error">
+                                Sorry, your password was incorrect. Please double-check your password.
+                            </Alert>}
+                            <Copyright sx={{ mt: 5 }} />
+                        </Box>
                     </Box>
-                </Box>
-                <Copyright sx={{ mt: 8, mb: 4 }} />
-            </Container>
+                </Grid>
+            </Grid>
         </ThemeProvider>
+
+
     );
 }
