@@ -119,18 +119,7 @@ export default function SignUp() {
                     <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{mt: 3}}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="username"
-                                    label="Username"
-                                    name="username"
-                                    autoComplete="username"
-                                    value={formik.values.username}
-                                    onChange = {formik.handleChange}
-                                    error={formik.touched.username && Boolean(formik.errors.username)} // avoids form loading and showing errors without form being touched
-                                    helperText={formik.touched.username && formik.errors.username}
-                                />
+
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
