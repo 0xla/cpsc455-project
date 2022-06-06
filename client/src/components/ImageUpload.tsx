@@ -37,7 +37,7 @@ const ImageUpload = () => {
             </label>
             <Box padding={2}>
                 <Button onClick={handleSubmit} variant="outlined">
-                    Submit
+                   Upload
                 </Button>
             </Box>
         </Box>
