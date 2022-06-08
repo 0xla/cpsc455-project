@@ -12,7 +12,7 @@ To create a database user, navigate to the project "Project0" on MongoDB. Then n
 
 Note to not use a password that you would normally use with other apps.
 
-4. To start the server locally, run ```ts-node server``` in the server directory. Make sure to have ts-node installed. ```npm install -g ts-node```
+4. To start the server locally, run ```npm run start``` in the server directory.
 
 # Group Members
 
