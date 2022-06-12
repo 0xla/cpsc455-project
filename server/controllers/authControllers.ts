@@ -1,6 +1,8 @@
 import User from "../models/user.model";
 import {handleAuthErrors} from "../errors/authErrors";
 import {Request, Response} from 'express';
+import sendEmail from "../utils/sendEmail";
+import * as crypto from "crypto";
 
 
 /**
@@ -57,6 +59,98 @@ export const loginUser = async (req :Request, res :Response) => {
 
     }
 
+}
+
+/**
+ *
+ * @param Expected request body:
+ *        {
+ *          email: string,
+ *        }
+ * @param Responds with success message if reset password email was successfully sent, else error message.
+ */
+export const forgotPassword = async (req :Request, res :Response) => {
+    const {email} = req.body;
+
+    try {
+        const user = await User.findOne({email})
+        console.log(user)
+        if (!user){
+            return res.status(404).json({
+                message: "Email could not be sent.",
+            });
+        }
+
+        const resetToken = user.getResetPasswordToken();
+        await user.save();  // updates the document in db with newly created resetToken.
+        const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`;
+        const emailBody = `
+        <h1>There was recently a request to change the password for your account. Please click on the following link to reset your password:</h1>
+        <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+        <p>If you did not make this request, you can ignore this message and your password will remain the same.</p>`
+
+        try {
+            await sendEmail({
+                to: user.email,
+                subject: "Reset your password",
+                text: emailBody
+            });
+            res.status(200).json({
+                success: true, data: "Reset password email sent"
+            })
+
+        } catch(err){
+            user.resetPasswordToken= undefined;
+            user.resetPasswordExpire = undefined;
+            await user.save();
+            return res.status(404).json({
+                message: "Email failed to send.",
+            });
+        }
+
+    } catch(err){
+        return res.status(404).json({
+            message: "Error when trying to reset password",
+        });
+    }
+}
+
+/**
+ *
+ * @param Expected request params:
+ *        {
+ *          resetPasswordToken: string,
+ *        }
+ * @param Responds with success message if password was reset, else error message.
+ */
+export const resetPassword = async (req :Request, res :Response) => {
+    const {resetToken} = req.params;
+    const resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+    try{
+        const user = await User.findOne({
+            resetPasswordToken,
+            resetPasswordExpire: {$gt: Date.now()}
+        })
+
+        if (!user){
+            return res.status(400).json({
+                message: "Reset token is invalid.",
+            });
+        }
+        user.pasword = req.body.password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpired= undefined;
+        await user.save();
+        res.status(200).json({
+            success: true,
+            message: "Password successfully reset"
+        })
+    }catch(err){
+        return res.status(404).json({
+            message: "Error when trying to reset password",
+        });
+    }
 }
 
 const sendToken = (user: any, statusCode: any, res: Response) => {
