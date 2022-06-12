@@ -15,7 +15,7 @@ import * as crypto from "crypto";
  *        }
  * @param Responds with created user's id and jwt token, or validation errors.
  */
-export const registerUser = async (req :Request, res :Response) => {
+export const registerUser = async (req: Request, res: Response) => {
     const {username, email, password} = req.body;
     try {
         const user = await User.create({
@@ -23,8 +23,8 @@ export const registerUser = async (req :Request, res :Response) => {
             email: email,
             password: password
         })
-        sendToken(user,200,res);
-    } catch (err){
+        sendToken(user, 200, res);
+    } catch (err) {
         const errors = handleAuthErrors(err);
         return res.status(400).json({
             message: "Failed to create user.",
@@ -44,13 +44,13 @@ export const registerUser = async (req :Request, res :Response) => {
  * @param Responds with user's id and jwt token, or validation errors.
  */
 
-export const loginUser = async (req :Request, res :Response) => {
+export const loginUser = async (req: Request, res: Response) => {
     console.log(req.body)
     const {usernameOrEmail, password} = req.body;
     try {
-        const user = await User.login(usernameOrEmail,password);
-        sendToken(user,200,res);
-    } catch(err) {
+        const user = await User.login(usernameOrEmail, password);
+        sendToken(user, 200, res);
+    } catch (err) {
         const errors = handleAuthErrors(err);
         return res.status(400).json({
             message: "Failed to login.",
@@ -69,21 +69,21 @@ export const loginUser = async (req :Request, res :Response) => {
  *        }
  * @param Responds with success message if reset password email was successfully sent, else error message.
  */
-export const forgotPassword = async (req :Request, res :Response) => {
+export const forgotPassword = async (req: Request, res: Response) => {
     const {email} = req.body;
 
     try {
         const user = await User.findOne({email})
-        console.log(user)
-        if (!user){
+        if (!user) {
             return res.status(404).json({
                 message: "Email could not be sent.",
             });
         }
 
-        const resetToken = user.getResetPasswordToken();
+
+        const resetToken = user.getResetPasswordToken(); // creates reset token and expiration and stores the hashed token in the database
         await user.save();  // updates the document in db with newly created resetToken.
-        const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`;
+        const resetUrl = `http://localhost:3000/password-reset/${resetToken}`; // the URL the user will receive in their email
         const emailBody = `
         <h1>There was recently a request to change the password for your account. Please click on the following link to reset your password:</h1>
         <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
@@ -99,8 +99,8 @@ export const forgotPassword = async (req :Request, res :Response) => {
                 success: true, data: "Reset password email sent"
             })
 
-        } catch(err){
-            user.resetPasswordToken= undefined;
+        } catch (err) {
+            user.resetPasswordToken = undefined;
             user.resetPasswordExpire = undefined;
             await user.save();
             return res.status(404).json({
@@ -108,7 +108,7 @@ export const forgotPassword = async (req :Request, res :Response) => {
             });
         }
 
-    } catch(err){
+    } catch (err) {
         return res.status(404).json({
             message: "Error when trying to reset password",
         });
@@ -123,30 +123,30 @@ export const forgotPassword = async (req :Request, res :Response) => {
  *        }
  * @param Responds with success message if password was reset, else error message.
  */
-export const resetPassword = async (req :Request, res :Response) => {
-    const {resetToken} = req.params;
+export const resetPassword = async (req: Request, res: Response) => {
+    const {resetToken} = req.params;  // the token is being sent in reset url sent to the user
     const resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
 
-    try{
+    try {
         const user = await User.findOne({
-            resetPasswordToken,
-            resetPasswordExpire: {$gt: Date.now()}
+            resetPasswordToken, // find user with matching reset token
+            resetPasswordExpire: {$gt: Date.now()} // check to make sure token not expired
         })
 
-        if (!user){
+        if (!user) {
             return res.status(400).json({
                 message: "Reset token is invalid.",
             });
         }
-        user.pasword = req.body.password;
+        user.password = req.body.password;
         user.resetPasswordToken = undefined;
-        user.resetPasswordExpired= undefined;
+        user.resetPasswordExpired = undefined;
         await user.save();
         res.status(200).json({
             success: true,
             message: "Password successfully reset"
         })
-    }catch(err){
+    } catch (err) {
         return res.status(404).json({
             message: "Error when trying to reset password",
         });

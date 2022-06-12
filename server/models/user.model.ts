@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
 // fires a function before doc is saved to db. In this case we create a salt, apply it to the password, then hash it.
 userSchema.pre('save', async function (next) {
     if (!this.isModified("password")) { // checks if password field has been modified (when a user has to reset their password, we update/save the
-        // document with the resetPasswordToken, but we're not hashing a new password again.
+                                             // document with the resetPasswordToken, but we're not hashing a new password again.
         next();
     }
     const salt = await bcrypt.genSalt();
