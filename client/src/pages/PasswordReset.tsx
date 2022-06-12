@@ -19,6 +19,7 @@ import * as React from "react";
 
 const PasswordReset = () => {
     const [success, setSuccess] = useState("");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
     const {resetToken} = useParams();
 
@@ -34,10 +35,8 @@ const PasswordReset = () => {
     })
 
     const handleSubmit = async (values: any) => {
+        setError("");
         const password = values.password;
-
-        console.log(resetToken)
-
         try {
             const res = await axios.put(
                 `http://localhost:5000/api/users/reset-password/${resetToken}`,
@@ -49,7 +48,7 @@ const PasswordReset = () => {
             }, 5000)
 
         } catch (err: any) {
-            console.log(err)
+            setError(err.response.data);
         }
     };
 
@@ -125,6 +124,9 @@ const PasswordReset = () => {
                 </Box>
                 {success && <Alert variant="filled" severity="success">
                     Success. Your password has been reset. Navigating back to sign in page.
+                </Alert>}
+                {error && <Alert variant="filled" severity="error">
+                    That password reset URL has expired. Please generate a new one by navigating back to the login page.
                 </Alert>}
             </Container>
         </ThemeProvider>
