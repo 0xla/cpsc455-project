@@ -1,5 +1,6 @@
 import ImageUpload from "../components/ImageUpload";
 import Navigation from "../components/Navigation";
+import Avatar from '@mui/material/Avatar';
 import Box from "@mui/material/Box";
 import ImageCard from "../components/ImageCard";
 import { useState } from "react";
@@ -9,6 +10,7 @@ import {
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
 import { useSelector } from "react-redux";
+import "../App/App.css"
 
 
 const Homepage = () => {
@@ -26,6 +28,10 @@ const Homepage = () => {
             <Box mt={5}>
                 <Navigation />
                 <ImageUpload />
+                <Box className="ProfilePic">
+                    <Avatar sx={{width: 50, height: 50}} alt="Remy Sharp" src={profileImageUrl} />
+                    <p>{userBio}</p>
+                </Box>
                 <Box mt={2}>
                     <TabMenu option={option} optionChange={optionChange} />
                 </Box>

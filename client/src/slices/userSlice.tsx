@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserDetails } from "../types";
-import { images } from "../dummydata/imagesPlaceholder";
+import { images, profileImageUrl, userBio } from "../dummydata/imagesPlaceholder";
 
 
 type SliceState = {
@@ -18,8 +18,8 @@ export const userSlice = createSlice({
         error: undefined,
         userData: {
             username: '',
-            userBio: '',
-            profileImageUrl: '',
+            userBio: userBio,
+            profileImageUrl: profileImageUrl,
             images: images,
         }
     } as SliceState,

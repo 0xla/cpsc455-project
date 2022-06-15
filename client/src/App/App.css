@@ -6,3 +6,7 @@
   background-color: transparent !important;
   box-shadow: none !important;
 }
+
+.ProfilePic {
+  text-align: -webkit-center
+}
