@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserDetails } from "../types";
+import { images } from "../dummydata/imagesPlaceholder";
 
 
 type SliceState = {
@@ -19,12 +20,12 @@ export const userSlice = createSlice({
             username: '',
             userBio: '',
             profileImageUrl: '',
-            imageUrls: [],
+            images: images,
         }
     } as SliceState,
     reducers: {
         addImage(state, action) {
-            state.userData.imageUrls = [state.userData.imageUrls, action.payload]
+            state.userData.images = [state.userData.images, action.payload]
         }
     },
     extraReducers(builder) {
@@ -34,8 +35,8 @@ export const userSlice = createSlice({
 });
 
 export const { addImage } = userSlice.actions;
-export const selectUserData = (state: any) => state.userData
-export const selectIsLoadingUserData = (state: any) => state.loading;
-export const selectIsUserDataRetrieved = (state: any) => state.isUserDataRetrieved;
+export const selectUserData = (state: any) => state.user.userData
+export const selectIsLoadingUserData = (state: any) => state.user.loading;
+export const selectIsUserDataRetrieved = (state: any) => state.user.isUserDataRetrieved;
 export default userSlice.reducer;
 

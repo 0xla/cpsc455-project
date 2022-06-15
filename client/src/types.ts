@@ -7,5 +7,5 @@ export interface UserDetails {
   username: string;
   userBio: string;
   profileImageUrl: string;
-  imageUrls: string[];
+  images: ImageData[];
 }
