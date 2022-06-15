@@ -2,3 +2,7 @@
   text-align: center;
 }
 
+.Tabs__main {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
