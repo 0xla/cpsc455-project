@@ -18,7 +18,7 @@ const useUploadForm = () => {
     });
 
     const dragDropFilesState= useDragDropFiles({
-        //onSetDropFils: uploadAndPreviewFilesState.handleAddFiles
+        onSetDropFiles: uploadAndPreviewFilesState.handleAddFiles
     });
 
     return {
