@@ -23,22 +23,29 @@ const Homepage = () => {
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
+    // sx={{width: 50, height: 50}}
     return (
         <Box>
             <Box mt={5}>
-                <Navigation />
-                <ImageUpload />
-                <Box className="ProfilePic">
-                    <Avatar sx={{width: 50, height: 50}} alt="Remy Sharp" src={profileImageUrl} />
-                    <p>{userBio}</p>
-                </Box>
-                <Box mt={2}>
+            <Navigation />
+                <div className="flex flex-row justify-center items-center gap-20 p-4">
+                    <Box className="ProfilePic flex flex-col justify-center items-center">
+                        <img className="md:w-[15vw] md:h-[15vw] w-[100px] h-[100px] rounded-full p-2" alt="Remy Sharp" src={profileImageUrl} />
+                        <div className=" ">{userBio}</div>
+                        
+                    </Box>
+                    <ImageUpload />
+                </div>
+               
+               
+                
+                <Box className="mt-2">
                     <TabMenu option={option} optionChange={optionChange} />
                 </Box>
             </Box>
-            <Box mt={5}>
+            <Box className="mt-5 grid md:grid-cols-4 gap-5 p-10 grid-cols-1">
                 {option === 0 && images.map((image: any) => (
-                    <Box mt={2}>
+                    <Box className="mt-2">
                         <ImageCard imageData={image} />
                     </Box>
                 ))}
