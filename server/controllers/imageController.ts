@@ -3,14 +3,13 @@ import User from "../models/user.model";
 import processFile from "../middleware/upload";
 import util from "util";
 import { Storage } from "@google-cloud/storage";
+import { ObjectId } from "mongodb";
 const storage = new Storage({ keyFilename: "google-cloud-key.json" });
 const bucket = storage.bucket("cpsc-455-images");
 
 export const uploadImage = async (req: Request, res: Response) => {
-  
   try {
     await processFile(req, res);
-    console.log(`hey ${req.file}`);
     if (!req.file) {
       return res.status(400).send({ message: "Please upload a file!" });
     }
@@ -28,6 +27,12 @@ export const uploadImage = async (req: Request, res: Response) => {
       const publicUrl = util.format(
         `https://storage.googleapis.com/${bucket.name}/${blob.name}`
       );
+
+      await User.findByIdAndUpdate(
+        { _id: new ObjectId("62bb72a56922126202a9452f") },
+        { $push: { images: publicUrl } }
+      );
+
       try {
         // Make the file public
         await bucket.file(req.file!.originalname).makePublic();
