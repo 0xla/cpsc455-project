@@ -1,7 +1,5 @@
 import ImageUpload from "../components/ImageUpload";
-import Navigation from "../components/Navigation";
-import Avatar from '@mui/material/Avatar';
-import Box from "@mui/material/Box";
+import TopNavigation from "../components/TopNavigation";
 import ImageCard from "../components/ImageCard";
 import { useState } from "react";
 import TabMenu from "../components/TabMenu";
@@ -20,37 +18,59 @@ const Homepage = () => {
 
     const [option, setOption] = useState(0);
 
+    const name : string = "user name";
+
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
-    // sx={{width: 50, height: 50}}
     return (
-        <Box>
-            <Box mt={5}>
-            <Navigation />
-                <div className="flex flex-row justify-center items-center gap-20 p-4">
-                    <Box className="ProfilePic flex flex-col justify-center items-center">
-                        <img className="md:w-[15vw] md:h-[15vw] w-[100px] h-[100px] rounded-full p-2" alt="Remy Sharp" src={profileImageUrl} />
-                        <div className=" ">{userBio}</div>
-                        
-                    </Box>
+        <div className="bg-[#FAFAFA] ">
+            <div>
+                <TopNavigation />
+                <div className="flex flex-row items-center mx-[10vw]">
+                    <div className="flex flex-col mr-[100px] p-2">
+                        <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2" alt="Remy Sharp" src={profileImageUrl} />
+                    </div>
+                    <div className="flex flex-col items-start gap-[15px] mr-[100px]">
+                        <div className="flex flex-row gap-[30px]">
+                            <div className="text-xl">
+                                {name}
+                            </div>
+                            <div className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium">
+                                Follow
+                            </div>
+                        </div>
+                        <div className="flex flex-row gap-[50px]">
+                            <div className="">
+                                <span className="font-bold">50</span> posts
+                            </div>
+                            <div className="">
+                                <span className="font-bold">1.2M</span> followers
+                            </div>
+                            <div className="">
+                                <span className="font-bold">5K</span> following 
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <span className="font-bold">Instagram's {name}</span>
+                            <div>{userBio}</div>
+                        </div>
+                    </div>
                     <ImageUpload />
+
                 </div>
-               
-               
-                
-                <Box className="mt-2">
+                <div className="mt-2">
                     <TabMenu option={option} optionChange={optionChange} />
-                </Box>
-            </Box>
-            <Box className="mt-5 grid md:grid-cols-4 gap-5 p-10 grid-cols-1">
+                </div>
+            </div>
+            <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                 {option === 0 && images.map((image: any) => (
-                    <Box className="mt-2">
+                    <div className="mt-2">
                         <ImageCard imageData={image} />
-                    </Box>
+                    </div>
                 ))}
-            </Box>
-        </Box>
+            </div>
+        </div>
     );
 }
 

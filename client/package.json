@@ -20,6 +20,7 @@
     "crypto": "^1.0.1",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^4.1.1",
+    "daisyui": "^2.17.0",
     "formik": "^2.2.9",
     "jsonwebtoken": "^8.5.1",
     "material-icons": "^1.11.1",

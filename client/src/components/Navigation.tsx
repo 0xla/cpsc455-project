@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import PersonIcon from '@mui/icons-material/Person';
@@ -8,7 +8,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const Navigation = () => {
 
-    const [value, setValue] = React.useState('recents');
+    const [value, setValue] = useState('recents');
 
     const handleChange = (_event: any, newValue: React.SetStateAction<string>) => {
         setValue(newValue);
