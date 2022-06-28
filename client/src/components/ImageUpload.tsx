@@ -10,11 +10,16 @@ const Input = styled("input")({
     display: "none",
 });
 
-const handleSubmit = async () => {};
 
 const ImageUpload = () => {
+    const handleSubmit = async () => {
+        if (image !== undefined) {
+            const formData = new FormData();
+            formData.append("image", image);
+        }
+    }
 
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState<any>(undefined);
     return (
         <Box>
             <label htmlFor="icon-button-file">
@@ -33,16 +38,15 @@ const ImageUpload = () => {
                 >
                     <PhotoCamera />
                 </IconButton>
-
+                <p>{image ? image.name : ""}</p>
             </label>
             <Box padding={2}>
                 <Button onClick={handleSubmit} variant="outlined">
-                   Upload
+                    Upload
                 </Button>
             </Box>
         </Box>
     );
-
 }
 
 export default ImageUpload;
