@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { styled } from "@mui/material/styles";
+import { uploadImage } from "../util/functions";
 
 const Input = styled("input")({
     display: "none",
@@ -12,12 +13,15 @@ const Input = styled("input")({
 
 
 const ImageUpload = () => {
+
     const handleSubmit = async () => {
         if (image !== undefined) {
             const formData = new FormData();
-            formData.append("image", image);
+            formData.append("file", image);
+            await uploadImage(formData);
         }
     }
+
 
     const [image, setImage] = useState<any>(undefined);
     return (

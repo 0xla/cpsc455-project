@@ -13,6 +13,7 @@ export const uploadImage = async (req: Request, res: Response) => {
     if (!req.file) {
       return res.status(400).send({ message: "Please upload a file!" });
     }
+
     // Create a new blob in the bucket and upload the file data.
     const blob = bucket.file(req.file!.originalname);
     const blobStream = blob.createWriteStream({
