@@ -18,7 +18,10 @@ const ImageUpload = () => {
             const formData = new FormData();
             formData.append("file", image);
             const url: string = await uploadImage(formData);
-            console.log(`image url: ${url}`);
+            if (url) {
+                setImage(undefined);
+                console.log(`image url: ${url}`);
+            }
         }
     }
 
