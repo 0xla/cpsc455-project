@@ -11,17 +11,16 @@ const Input = styled("input")({
     display: "none",
 });
 
-
 const ImageUpload = () => {
 
     const handleSubmit = async () => {
         if (image !== undefined) {
             const formData = new FormData();
             formData.append("file", image);
-            await uploadImage(formData);
+            const url: string = await uploadImage(formData);
+            console.log(`image url: ${url}`);
         }
     }
-
 
     const [image, setImage] = useState<any>(undefined);
     return (

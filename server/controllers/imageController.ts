@@ -37,11 +37,11 @@ export const uploadImage = async (req: Request, res: Response) => {
       try {
         // Make the file public
         await bucket.file(req.file!.originalname).makePublic();
-      } catch {
+      } catch (err){
         return res.status(500).send({
           message: `Uploaded the file successfully: ${
             req.file!.originalname
-          }, but public access is denied!`,
+          }, but public access is denied! error message: ${err}`,
           url: publicUrl,
         });
       }
