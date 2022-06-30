@@ -2,6 +2,8 @@ import express from "express";
 import {resetPassword, forgotPassword, loginUser, registerUser} from "./controllers/authControllers";
 import { addImage, deleteImage, getImages, editImage } from "./controllers/imageController";
 import { protect } from "./middleware/auth";
+import {getAllUsers} from "./controllers/userControllers";
+
 
 const router = express.Router();
 
@@ -22,5 +24,12 @@ router.post("api/images", addImage);
 router.get("api/images", getImages);
 router.put("api/images/:imageId", editImage);
 router.delete("api/images/:imageId", deleteImage);
+
+/**
+ * USER ENDPOINTS
+ */
+
+router.get("/api/users", getAllUsers);
+
 
 export default router;
