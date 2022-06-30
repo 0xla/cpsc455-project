@@ -1,5 +1,5 @@
 import express from "express";
-import { loginUser, registerUser } from "./controllers/authControllers";
+import {resetPassword, forgotPassword, loginUser, registerUser} from "./controllers/authControllers";
 import { addImage, deleteImage, getImages, editImage } from "./controllers/imageController";
 import { protect } from "./middleware/auth";
 
@@ -11,6 +11,8 @@ const router = express.Router();
 
 router.post("/api/users/register", registerUser);
 router.post("/api/users/login", loginUser);
+router.post("/api/users/forgot-password", forgotPassword);
+router.put("/api/users/reset-password/:resetToken", resetPassword);
 
 /**
  * IMAGE ENDPOINTS
