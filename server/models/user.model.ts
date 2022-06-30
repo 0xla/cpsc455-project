@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema(
             required: true,
             minlength: [6, "Minimum password length is 6 characters"]
         },
+        user_bio: {
+            type: String
+        },
+        profile_img_url:{
+            type: String
+        },
         resetPasswordToken: String,
         resetPasswordExpire: Date,
     },
