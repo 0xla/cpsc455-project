@@ -6,7 +6,15 @@ export interface ImageData {
 
 export interface UserDetails {
   username: string;
-  userBio: string;
-  profileImageUrl: string;
-  images: ImageData[];
+  email: string;
+  followers: Array<any>;
+  followings: Array<any>;
+  profilePicture: string;
+  bio: string;
+}
+
+export interface SliceState {
+  loading: boolean;
+  error: boolean;
+  userData: UserDetails;
 }
