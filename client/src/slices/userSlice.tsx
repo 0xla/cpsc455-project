@@ -36,7 +36,8 @@ export const userSlice = createSlice({
             followers: [],
             followings: [],
             profilePicture: "",
-            bio: ""
+            bio: "",
+            images: [],
         }
     } as SliceState,
     reducers: {

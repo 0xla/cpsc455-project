@@ -11,6 +11,7 @@ export interface UserDetails {
   followings: Array<any>;
   profilePicture: string;
   bio: string;
+  images: Array<string>;
 }
 
 export interface SliceState {
