@@ -1,16 +1,32 @@
 import User from "../models/user.model";
 import { Request, Response } from 'express';
 
+export const getUser = async (req: Request, res: Response) => {
+    try {
+      const user = await User.findById(req.params.id);
+      const { password, updatedAt, ...other } = user._doc;
+      res.status(200).json(other);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+}
+  
+
 export const followUser = async (req: Request, res: Response) => {
     if(req.params.id !== req.body.id){
         // params is storing the id of the user who is to Followed
         // body is storing the id of the user who is doing the action of following
         try{
-            const userToBeFollowed = User.find({id:req.params.id});
-            const userFollowing = User.find({id:req.body.id});
-            if(!userToBeFollowed.followers.includes(userFollowing.id)){
-                await userToBeFollowed.updateOne({ $push: { followers : req.body.id }} )
-                await userFollowing.updateOne({$push: { following : req.params.id }})
+            console.log("following a user");
+            const userToBeFollowed = await User.findById(req.params.id);
+            const userFollowing = await User.findById(req.body.id);
+            console.log("storing users");
+            if(!userToBeFollowed.followers.includes(req.body.id)){
+                console.log("comes inside");
+                await userToBeFollowed.updateOne({ $push: { followers : req.body.id }});
+                console.log("followers list edited");
+                await userFollowing.updateOne({$push: { followings : req.params.id }})
+                console.log("following list updated");
                 res.status(200).json("user has been followed");
             }
             else{
@@ -18,7 +34,7 @@ export const followUser = async (req: Request, res: Response) => {
             }
         }
         catch(error: any){
-            res.status(500).json(error);
+            res.status(500).json({"error": error});
         }
     }
     else{
@@ -28,12 +44,12 @@ export const followUser = async (req: Request, res: Response) => {
 }
 
 export const unfollowUser = async (req: Request, res: Response) => {
-    if (req.body.userId !== req.params.id) {
+    if (req.body.id !== req.params.id) {
         try {
           const userToBeUnfollowed = await User.findById(req.params.id);
-          const userUnfollowing = await User.findById(req.body.userId);
-          if (userToBeUnfollowed.followers.includes(req.body.userId)) {
-            await userToBeUnfollowed.updateOne({ $pull: { followers: req.body.userId } });
+          const userUnfollowing = await User.findById(req.body.id);
+          if (userToBeUnfollowed.followers.includes(req.body.id)) {
+            await userToBeUnfollowed.updateOne({ $pull: { followers: req.body.id } });
             await userUnfollowing.updateOne({ $pull: { followings: req.params.id } });
             res.status(200).json("user has been unfollowed");
           } else {
