@@ -5,16 +5,29 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { styled } from "@mui/material/styles";
+import { uploadImage } from "../util/functions";
 
 const Input = styled("input")({
     display: "none",
 });
 
-const handleSubmit = async () => {};
-
 const ImageUpload = () => {
 
-    const [image, setImage] = useState(null);
+    const handleSubmit = async () => {
+        if (image !== undefined) {
+            const formData = new FormData();
+            formData.append("file", image);
+            const url: string = await uploadImage(formData);
+            if (url) {
+                setImage(undefined);
+                console.log(`image url: ${url}`);
+            } else {
+                console.log('image failed to upload')
+            }
+        }
+    }
+
+    const [image, setImage] = useState<any>(undefined);
     return (
         <Box>
             <label htmlFor="icon-button-file">
@@ -33,16 +46,15 @@ const ImageUpload = () => {
                 >
                     <PhotoCamera />
                 </IconButton>
-
+                <p>{image ? image.name : ""}</p>
             </label>
             <Box padding={2}>
                 <Button onClick={handleSubmit} variant="outlined">
-                   Upload
+                    Upload
                 </Button>
             </Box>
         </Box>
     );
-
 }
 
 export default ImageUpload;
