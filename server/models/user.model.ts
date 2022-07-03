@@ -59,11 +59,12 @@ userSchema.statics.login = async function (usernameOrEmail, password) {
 };
 
 userSchema.methods.getSignedToken = function () {
-  console.log(this._id); // ObjectId("62bb72a56922126202a9452f")
   // @ts-ignore
-  return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN_SECRET, {
+  const token = jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
+
+  return token;
 };
 
 const User = mongoose.model("user", userSchema);

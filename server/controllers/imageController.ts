@@ -8,6 +8,7 @@ const storage = new Storage({ keyFilename: "google-cloud-key.json" });
 const bucket = storage.bucket("cpsc-455-images");
 
 export const uploadImage = async (req: Request, res: Response) => {
+ 
   try {
     await processFile(req, res);
     if (!req.file) {
@@ -30,7 +31,7 @@ export const uploadImage = async (req: Request, res: Response) => {
       );
 
       await User.findByIdAndUpdate(
-        { _id: new ObjectId("62bb72a56922126202a9452f") },
+        { _id: new ObjectId(req.params.userid) },
         { $push: { images: publicUrl } }
       );
 

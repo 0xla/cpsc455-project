@@ -16,9 +16,9 @@ router.post("/api/users/login", loginUser);
  * IMAGE ENDPOINTS
  */
 
-router.post("/api/images", uploadImage);
-router.get("/api/images", getImages);
-router.put("/api/images/:imageId", editImage);
-router.delete("/api/images/:imageId", deleteImage);
+router.post("/api/:userid/images", uploadImage);
+router.get("/api/:userid/images", getImages);
+router.put("/api/:userid/images/:imageId", editImage);
+router.delete("/api/:userid/images/:imageId", deleteImage);
 
 export default router;

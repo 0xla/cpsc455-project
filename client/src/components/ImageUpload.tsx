@@ -21,6 +21,8 @@ const ImageUpload = () => {
             if (url) {
                 setImage(undefined);
                 console.log(`image url: ${url}`);
+            } else {
+                console.log('image failed to upload')
             }
         }
     }
