@@ -1,6 +1,6 @@
 import express from "express";
 import {resetPassword, forgotPassword, loginUser, registerUser} from "./controllers/authControllers";
-import { addImage, deleteImage, getImages, editImage } from "./controllers/imageController";
+import { uploadImage, deleteImage, getImages, editImage } from "./controllers/imageController";
 import { protect } from "./middleware/auth";
 
 const router = express.Router();
@@ -18,9 +18,9 @@ router.put("/api/users/reset-password/:resetToken", resetPassword);
  * IMAGE ENDPOINTS
  */
 
-router.post("api/images", addImage);
-router.get("api/images", getImages);
-router.put("api/images/:imageId", editImage);
-router.delete("api/images/:imageId", deleteImage);
+router.post("/api/:userid/images", uploadImage);
+router.get("/api/:userid/images", getImages);
+router.put("/api/:userid/images/:imageId", editImage);
+router.delete("/api/:userid/images/:imageId", deleteImage);
 
 export default router;
