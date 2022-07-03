@@ -22,6 +22,23 @@ const userSchema = new mongoose.Schema(
             required: true,
             minlength: [6, "Minimum password length is 6 characters"]
         },
+        followers: {
+            type: Array,
+            default: []
+        },
+        following: {
+            type: Array,
+            defaul: []
+        },
+        profilePicture: {
+            type: String,
+            default: ""
+        },
+        bio: {
+            type: String,
+            default: "",
+            maxlength: 50
+        },
         resetPasswordToken: String,
         resetPasswordExpire: Date,
     },
