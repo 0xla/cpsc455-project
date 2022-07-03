@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 
 export const getUser = async (req: Request, res: Response) => {
     try {
+      console.log("receveing a request")
       const user = await User.findById(req.params.id);
       const { password, updatedAt, ...other } = user._doc;
       res.status(200).json(other);
