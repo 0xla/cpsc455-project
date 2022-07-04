@@ -36,3 +36,28 @@ export const getAllUsers = async (req: Request, res: Response) => {
         });
 };
 
+/**
+ * @param Expected request body: None, request url parameters: user id
+ *
+ * * @param Responds Responds with a success message, along with the retrieved user,
+ * or an error message if unsuccessful
+ */
+export const getUser = async (req: Request, res: Response) => {
+    const id = req.params.id
+    User.findById(id)
+        .exec()
+        .then((data: any) => {
+            res.status(200).json({
+                message: "Successfully retrieved user",
+                data: data,
+            });
+        })
+        .catch((err: any) => {
+            res.status(500).json({
+                message: "Error getting user from MongoDB",
+                error: err,
+                errCode: USER_ERR.USER002
+            });
+        });
+}
+
