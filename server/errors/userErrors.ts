@@ -8,6 +8,8 @@
 
 const USER_ERR = {
     USER001: 'USER001',
+    USER002: 'USER002',
+
 };
 
 Object.freeze(USER_ERR);
