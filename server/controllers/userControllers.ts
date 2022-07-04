@@ -18,7 +18,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
         }
     }
 
-
     User.find(filter)
         .exec()
         .then((data: any) => {
@@ -61,3 +60,54 @@ export const getUser = async (req: Request, res: Response) => {
         });
 }
 
+
+export const getAutoComplete = async (req: Request, res: Response) => {
+    console.log("hello")
+    try {
+        let result;
+        if(req.query.username) {
+            result = await User.aggregate([
+                {
+                    $search: {
+                        index: "autocomplete",
+                        compound: {
+                            must: [
+                                {
+                                    text: {
+                                        query: req.query.username,
+                                        path: "username",
+                                        fuzzy: {
+                                            maxEdits: 1,
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                },
+                {
+                    $limit: 10,
+                },
+                {
+                    $project: {
+                        username: 1,
+                        _id: 1,
+                    },
+                },
+            ]);
+            if (res) {
+                return res.send(result);
+            }
+        } else {
+            res.send([]);
+        }
+        }
+     catch (err) {
+        res.status(500).json( {
+            message: "Error getting autocompleted users from MongoDB",
+            error: err,
+            errCode: USER_ERR.USER003
+        })
+
+    }
+}

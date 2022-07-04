@@ -7,7 +7,6 @@ import Signup from "../pages/Signup";
 import PasswordReset from "../pages/PasswordReset"
 import ForgotPassword from "../pages/ForgotPassword"
 
-
 function App() {
 
     return (
