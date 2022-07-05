@@ -8,7 +8,6 @@ const storage = new Storage({ keyFilename: "google-cloud-key.json" });
 const bucket = storage.bucket("cpsc-455-images");
 
 export const uploadImage = async (req: Request, res: Response) => {
- 
   try {
     await processFile(req, res);
     if (!req.file) {
@@ -38,7 +37,7 @@ export const uploadImage = async (req: Request, res: Response) => {
       try {
         // Make the file public
         await bucket.file(req.file!.originalname).makePublic();
-      } catch (err){
+      } catch (err) {
         return res.status(500).send({
           message: `Uploaded the file successfully: ${
             req.file!.originalname
@@ -58,6 +57,19 @@ export const uploadImage = async (req: Request, res: Response) => {
     });
   }
 };
-export const getImages = () => {};
+export const getImages = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.params.userid);
+    res.status(200).send({
+      messages: "Images retrieved successfully",
+      images: user.images,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(404).send({
+      message: `could not retrieve images: ${err}`,
+    });
+  }
+};
 export const deleteImage = () => {};
 export const editImage = () => {};

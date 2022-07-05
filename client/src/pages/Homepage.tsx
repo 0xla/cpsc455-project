@@ -1,7 +1,7 @@
 import ImageUpload from "../components/ImageUpload";
 import TopNavigation from "../components/TopNavigation";
 import ImageCard from "../components/ImageCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TabMenu from "../components/TabMenu";
 import {
     selectUserData
@@ -9,9 +9,22 @@ import {
 import { UserDetails } from "../types";
 import { useSelector } from "react-redux";
 import "../App/App.css"
+import { fetchUserData } from "../util/functions";
 
 
 const Homepage = () => {
+
+    useEffect(() => {
+       async function getUserData() {
+        const response = await fetchUserData();
+        console.log(response);
+        return response;
+       }
+       getUserData();
+
+      }, []);
+
+
     const userData: UserDetails = useSelector(selectUserData);
 
     const { images, username, userBio, profileImageUrl } = userData;
