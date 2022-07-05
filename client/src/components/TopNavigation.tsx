@@ -1,10 +1,11 @@
+import TEXT from "../statics/text";
 
 const TopNavigation = () => {
     return (
         <div className="navbar w-full bg-base-100 z-50 border-b-[1px] border-[#dbdbdb]">
             <div className="w-full mx-[10vw] flex justify-between">
                 <div className="flex">
-                    <a className="btn btn-ghost normal-case text-xl" href="localhost:3000/homepage">Anagram</a>
+                    <a className="btn btn-ghost normal-case text-xl" href="localhost:3000/homepage">{TEXT.COMMON.TITLE}</a>
                 </div>
                 <div className="flex-none gap-2">
                     <div className="form-control">
