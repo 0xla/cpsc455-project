@@ -46,6 +46,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
                     error: err,
                     errCode: USER_ERR.USER001
                 });
+
             });
     } else {
         if (req.query.username) {
@@ -96,6 +97,7 @@ export const getSuggestedUsers = async (username: string) => {
     ])
 
     return result;
+
 }
 
     /**
