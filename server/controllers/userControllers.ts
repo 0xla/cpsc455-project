@@ -52,6 +52,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
             try {
                 const result = await getSuggestedUsers(req.query.username as string);
                 return res.status(200).json({
+                    message: "Successfully retrieved suggested users from MongoDb",
                     data: result
                 })
             } catch(err) {
