@@ -2,6 +2,16 @@ import {Request, Response} from "express";
 import User from "../models/user.model";
 import USER_ERR from "../errors/userErrors";
 
+const userProjection = {
+    password: false,
+    email: false,
+    createdAt: false,
+    updatedAt: false,
+    __v: false,
+    resetPasswordExpire: false,
+    resetPasswordToken: false
+}
+
 /**
  * @param Expected request body: None, request query parameters (optional): username
  *
@@ -19,7 +29,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     }
 
 
-    User.find(filter)
+    User.find(filter, userProjection)
         .exec()
         .then((data: any) => {
             res.status(200).json({
@@ -44,7 +54,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
  */
 export const getUser = async (req: Request, res: Response) => {
     const id = req.params.id
-    User.findById(id)
+    User.findById(id,userProjection)
         .exec()
         .then((data: any) => {
             res.status(200).json({
