@@ -1,4 +1,5 @@
 import TEXT from "../statics/text";
+import SearchBar from "../components/SearchBar"
 
 const TopNavigation = () => {
     return (
@@ -8,9 +9,7 @@ const TopNavigation = () => {
                     <a className="btn btn-ghost normal-case text-xl" href="localhost:3000/homepage">{TEXT.COMMON.TITLE}</a>
                 </div>
                 <div className="flex-none gap-2">
-                    <div className="form-control">
-                        <input type="text" placeholder="Search" className="input input-bordered" />
-                    </div>
+                    <SearchBar/>
                 </div>
             <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
