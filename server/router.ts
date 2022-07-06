@@ -2,7 +2,7 @@ import express from "express";
 import {resetPassword, forgotPassword, loginUser, registerUser} from "./controllers/authControllers";
 import { uploadImage, deleteImage, getImages, editImage } from "./controllers/imageController";
 import { protect } from "./middleware/auth";
-import {getAllUsers, getSuggestedUsers, getUser} from "./controllers/userControllers";
+import {getAllUsers, getUser} from "./controllers/userControllers";
 
 
 const router = express.Router();
