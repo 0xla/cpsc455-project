@@ -20,6 +20,7 @@ import {validationSchema} from "../Validation/SignInValidation";
 import * as React from 'react';
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
+import TEXT from "../statics/text";
 
 
 
@@ -27,9 +28,7 @@ function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
+            {TEXT.COMMON.TITLE + " "}
             {new Date().getFullYear()}
             {'.'}
         </Typography>
