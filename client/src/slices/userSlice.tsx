@@ -25,11 +25,15 @@ export const userSlice = createSlice({
     } as SliceState,
     reducers: {
         addImage(state, action) {
-            state.userData.images = [state.userData.images, action.payload]
+            state.userData.images.push(action.payload)        },
+        setImages(state, action) {
+            state.userData.images = action.payload;
         },
-
         removeImage(state, action) {
             state.userData.images.filter((image: ImageData) => image.id !== action.payload);
+        },
+        setUsername(state, action) {
+            state.userData.username = action.payload;
         },
 
         updateUserBio(state, action) {
@@ -42,7 +46,7 @@ export const userSlice = createSlice({
 
 });
 
-export const {addImage, removeImage, updateUserBio} = userSlice.actions;
+export const { addImage, removeImage, updateUserBio, setUsername, setImages } = userSlice.actions;
 export const selectUserData = (state: any) => state.user.userData
 export const selectIsLoadingUserData = (state: any) => state.user.loading;
 export const selectIsUserDataRetrieved = (state: any) => state.user.isUserDataRetrieved;

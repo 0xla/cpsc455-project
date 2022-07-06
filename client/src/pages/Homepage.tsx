@@ -7,31 +7,38 @@ import {
     selectUserData
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../App/App.css"
 import { fetchUserData } from "../util/functions";
+import {setUsername, setImages } from "../slices/userSlice";
 
 
 const Homepage = () => {
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
-       async function getUserData() {
-        const response = await fetchUserData();
-        console.log(response);
-        return response;
-       }
-       getUserData();
+        async function getUserData() {
 
-      }, []);
+            try {
+                const response = await fetchUserData();
+                const { username, images } = response.data;
 
+                dispatch(setUsername(username));
+                dispatch(setImages(images));
+            } catch (err) {
+                console.log(err);
+
+            }
+        }
+        getUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const userData: UserDetails = useSelector(selectUserData);
 
     const { images, username, userBio, profileImageUrl } = userData;
-
     const [option, setOption] = useState(0);
-
-    const name : string = "user name";
 
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
@@ -47,7 +54,7 @@ const Homepage = () => {
                     <div className="flex flex-col items-start gap-[15px] mr-[100px]">
                         <div className="flex flex-row gap-[30px]">
                             <div className="text-xl">
-                                {name}
+                                {username}
                             </div>
                             <div className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium">
                                 Follow
@@ -61,11 +68,11 @@ const Homepage = () => {
                                 <span className="font-bold">1.2M</span> followers
                             </div>
                             <div className="">
-                                <span className="font-bold">5K</span> following 
+                                <span className="font-bold">5K</span> following
                             </div>
                         </div>
                         <div className="flex flex-col items-start">
-                            <span className="font-bold">Instagram's {name}</span>
+                            <span className="font-bold">Instagram's {username}</span>
                             <div>{userBio}</div>
                         </div>
                     </div>

@@ -4,6 +4,7 @@ import processFile from "../middleware/upload";
 import util from "util";
 import { Storage } from "@google-cloud/storage";
 import { ObjectId } from "mongodb";
+import { v4 as uuidv4 } from 'uuid';
 const storage = new Storage({ keyFilename: "google-cloud-key.json" });
 const bucket = storage.bucket("cpsc-455-images");
 
@@ -31,7 +32,16 @@ export const uploadImage = async (req: Request, res: Response) => {
 
       await User.findByIdAndUpdate(
         { _id: new ObjectId(req.params.userid) },
-        { $push: { images: publicUrl } }
+        {
+          $push: {
+            images: {
+              id: uuidv4(),
+              url: publicUrl,
+              description:
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+            },
+          },
+        }
       );
 
       try {
