@@ -32,5 +32,4 @@ router.delete("/api/:userid/images/:imageId", deleteImage);
 router.get("/api/users", getAllUsers);
 router.get("/api/users/:id", getUser);
 
-
 export default router;
