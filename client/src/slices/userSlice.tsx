@@ -25,7 +25,8 @@ export const userSlice = createSlice({
     } as SliceState,
     reducers: {
         addImage(state, action) {
-            state.userData.images.push(action.payload)        },
+            state.userData.images.push(action.payload)        
+        },
         setImages(state, action) {
             state.userData.images = action.payload;
         },
