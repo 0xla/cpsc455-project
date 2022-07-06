@@ -6,6 +6,9 @@ import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { styled } from "@mui/material/styles";
 import { uploadImage } from "../util/functions";
+import { addImage } from "../slices/userSlice";
+import { useDispatch } from "react-redux";
+
 
 const Input = styled("input")({
     display: "none",
@@ -13,14 +16,18 @@ const Input = styled("input")({
 
 const ImageUpload = () => {
 
+    const dispatch = useDispatch();
+
     const handleSubmit = async () => {
         if (image !== undefined) {
             const formData = new FormData();
             formData.append("file", image);
-            const url: string = await uploadImage(formData);
-            if (url) {
+            const imageData = await uploadImage(formData);
+            if (imageData) {
                 setImage(undefined);
-                console.log(`image url: ${url}`);
+                console.log(`image url: ${imageData.url}`);
+                dispatch(addImage(imageData));
+
             } else {
                 console.log('image failed to upload')
             }

@@ -9,6 +9,22 @@ type DecodedToken = {
   id: string;
 };
 
+export const fetchUserData = async () => {
+  const token: string | null = window.localStorage.getItem("authToken");
+  if (token) {
+    const decoded: DecodedToken | null = decodeToken(token);
+    if (decoded !== null) {
+      try {
+        const response: any = await axios.get(`/api/users/${decoded.id}/`);
+        return response.data;
+
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+};
+
 export const uploadImage = async (formData: any) => {
   const token: string | null = window.localStorage.getItem("authToken");
 
@@ -25,8 +41,8 @@ export const uploadImage = async (formData: any) => {
               "Content-Type": "multipart/form-data",
             },
           }
-        );
-        return response.data.url;
+        );  
+        return response.data;
       } catch (error) {
         console.log(error);
       }
