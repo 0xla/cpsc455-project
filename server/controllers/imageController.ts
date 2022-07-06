@@ -4,7 +4,7 @@ import processFile from "../middleware/upload";
 import util from "util";
 import { Storage } from "@google-cloud/storage";
 import { ObjectId } from "mongodb";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 const storage = new Storage({ keyFilename: "google-cloud-key.json" });
 const bucket = storage.bucket("cpsc-455-images");
 
@@ -67,19 +67,3 @@ export const uploadImage = async (req: Request, res: Response) => {
     });
   }
 };
-export const getImages = async (req: Request, res: Response) => {
-  try {
-    const user = await User.findById(req.params.userid);
-    res.status(200).send({
-      messages: "Images retrieved successfully",
-      images: user.images,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(404).send({
-      message: `could not retrieve images: ${err}`,
-    });
-  }
-};
-export const deleteImage = () => {};
-export const editImage = () => {};
