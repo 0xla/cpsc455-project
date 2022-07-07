@@ -24,7 +24,7 @@ const TopNavigation = () => {
                             <span className="badge">New</span>
                         </a>
                         </li>
-                        <li><a href="localhost:3000/settings">Settings</a></li>
+                        <li><a href="/settings">Settings</a></li>
                         <li><a href="localhost:3000/logout">Logout</a></li>
                     </ul>
                 </div>
