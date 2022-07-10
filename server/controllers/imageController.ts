@@ -39,6 +39,7 @@ export const uploadImage = async (req: Request, res: Response) => {
               url: publicUrl,
               description:
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+              likes: []
             },
           },
         }

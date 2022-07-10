@@ -2,6 +2,7 @@ export interface ImageData {
   id: string;
   url: string;
   description: string;
+  likes: []
 }
 
 export interface UserDetails {
