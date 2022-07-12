@@ -29,4 +29,12 @@ router.post("/api/:userid/images", uploadImage);
 router.get("/api/users", getAllUsers);
 router.get("/api/users/:id", getUser);
 
+/**
+ * LIKE ENDPOINTS
+ */
+
+router.post("/posts/:postid/likes")
+router.get("/posts/:postid/likes")
+router.delete("/posts/:postid/likes/:userid")
+
 export default router;
