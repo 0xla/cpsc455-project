@@ -4,25 +4,39 @@ import ImageCard from "../components/ImageCard";
 import { useEffect, useState } from "react";
 import TabMenu from "../components/TabMenu";
 import {
-    selectUserData
+    selectUserData, setAuthToken
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import "../App/App.css"
 import { fetchUserData } from "../util/functions";
-import {setUsername, setImages } from "../slices/userSlice";
+import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 
 
 const Homepage = () => {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+    let authToken = useSelector(selectAuthToken);
 
     useEffect(() => {
+
+        if (authToken === undefined) {
+            const token: string | null = window.localStorage.getItem("authToken");
+            if (token) {
+                dispatch(setAuthToken(token));
+                authToken = token;
+            } else {
+                navigate("/")
+            }
+        }
+
         async function getUserData() {
 
             try {
-                const response = await fetchUserData();
+                const response = await fetchUserData(authToken);
                 const { username, images } = response.data;
 
                 dispatch(setUsername(username));
@@ -33,7 +47,7 @@ const Homepage = () => {
             }
         }
         getUserData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const userData: UserDetails = useSelector(selectUserData);
