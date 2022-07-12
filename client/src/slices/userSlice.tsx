@@ -8,6 +8,7 @@ type SliceState = {
     isUserDataRetrieved: boolean;
     error: string | undefined;
     userData: UserDetails;
+    authToken: string | undefined;
 }
 
 export const userSlice = createSlice({
@@ -21,11 +22,12 @@ export const userSlice = createSlice({
             userBio: userBio,
             profileImageUrl: profileImageUrl,
             images: images,
-        }
+        },
+        authToken: undefined,
     } as SliceState,
     reducers: {
         addImage(state, action) {
-            state.userData.images.push(action.payload)        
+            state.userData.images.push(action.payload)
         },
         setImages(state, action) {
             state.userData.images = action.payload;
@@ -39,16 +41,21 @@ export const userSlice = createSlice({
 
         updateUserBio(state, action) {
             state.userData.userBio = action.payload;
-        }
+        },
+        setAuthToken(state, action) {
+            state.authToken = action.payload;
+        },
     },
+    
     extraReducers(builder) {
         /* TODO: state changes related to async thunk calls */
     }
 
 });
 
-export const { addImage, removeImage, updateUserBio, setUsername, setImages } = userSlice.actions;
-export const selectUserData = (state: any) => state.user.userData
+export const { addImage, removeImage, updateUserBio, setUsername, setImages, setAuthToken} = userSlice.actions;
+export const selectUserData = (state: any) => state.user.userData;
+export const selectAuthToken = (state: any) => state.user.authToken;
 export const selectIsLoadingUserData = (state: any) => state.user.loading;
 export const selectIsUserDataRetrieved = (state: any) => state.user.isUserDataRetrieved;
 export default userSlice.reducer;

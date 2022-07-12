@@ -1,6 +1,5 @@
 import axios from "axios";
-import { isExpired, decodeToken } from "react-jwt";
-
+import { decodeToken } from "react-jwt";
 axios.defaults.baseURL = "http://localhost:5000";
 
 type DecodedToken = {
@@ -9,26 +8,20 @@ type DecodedToken = {
   id: string;
 };
 
-export const fetchUserData = async () => {
-  const token: string | null = window.localStorage.getItem("authToken");
-  if (token) {
-    const decoded: DecodedToken | null = decodeToken(token);
-    if (decoded !== null) {
-      try {
-        const response: any = await axios.get(`/api/users/${decoded.id}/`);
-        return response.data;
-
-      } catch (err) {
-        console.log(err);
-      }
+export const fetchUserData = async (token: string) => {
+  const decoded: DecodedToken | null = decodeToken(token);
+  if (decoded !== null) {
+    try {
+      const response: any = await axios.get(`/api/users/${decoded.id}/`);
+      return response.data;
+    } catch (err) {
+      console.log(err);
     }
   }
 };
 
-export const uploadImage = async (formData: any) => {
-  const token: string | null = window.localStorage.getItem("authToken");
-
-  if (formData.get("file") !== "null" && token) {
+export const uploadImage = async (formData: any, token: string) => {
+  if (formData.get("file") !== "null") {
     const decoded: DecodedToken | null = decodeToken(token);
 
     if (decoded !== null) {
@@ -41,7 +34,7 @@ export const uploadImage = async (formData: any) => {
               "Content-Type": "multipart/form-data",
             },
           }
-        );  
+        );
         return response.data;
       } catch (error) {
         console.log(error);
