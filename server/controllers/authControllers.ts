@@ -154,16 +154,6 @@ export const resetPassword = async (req: Request, res: Response) => {
 }
 
 const sendToken = (user: any, statusCode: any, res: Response) => {
-    const token = user.getSignedToken();
-    res.status(statusCode).json({success: true, token, user: user._id})
-}
-
-
-
-
-
-
-
-
-
-
+  const token = user.getSignedToken();
+  res.status(statusCode).json({ success: true, token, user: user._id });
+};

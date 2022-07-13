@@ -9,17 +9,20 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Lock} from "@material-ui/icons";
-import {Alert} from "@mui/material";
+import { Lock } from "@material-ui/icons";
+import { Alert } from "@mui/material";
 
 // Form validation imports
-import {useFormik} from "formik";
-import {validationSchema} from "../Validation/SignInValidation";
+import { useFormik } from "formik";
+import { validationSchema } from "../Validation/SignInValidation";
 
 // React Imports
 import * as React from 'react';
-import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import TEXT from "../statics/text";
+import { setAuthToken } from "../slices/userSlice";
+import { useDispatch } from "react-redux";
 
 
 
@@ -27,9 +30,7 @@ function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
+            {TEXT.COMMON.TITLE + " "}
             {new Date().getFullYear()}
             {'.'}
         </Typography>
@@ -41,8 +42,9 @@ const theme = createTheme();
 export default function SignInSide() {
 
     const [invalidLogin, setInvalidLogin] = useState(false);
+    const dispatch = useDispatch();
 
-    const formik: any = useFormik( {
+    const formik: any = useFormik({
         initialValues: {
             username: "",
             password: ""
@@ -86,9 +88,10 @@ export default function SignInSide() {
             console.log(err)
         }
 
-        const data = await response.json()
+        const data = await response.json();
+        console.log(data);
         localStorage.setItem("authToken", data.token);
-        console.log(data)
+        dispatch(setAuthToken(data.token));
 
         if (data.errors) {
             Object.values(data.errors).forEach((err) => {
@@ -130,7 +133,7 @@ export default function SignInSide() {
                         }}
                     >
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <Lock/>
+                            <Lock />
                         </Avatar>
                         <Typography component="h1" variant="h5">
                             Sign in
@@ -146,7 +149,7 @@ export default function SignInSide() {
                                 autoComplete="username"
                                 autoFocus
                                 value={formik.values.username}
-                                onChange = {formik.handleChange}
+                                onChange={formik.handleChange}
                                 error={formik.touched.username && Boolean(formik.errors.username)} // avoids form loading and showing errors without form being touched
                                 helperText={formik.touched.username && formik.errors.username}
                             />
@@ -160,7 +163,7 @@ export default function SignInSide() {
                                 id="password"
                                 autoComplete="current-password"
                                 value={formik.values.password}
-                                onChange = {formik.handleChange}
+                                onChange={formik.handleChange}
                                 error={formik.touched.password && Boolean(formik.errors.password)}
                                 helperText={formik.touched.password && formik.errors.password}
                             />
