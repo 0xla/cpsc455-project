@@ -1,6 +1,6 @@
 import express from "express";
 import {resetPassword, forgotPassword, loginUser, registerUser} from "./controllers/authControllers";
-import {getUser, getAllUsers, followUser, unfollowUser} from "./controllers/userControllers";
+import {getUser, getAllUsers, editUser} from "./controllers/userControllers";
 import { uploadImage} from "./controllers/imageController";
 
 import { protect } from "./middleware/auth";
@@ -18,8 +18,8 @@ router.post("/api/users/login", loginUser);
 router.post("/api/users/forgot-password", forgotPassword);
 router.put("/api/users/reset-password/:resetToken", resetPassword);
 
-router.put("/api/users/:id/follow", followUser);
-router.put("/api/users/:id/unfollow", unfollowUser);
+router.put("/api/users/:id", editUser);
+// router.put("/api/users/:id", unfollowUser);
 
 /**
  * IMAGE ENDPOINTS

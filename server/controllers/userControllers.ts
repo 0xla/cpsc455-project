@@ -128,38 +128,45 @@ export const getUser = async (req: Request, res: Response) => {
 
 
 
-export const followUser = async (req: Request, res: Response) => {
+const followUser = async (req: Request, res: Response) => {
     if(req.params.id !== req.body.id){
         // params is storing the id of the user who is to Followed
         // body is storing the id of the user who is doing the action of following
         try{
-            console.log("following a user");
             const userToBeFollowed = await User.findById(req.params.id);
             const userFollowing = await User.findById(req.body.id);
-            console.log("storing users");
             if(!userToBeFollowed.followers.includes(req.body.id)){
-                console.log("comes inside");
                 await userToBeFollowed.updateOne({ $push: { followers : req.body.id }});
-                console.log("followers list edited");
                 await userFollowing.updateOne({$push: { followings : req.params.id }})
-                console.log("following list updated");
-                res.status(200).json("user has been followed");
+                res.status(200).json(
+                    {
+                        message: "user has been followed",
+                    });
             }
             else{
-                res.status(403).json("you allready follow this user");
+                res.status(403).json({
+                    message: "you already follow this user"
+                });
             }
         }
         catch(error: any){
-            res.status(500).json({"error": error});
+            res.status(500).json({
+                message: "Error getting user from MongoDB",
+                error: error
+            });
         }
     }
     else{
-        console.log("you can't follow yourself");
-        res.status(403).json("you cant follow yourself");
+        res.status(403).json({
+            message: "You can't follow yourself",
+            error: {
+                userToBeFollowedId: req.params.id
+            }
+        });
     }
 }
 
-export const unfollowUser = async (req: Request, res: Response) => {
+const unfollowUser = async (req: Request, res: Response) => {
     if (req.body.id !== req.params.id) {
         try {
           const userToBeUnfollowed = await User.findById(req.params.id);
@@ -167,16 +174,50 @@ export const unfollowUser = async (req: Request, res: Response) => {
           if (userToBeUnfollowed.followers.includes(req.body.id)) {
             await userToBeUnfollowed.updateOne({ $pull: { followers: req.body.id } });
             await userUnfollowing.updateOne({ $pull: { followings: req.params.id } });
-            res.status(200).json("user has been unfollowed");
+            res.status(200).json({
+                message: "user has been unfollowed"
+            });
           } else {
-            res.status(403).json("you dont follow this user");
+            res.status(403).json({
+                message: "You don't follow this user"
+            });
           }
-        } catch (err) {
-          res.status(500).json(err);
+        } catch (error: any) {
+          res.status(500).json({
+            message: "Error getting user from MongoDB",
+            error: error
+        });
         }
       } else {
-        res.status(403).json("you cant unfollow yourself");
+        res.status(403).json({
+            message: "You can't unfollow yourself",
+            error: {
+                userToBeUnfollowedId: req.params.id
+            }
+        });
       }
 }
 
 
+
+export const editUser = (req:Request, res: Response) => {
+    if(req.body.action){
+        switch(req.body.action.toLowerCase()){
+            case "follow":
+                followUser(req, res);
+                break;
+            case "unfollow":
+                unfollowUser(req, res);
+                break;
+            default: res.status(400).json(
+                {
+                    message: "Invalid Edit Request (Follow / Unfollow) ",
+                    data: {
+                        request : req.body.action
+                    }
+                }
+            )
+        }
+    }
+        
+}
