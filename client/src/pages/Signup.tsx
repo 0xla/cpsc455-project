@@ -17,14 +17,15 @@ import {validationSchema} from "../Validation/SignUpValidation";
 // React Imports
 import * as React from 'react';
 import {useNavigate} from "react-router-dom";
+import {useState} from "react";
+import {Alert} from "@mui/material";
+import TEXT from "../statics/text";
 
 function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="#">
-                SocialMediaApp
-            </Link>{' '}
+            {TEXT.COMMON.TITLE + " "}
             {new Date().getFullYear()}
             {'.'}
         </Typography>
@@ -34,6 +35,8 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignUp() {
+
+    const [invalidSignup, setInvalidSignup] = useState(false);
 
     const navigate = useNavigate();
 
@@ -89,7 +92,7 @@ export default function SignUp() {
         if (data.errors) {
             Object.values(data.errors).forEach((err) => {
                 if (err !== "") {
-                    alert(err)
+                    setInvalidSignup(true)
                 }
             })
             throw new Error(data.message)
@@ -179,6 +182,9 @@ export default function SignUp() {
                         </Grid>
                     </Box>
                 </Box>
+                {invalidSignup && <Alert variant="filled" severity="error">
+                    Sorry, that username is already taken.
+                </Alert>}
                 <Copyright sx={{mt: 5}}/>
             </Container>
         </ThemeProvider>
