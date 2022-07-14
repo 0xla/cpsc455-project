@@ -1,7 +1,7 @@
-import {Request, Response} from "express";
 import User from "../models/user.model";
+import { Request, Response } from 'express';
 import USER_ERR from "../errors/userErrors";
-
+  
 const userProjection = {
     password: false,
     email: false,
@@ -12,6 +12,7 @@ const userProjection = {
     resetPasswordToken: false
 }
 
+
 /**
  * @param Expected request body: None, request query parameters (optional): username, exact
  *
@@ -20,7 +21,7 @@ const userProjection = {
  *  *                based on query parameters. If exact is set to false,
  *                   will only return suggested usernames as opposed to an exact match by default.
  */
-export const getAllUsers = async (req: Request, res: Response) => {
+ export const getAllUsers = async (req: Request, res: Response) => {
     const filter: any = {};
     const validFilters = ["username"];
     const exactMatch = req.query.exact;
@@ -100,28 +101,123 @@ export const getSuggestedUsers = async (username: string) => {
 
 }
 
-    /**
-     * @param Expected request body: None, request url parameters: user id
-     *
-     * * @param Responds Responds with a success message, along with the retrieved user,
-     * or an error message if unsuccessful
-     */
-    export const getUser = async (req: Request, res: Response) => {
-        const id = req.params.id
-        User.findById(id, userProjection)
-            .exec()
-            .then((data: any) => {
-                res.status(200).json({
-                    message: "Successfully retrieved user",
-                    data: data,
-                });
-            })
-            .catch((err: any) => {
-                res.status(500).json({
-                    message: "Error getting user from MongoDB",
-                    error: err,
-                    errCode: USER_ERR.USER002
-                });
+/**
+ * @param Expected request body: None, request url parameters: user id
+ *
+ * * @param Responds Responds with a success message, along with the retrieved user,
+ * or an error message if unsuccessful
+ */
+export const getUser = async (req: Request, res: Response) => {
+    const id = req.params.id
+    User.findById(id, userProjection)
+        .exec()
+        .then((data: any) => {
+            res.status(200).json({
+                message: "Successfully retrieved user",
+                data: data,
             });
-    }
+        })
+        .catch((err: any) => {
+            res.status(500).json({
+                message: "Error getting user from MongoDB",
+                error: err,
+                errCode: USER_ERR.USER002
+            });
+        });
+}
 
+
+
+const followUser = async (req: Request, res: Response) => {
+    if(req.params.id !== req.body.id){
+        // params is storing the id of the user who is to Followed
+        // body is storing the id of the user who is doing the action of following
+        try{
+            const userToBeFollowed = await User.findById(req.params.id);
+            const userFollowing = await User.findById(req.body.id);
+            if(!userToBeFollowed.followers.includes(req.body.id)){
+                await userToBeFollowed.updateOne({ $push: { followers : req.body.id }});
+                await userFollowing.updateOne({$push: { followings : req.params.id }})
+                res.status(200).json(
+                    {
+                        message: "user has been followed",
+                    });
+            }
+            else{
+                res.status(403).json({
+                    message: "you already follow this user"
+                });
+            }
+        }
+        catch(error: any){
+            res.status(500).json({
+                message: "Error getting user from MongoDB",
+                error: error
+            });
+        }
+    }
+    else{
+        res.status(403).json({
+            message: "You can't follow yourself",
+            error: {
+                userToBeFollowedId: req.params.id
+            }
+        });
+    }
+}
+
+const unfollowUser = async (req: Request, res: Response) => {
+    if (req.body.id !== req.params.id) {
+        try {
+          const userToBeUnfollowed = await User.findById(req.params.id);
+          const userUnfollowing = await User.findById(req.body.id);
+          if (userToBeUnfollowed.followers.includes(req.body.id)) {
+            await userToBeUnfollowed.updateOne({ $pull: { followers: req.body.id } });
+            await userUnfollowing.updateOne({ $pull: { followings: req.params.id } });
+            res.status(200).json({
+                message: "user has been unfollowed"
+            });
+          } else {
+            res.status(403).json({
+                message: "You don't follow this user"
+            });
+          }
+        } catch (error: any) {
+          res.status(500).json({
+            message: "Error getting user from MongoDB",
+            error: error
+        });
+        }
+      } else {
+        res.status(403).json({
+            message: "You can't unfollow yourself",
+            error: {
+                userToBeUnfollowedId: req.params.id
+            }
+        });
+      }
+}
+
+
+
+export const editUser = (req:Request, res: Response) => {
+    if(req.body.action){
+        switch(req.body.action.toLowerCase()){
+            case "follow":
+                followUser(req, res);
+                break;
+            case "unfollow":
+                unfollowUser(req, res);
+                break;
+            default: res.status(400).json(
+                {
+                    message: "Invalid Edit Request (Follow / Unfollow) ",
+                    data: {
+                        request : req.body.action
+                    }
+                }
+            )
+        }
+    }
+        
+}
