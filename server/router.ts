@@ -19,7 +19,6 @@ router.post("/api/users/forgot-password", forgotPassword);
 router.put("/api/users/reset-password/:resetToken", resetPassword);
 
 router.put("/api/users/:id", editUser);
-// router.put("/api/users/:id", unfollowUser);
 
 /**
  * IMAGE ENDPOINTS
