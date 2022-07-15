@@ -135,9 +135,19 @@ const followUser = async (req: Request, res: Response) => {
         try{
             const userToBeFollowed = await User.findById(req.params.id);
             const userFollowing = await User.findById(req.body.id);
-            if(!userToBeFollowed.followers.includes(req.body.id)){
-                await userToBeFollowed.updateOne({ $push: { followers : req.body.id }});
-                await userFollowing.updateOne({$push: { followings : req.params.id }})
+            const userToBeFollowedIdList = userToBeFollowed.followers.map((element: any) => element.id);
+            // const userFollowingList = userFollowing.followers.map((element: any) => element.username);
+            if(!userToBeFollowedIdList.includes(req.body.id)){
+                await userToBeFollowed.updateOne({ $push: { followers : {
+                    id: req.body.id, 
+                    username: userFollowing.username
+                } }});
+                await userFollowing.updateOne({$push: { followings : 
+                    {
+                        id: req.params.id, 
+                        username: userToBeFollowed.username
+                    } 
+                }})
                 res.status(200).json(
                     {
                         message: "user has been followed",
@@ -171,9 +181,16 @@ const unfollowUser = async (req: Request, res: Response) => {
         try {
           const userToBeUnfollowed = await User.findById(req.params.id);
           const userUnfollowing = await User.findById(req.body.id);
-          if (userToBeUnfollowed.followers.includes(req.body.id)) {
-            await userToBeUnfollowed.updateOne({ $pull: { followers: req.body.id } });
-            await userUnfollowing.updateOne({ $pull: { followings: req.params.id } });
+          const userToBeUnfollowedIdList = userToBeUnfollowed.followers.map((element: any) => element.id);
+          if (userToBeUnfollowedIdList.includes(req.body.id)) {
+            await userToBeUnfollowed.updateOne({ $pull: { followers: {
+                id: req.body.id, 
+                username: userUnfollowing.username
+            } } });
+            await userUnfollowing.updateOne({ $pull: { followings: {
+                id: req.params.id,
+                username: userToBeUnfollowed.username
+            } } });
             res.status(200).json({
                 message: "user has been unfollowed"
             });
