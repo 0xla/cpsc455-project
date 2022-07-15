@@ -89,7 +89,7 @@ const Homepage = () => {
                         </div>
                         <div className="flex flex-row gap-[50px]">
                             <div className="">
-                                <span className="font-bold">50</span> posts
+                                <span className="font-bold">{userData.images.length}</span> posts
                             </div>
                             <button className="" id="followers" 
                             onClick={() => {
