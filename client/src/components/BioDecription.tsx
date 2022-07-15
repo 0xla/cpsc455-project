@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function HelpTextarea() {
+export default function BioDescription() {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -21,20 +21,19 @@ export default function HelpTextarea() {
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Text us for Help!
+        Update
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Do you need a hand?</DialogTitle>
+        <DialogTitle>Your Introduction</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To improve your experience of this website, please enter your concern or questions here. We
-            are happy to help you .
+            This can be viewed by everyone
           </DialogContentText>
           <TextField
             autoFocus
-            margin="dense"
+            margin="normal"
             id="name"
-            label="Leave your comments here"
+            label="Something about you"
             type="string"
             fullWidth
             variant="standard"
@@ -42,7 +41,7 @@ export default function HelpTextarea() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Submit</Button>
+          <Button onClick={handleClose}>Update</Button>
         </DialogActions>
       </Dialog>
     </div>

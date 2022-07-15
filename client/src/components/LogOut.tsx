@@ -20,7 +20,7 @@ export default function AlertDialog() {
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Click to log out
+        Click to Sign Out
       </Button>
       <Dialog
         open={open}
@@ -37,8 +37,8 @@ export default function AlertDialog() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancle</Button>
-          <Button onClick={handleClose} autoFocus>
+          <Button onClick={handleClose} >Cancle</Button>
+          <Button onClick={handleClose} autoFocus href="/">
             Comfirm
           </Button>
         </DialogActions>
