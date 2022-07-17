@@ -4,7 +4,7 @@ import ImageCard from "../components/ImageCard";
 import { useEffect, useState } from "react";
 import TabMenu from "../components/TabMenu";
 import {
-    selectUserData, setAuthToken
+    selectUserData, setAuthToken, setUserId
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,9 +37,11 @@ const Homepage = () => {
 
             try {
                 const response = await fetchUserData(authToken);
-                const { username, images } = response.data;
+                const { username, _id, images } = response.data;
+                console.log("THIS IS UUID" + _id)
 
                 dispatch(setUsername(username));
+                dispatch(setUserId(_id));
                 dispatch(setImages(images));
             } catch (err) {
                 console.log(err);
@@ -52,7 +54,7 @@ const Homepage = () => {
 
     const userData: UserDetails = useSelector(selectUserData);
 
-    const { images, username, userBio, profileImageUrl } = userData;
+    const { images, username, userBio, profileImageUrl} = userData;
     const [option, setOption] = useState(0);
 
     const optionChange = (_event: any, selected: number) => {
