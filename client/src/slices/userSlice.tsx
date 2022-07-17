@@ -19,6 +19,7 @@ export const userSlice = createSlice({
         error: undefined,
         userData: {
             username: '',
+            userId: '',
             userBio: userBio,
             profileImageUrl: profileImageUrl,
             images: images,
@@ -38,6 +39,9 @@ export const userSlice = createSlice({
         setUsername(state, action) {
             state.userData.username = action.payload;
         },
+        setUserId(state, action) {
+            state.userData.userId = action.payload;
+        },
 
         updateUserBio(state, action) {
             state.userData.userBio = action.payload;
@@ -53,7 +57,7 @@ export const userSlice = createSlice({
 
 });
 
-export const { addImage, removeImage, updateUserBio, setUsername, setImages, setAuthToken} = userSlice.actions;
+export const { addImage, removeImage, updateUserBio, setUsername, setImages, setAuthToken,setUserId} = userSlice.actions;
 export const selectUserData = (state: any) => state.user.userData;
 export const selectAuthToken = (state: any) => state.user.authToken;
 export const selectIsLoadingUserData = (state: any) => state.user.loading;

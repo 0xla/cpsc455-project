@@ -1,6 +1,6 @@
 import express from "express";
 import {resetPassword, forgotPassword, loginUser, registerUser} from "./controllers/authControllers";
-import { uploadImage} from "./controllers/imageController";
+import {likePost, unlikePost, uploadImage} from "./controllers/imageController";
 import { protect } from "./middleware/auth";
 import {getAllUsers, getUser} from "./controllers/userControllers";
 
@@ -28,5 +28,12 @@ router.post("/api/:userid/images", uploadImage);
 
 router.get("/api/users", getAllUsers);
 router.get("/api/users/:id", getUser);
+
+/**
+ * LIKE ENDPOINTS
+ */
+
+router.put("/api/posts/:postid/likes/:userid", likePost)
+router.delete("/api/posts/:postid/likes/:userid", unlikePost)
 
 export default router;

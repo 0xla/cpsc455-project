@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     resetPasswordExpire: Date,
 
     images: {
-      type: [],
+      type: [{id: String, url: String, description: String, likes: []}],
     },
   },
   {
