@@ -38,8 +38,6 @@ const Homepage = () => {
             try {
                 const response = await fetchUserData(authToken);
                 const { username, _id, images } = response.data;
-                console.log("THIS IS UUID" + _id)
-
                 dispatch(setUsername(username));
                 dispatch(setUserId(_id));
                 dispatch(setImages(images));
