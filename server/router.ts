@@ -12,7 +12,7 @@ const router = express.Router();
  * AUTHENTICATION ENDPOINTS
  */
 
-router.get("/api/users/:id", getUser)
+
 router.post("/api/users/register", registerUser);
 router.post("/api/users/login", loginUser);
 router.post("/api/users/forgot-password", forgotPassword);
