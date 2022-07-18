@@ -45,7 +45,6 @@ export const registerUser = async (req: Request, res: Response) => {
  */
 
 export const loginUser = async (req: Request, res: Response) => {
-    console.log(req.body)
     const {usernameOrEmail, password} = req.body;
     try {
         const user = await User.login(usernameOrEmail, password);

@@ -19,6 +19,7 @@ export const userSlice = createSlice({
         error: undefined,
         userData: {
             username: '',
+            userId: '',
             userBio: userBio,
             profileImageUrl: profileImageUrl,
             images: images,
@@ -40,6 +41,9 @@ export const userSlice = createSlice({
         setUsername(state, action) {
             state.userData.username = action.payload;
         },
+        setUserId(state, action) {
+            state.userData.userId = action.payload;
+        },
 
         updateUserBio(state, action) {
             state.userData.userBio = action.payload;
@@ -57,18 +61,19 @@ export const userSlice = createSlice({
             state.userData.profileImageUrl = action.payload;
         }
     },
-    
+
     extraReducers(builder) {
         /* TODO: state changes related to async thunk calls */
     }
 
 });
 
+
 export const { addImage, removeImage, updateUserBio, setUsername, 
-    setImages, setAuthToken, setFollowers, setFollowings, setProfileImageUrl } = userSlice.actions;
+    setImages, setAuthToken, setFollowers, setFollowings, setProfileImageUrl,setUserId } = userSlice.actions;
+
 export const selectUserData = (state: any) => state.user.userData;
 export const selectAuthToken = (state: any) => state.user.authToken;
 export const selectIsLoadingUserData = (state: any) => state.user.loading;
 export const selectIsUserDataRetrieved = (state: any) => state.user.isUserDataRetrieved;
 export default userSlice.reducer;
-

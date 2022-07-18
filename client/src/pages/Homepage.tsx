@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import TabMenu from "../components/TabMenu";
 import {
     selectUserData, setAuthToken, 
-    setFollowers, setFollowings,
+    setFollowers, setFollowings, setUserId,
     setProfileImageUrl
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
@@ -41,9 +41,10 @@ const Homepage = () => {
 
             try {
                 const response = await fetchUserData(authToken);
-                const { username, images, followers, followings, profileImageUrl } = response.data;
+                const { username, _id, images, followers, followings, profileImageUrl } = response.data;
 
                 dispatch(setUsername(username));
+                dispatch(setUserId(_id));
                 dispatch(setImages(images));
                 dispatch(setFollowers(followers));
                 dispatch(setFollowings(followings));
@@ -59,7 +60,7 @@ const Homepage = () => {
 
     const userData: UserDetails = useSelector(selectUserData);
 
-    const { images, username, userBio, profileImageUrl } = userData;
+    const { images, username, userBio, profileImageUrl} = userData;
     const [option, setOption] = useState(0);
     console.log("userData", userData);
     const optionChange = (_event: any, selected: number) => {
