@@ -1,24 +1,31 @@
 import ImageUpload from "../components/ImageUpload";
 import TopNavigation from "../components/TopNavigation";
 import ImageCard from "../components/ImageCard";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import TabMenu from "../components/TabMenu";
 import {
-    selectUserData, setAuthToken
+    setAuthToken
 } from "../slices/userSlice"
-import { UserDetails } from "../types";
-import { useDispatch, useSelector } from "react-redux";
+
+import {useDispatch, useSelector} from "react-redux";
 import "../App/App.css"
-import { fetchUserData } from "../util/functions";
-import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
+import {fetchUserData} from "../util/functions";
+import {selectAuthToken} from "../slices/userSlice";
 import {useNavigate, useParams} from "react-router-dom";
 
 
 const UserPage = () => {
 
-    // const [userProfile,setProfile] = useState(null)
     const {username} = useParams();
+    
+    const initialUserData = {
+        username: '',
+        userBio: "",
+        profileImageUrl: "",
+        images: [],
+    }
 
+    const [data, setData] = useState(initialUserData);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
@@ -38,24 +45,19 @@ const UserPage = () => {
         async function getUserData() {
 
             try {
-                if(username) {
+                if (username) {
                     const response = await fetchUserData(username);
-                    const {images} = response.data[0];
-                    dispatch(setUsername(username));
-                    dispatch(setImages(images));
+                    setData(response.data[0])
                 }
             } catch (err) {
                 console.log(err);
-
             }
         }
+
         getUserData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigate]);
 
-    const userData: UserDetails = useSelector(selectUserData);
-
-    const { images, userBio, profileImageUrl } = userData;
     const [option, setOption] = useState(0);
 
     const optionChange = (_event: any, selected: number) => {
@@ -64,17 +66,19 @@ const UserPage = () => {
     return (
         <div className="bg-[#FAFAFA] ">
             <div>
-                <TopNavigation />
+                <TopNavigation/>
                 <div className="flex flex-row items-center mx-[10vw]">
                     <div className="flex flex-col mr-[100px] p-2">
-                        <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2" alt="Remy Sharp" src={profileImageUrl} />
+                        <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
+                             alt="Remy Sharp" src={data.profileImageUrl}/>
                     </div>
                     <div className="flex flex-col items-start gap-[15px] mr-[100px]">
                         <div className="flex flex-row gap-[30px]">
                             <div className="text-xl">
                                 {username}
                             </div>
-                            <div className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium">
+                            <div
+                                className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium">
                                 Follow
                             </div>
                         </div>
@@ -91,20 +95,20 @@ const UserPage = () => {
                         </div>
                         <div className="flex flex-col items-start">
                             <span className="font-bold">Instagram's {username}</span>
-                            <div>{userBio}</div>
+                            <div>{data.userBio}</div>
                         </div>
                     </div>
-                    <ImageUpload />
+                    <ImageUpload/>
 
                 </div>
                 <div className="mt-2">
-                    <TabMenu option={option} optionChange={optionChange} />
+                    <TabMenu option={option} optionChange={optionChange}/>
                 </div>
             </div>
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
-                {option === 0 && images.map((image: any) => (
+                {option === 0 && data.images.map((image: any) => (
                     <div className="mt-2">
-                        <ImageCard imageData={image} />
+                        <ImageCard imageData={image}/>
                     </div>
                 ))}
             </div>

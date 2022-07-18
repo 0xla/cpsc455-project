@@ -26,7 +26,13 @@ export default function FreeSolo() {
     const handleInput = async (e: any) => {
         if (e.target.value) {
             let data: any = await getSuggestedUsers(e.target.value);
-            setUserSuggestions(data);
+            console.log(data)
+            if(data.length === 0){
+                // @ts-ignore
+                setUserSuggestions([{username: "No results found."}]);
+            } else {
+                setUserSuggestions(data);
+            }
         }
     }
 
@@ -38,17 +44,19 @@ export default function FreeSolo() {
                 freeSolo
                 filterOptions={(x) => x}
                 onChange={(e,value) => {
-                    //TODO some logic for when user clicks on a name
-                    if(value) {
+                    if (value === userData.username){
+                        navigate("/homepage")
+                    }
+                    else if(value) {
                         navigate(`/${value}`)
                     }
-                    console.log(value)
                 }}
                 options={
                     userSuggestions
                         ? userSuggestions.map((obj: { username: string }) => obj.username)
                         : []
                 }
+                getOptionDisabled={option => option === "No results found."}
                 sx={{width: 300}}
                 renderInput={(params) => (
                     <TextField
