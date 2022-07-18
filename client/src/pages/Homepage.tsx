@@ -28,6 +28,7 @@ const Homepage = () => {
             if (token) {
                 dispatch(setAuthToken(token));
                 authToken = token;
+
             } else {
                 navigate("/")
             }

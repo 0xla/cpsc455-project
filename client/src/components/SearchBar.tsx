@@ -7,12 +7,14 @@ import InputAdornment from '@mui/material/InputAdornment';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {UserDetails} from "../types";
-import {useSelector} from "react-redux";
-import {selectUserData} from "../slices/userSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {selectUserData, setAuthToken} from "../slices/userSlice";
+
 
 export default function FreeSolo() {
     const [userSuggestions, setUserSuggestions] = useState([]);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const getSuggestedUsers = async (user: string) => {
         try {
@@ -21,15 +23,19 @@ export default function FreeSolo() {
                     Authorization: `Bearer ${localStorage.getItem("authToken")}`
         }});
             return result.data.data;
-        } catch (err) {
-            console.error(err)
+        } catch (err: any) {
+            if(err.response.status === 401){
+                window.localStorage.removeItem("authToken");
+                dispatch(setAuthToken(""));
+                navigate("/")
+                console.error(err)
+            }
         }
     }
 
     const handleInput = async (e: any) => {
         if (e.target.value) {
             let data: any = await getSuggestedUsers(e.target.value);
-            console.log(data)
             if(data.length === 0){
                 // @ts-ignore
                 setUserSuggestions([{username: "No results found."}]);
