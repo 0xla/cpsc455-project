@@ -5,8 +5,11 @@ import util from "util";
 import { Storage } from "@google-cloud/storage";
 import { ObjectId } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
+import dotenv from "dotenv";
+dotenv.config()
 const storage = new Storage({ keyFilename: "google-cloud-key.json" });
-const bucket = storage.bucket("cpsc-455-images");
+const bucket_name: string = process.env.BUCKET_NAME || '';
+const bucket = storage.bucket(bucket_name);
 
 export const uploadImage = async (req: Request, res: Response) => {
   try {
