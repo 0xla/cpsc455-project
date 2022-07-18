@@ -5,9 +5,17 @@ import Autocomplete from '@mui/material/Autocomplete';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {UserDetails} from "../types";
+import {useDispatch, useSelector} from "react-redux";
+import {selectUserData} from "../slices/userSlice";
+
 
 export default function FreeSolo() {
+    const userData: UserDetails = useSelector(selectUserData);
     const [userSuggestions, setUserSuggestions] = useState([]);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const getSuggestedUsers = async (user: string) => {
         try {
@@ -21,7 +29,12 @@ export default function FreeSolo() {
     const handleInput = async (e: any) => {
         if (e.target.value) {
             let data: any = await getSuggestedUsers(e.target.value);
-            setUserSuggestions(data);
+            if(data.length === 0){
+                // @ts-ignore
+                setUserSuggestions([{username: "No results found."}]);
+            } else {
+                setUserSuggestions(data);
+            }
         }
     }
 
@@ -30,14 +43,20 @@ export default function FreeSolo() {
             <Autocomplete
                 freeSolo
                 filterOptions={(x) => x}
-                onChange={(e: any) => {
-                    //TODO some logic for when user clicks on a name
+                onChange={(e,value) => {
+                    if (value === userData.username){
+                        navigate("/homepage")
+                    }
+                    else if(value) {
+                        navigate(`/${value}`)
+                    }
                 }}
                 options={
                     userSuggestions
                         ? userSuggestions.map((obj: { username: string }) => obj.username)
                         : []
                 }
+                getOptionDisabled={option => option === "No results found."}
                 sx={{width: 300}}
                 renderInput={(params) => (
                     <TextField
@@ -61,5 +80,5 @@ export default function FreeSolo() {
             />
         </div>
 
-  )
+    )
 }
