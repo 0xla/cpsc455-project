@@ -17,7 +17,7 @@ import {useNavigate, useParams} from "react-router-dom";
 const UserPage = () => {
 
     const {username} = useParams();
-    
+
     const initialUserData = {
         username: '',
         userBio: "",

@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
+import {NextFunction, Request, Response} from "express";
 
 
 /**
@@ -8,18 +9,20 @@ import User from "../models/user.model";
  to be called and only users who have logged in and acquired the token will be able to access that route.
  */
 
-export const protect = async (req, res, next) => {
+export const protect = async (req: Request, res: Response, next: NextFunction) => {
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
         token = req.headers.authorization.split(" ")[1]
     }
     if (!token) {
+        console.log("no token")
         return res.status(401).json({
             message: "Not authorized to access this route.",
         });
     }
 
     try {
+        // @ts-ignore
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         const user = await User.findById(decoded.id)
 
@@ -29,10 +32,12 @@ export const protect = async (req, res, next) => {
             });
         }
 
+        // @ts-ignore
         req.user = user;
         next();
 
     } catch (err) {
+        console.log("no access")
         return res.status(401).json({
             message: "Not authorized to access this route.",
         });

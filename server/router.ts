@@ -30,7 +30,7 @@ router.post("/api/:userid/images", uploadImage);
  * USER ENDPOINTS
  */
 
-router.get("/api/users", getAllUsers);
+router.get("/api/users",protect, getAllUsers);
 router.get("/api/users/:id", getUser);
 
 export default router;

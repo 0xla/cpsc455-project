@@ -16,7 +16,10 @@ export default function FreeSolo() {
 
     const getSuggestedUsers = async (user: string) => {
         try {
-            const result = await axios.get(`http://localhost:5000/api/users?exact=false&username=${user}`);
+            const result = await axios.get(`http://localhost:5000/api/users?exact=false&username=${user}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`
+        }});
             return result.data.data;
         } catch (err) {
             console.error(err)

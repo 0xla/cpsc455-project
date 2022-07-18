@@ -19,7 +19,10 @@ export const fetchUserData = async (token: string) => {
     }
   } else {
     try {
-      const response: any = await axios.get(`/api/users/?username=${token}`);
+      const response: any = await axios.get(`/api/users/?username=${token}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`
+    }});
       console.log(response)
       return response.data;
     } catch (err) {
