@@ -12,6 +12,9 @@ import "../App/App.css"
 import { fetchUserData } from "../util/functions";
 import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import {isExpired} from "react-jwt"
+
+
 
 
 
@@ -25,7 +28,7 @@ const Homepage = () => {
 
         if (authToken === undefined) {
             const token: string | null = window.localStorage.getItem("authToken");
-            if (token) {
+            if (token && !isExpired(token)) {
                 dispatch(setAuthToken(token));
                 authToken = token;
 
