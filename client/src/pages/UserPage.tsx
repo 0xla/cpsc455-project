@@ -11,11 +11,13 @@ import { useDispatch, useSelector } from "react-redux";
 import "../App/App.css"
 import { fetchUserData } from "../util/functions";
 import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 
+const UserPage = () => {
 
-const Homepage = () => {
+    // const [userProfile,setProfile] = useState(null)
+    const {username} = useParams();
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -36,11 +38,12 @@ const Homepage = () => {
         async function getUserData() {
 
             try {
-                const response = await fetchUserData(authToken);
-                const { username, images } = response.data;
-
-                dispatch(setUsername(username));
-                dispatch(setImages(images));
+                if(username) {
+                    const response = await fetchUserData(username);
+                    const {images} = response.data[0];
+                    dispatch(setUsername(username));
+                    dispatch(setImages(images));
+                }
             } catch (err) {
                 console.log(err);
 
@@ -48,11 +51,11 @@ const Homepage = () => {
         }
         getUserData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [navigate]);
 
     const userData: UserDetails = useSelector(selectUserData);
 
-    const { images, username, userBio, profileImageUrl } = userData;
+    const { images, userBio, profileImageUrl } = userData;
     const [option, setOption] = useState(0);
 
     const optionChange = (_event: any, selected: number) => {
@@ -71,7 +74,9 @@ const Homepage = () => {
                             <div className="text-xl">
                                 {username}
                             </div>
-
+                            <div className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium">
+                                Follow
+                            </div>
                         </div>
                         <div className="flex flex-row gap-[50px]">
                             <div className="">
@@ -107,4 +112,4 @@ const Homepage = () => {
     );
 }
 
-export default Homepage;
+export default UserPage;

@@ -6,6 +6,7 @@ export interface ImageData {
 
 export interface UserDetails {
   username: string;
+  followers: []
   userBio: string;
   profileImageUrl: string;
   images: ImageData[];

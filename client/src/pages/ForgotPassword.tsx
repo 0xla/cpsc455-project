@@ -41,7 +41,6 @@ const ForgotPassword = () => {
         setError("");
         const email = values.email;
 
-        console.log(email)
         try {
             const res = await axios.post(
                 "http://localhost:5000/api/users/forgot-password",

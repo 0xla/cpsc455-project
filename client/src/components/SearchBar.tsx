@@ -5,9 +5,14 @@ import Autocomplete from '@mui/material/Autocomplete';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {UserDetails} from "../types";
+import {useSelector} from "react-redux";
+import {selectUserData} from "../slices/userSlice";
 
 export default function FreeSolo() {
     const [userSuggestions, setUserSuggestions] = useState([]);
+    const navigate = useNavigate();
 
     const getSuggestedUsers = async (user: string) => {
         try {
@@ -25,13 +30,19 @@ export default function FreeSolo() {
         }
     }
 
+    const userData: UserDetails = useSelector(selectUserData);
+
     return (
         <div>
             <Autocomplete
                 freeSolo
                 filterOptions={(x) => x}
-                onChange={(e: any) => {
+                onChange={(e,value) => {
                     //TODO some logic for when user clicks on a name
+                    if(value) {
+                        navigate(`/${value}`)
+                    }
+                    console.log(value)
                 }}
                 options={
                     userSuggestions

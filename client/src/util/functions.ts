@@ -17,8 +17,17 @@ export const fetchUserData = async (token: string) => {
     } catch (err) {
       console.log(err);
     }
+  } else {
+    try {
+      const response: any = await axios.get(`/api/users/?username=${token}`);
+      console.log(response)
+      return response.data;
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
+
 
 export const uploadImage = async (formData: any, token: string) => {
   if (formData.get("file") !== "null") {
