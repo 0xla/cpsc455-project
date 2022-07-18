@@ -4,7 +4,9 @@ import ImageCard from "../components/ImageCard";
 import { useEffect, useState } from "react";
 import TabMenu from "../components/TabMenu";
 import {
-    selectUserData, setAuthToken
+    selectUserData, setAuthToken, 
+    setFollowers, setFollowings,
+    setProfileImageUrl
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,11 +14,13 @@ import "../App/App.css"
 import { fetchUserData } from "../util/functions";
 import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import Popup from "../components/Popup";
 
 
 
 const Homepage = () => {
-
+    const [showModal, setShowModal] = useState(false);
+    const [modalTarget, setModalTarget] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
@@ -37,10 +41,13 @@ const Homepage = () => {
 
             try {
                 const response = await fetchUserData(authToken);
-                const { username, images } = response.data;
+                const { username, images, followers, followings, profileImageUrl } = response.data;
 
                 dispatch(setUsername(username));
                 dispatch(setImages(images));
+                dispatch(setFollowers(followers));
+                dispatch(setFollowings(followings));
+                dispatch(setProfileImageUrl(profileImageUrl));
             } catch (err) {
                 console.log(err);
 
@@ -54,19 +61,24 @@ const Homepage = () => {
 
     const { images, username, userBio, profileImageUrl } = userData;
     const [option, setOption] = useState(0);
-
+    console.log("userData", userData);
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
+
+    // const openPopup = () => {
+    //     setShowFollowers(true);
+    //     return <Popup />
+    // }
     return (
         <div className="bg-[#FAFAFA] ">
             <div>
                 <TopNavigation />
-                <div className="flex flex-row items-center mx-[10vw]">
-                    <div className="flex flex-col mr-[100px] p-2">
-                        <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2" alt="Remy Sharp" src={profileImageUrl} />
+                <div className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
+                    <div className="flex flex-col lg:mr-[100px] p-2">
+                        <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2" alt={userData.profileImageUrl} src={userData.profileImageUrl} />
                     </div>
-                    <div className="flex flex-col items-start gap-[15px] mr-[100px]">
+                    <div className="flex flex-col gap-[15px] lg:mr-[100px] mr-[0px] p-2">
                         <div className="flex flex-row gap-[30px]">
                             <div className="text-xl">
                                 {username}
@@ -77,14 +89,20 @@ const Homepage = () => {
                         </div>
                         <div className="flex flex-row gap-[50px]">
                             <div className="">
-                                <span className="font-bold">50</span> posts
+                                <span className="font-bold">{userData.images.length}</span> posts
                             </div>
-                            <div className="">
-                                <span className="font-bold">1.2M</span> followers
-                            </div>
-                            <div className="">
-                                <span className="font-bold">5K</span> following
-                            </div>
+                            <button className="" id="followers" 
+                            onClick={() => {
+                                setModalTarget("followers");
+                                setShowModal(true)}}>
+                                <span className="font-bold">{userData.followers.length}</span> followers
+                            </button>
+                            <button className="" id="followings" 
+                            onClick={() => {
+                                setModalTarget("followings");
+                                setShowModal(true)}} >
+                                <span className="font-bold">{userData.followings.length}</span> following
+                            </button>
                         </div>
                         <div className="flex flex-col items-start">
                             <span className="font-bold">Instagram's {username}</span>
@@ -105,6 +123,7 @@ const Homepage = () => {
                     </div>
                 ))}
             </div>
+            <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData}/>
         </div>
     );
 }
