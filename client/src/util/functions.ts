@@ -20,6 +20,7 @@ export const fetchUserData = async (tokenOrUsername: string) => {
         }
     } else {
         try {
+            console.log("here")
             const response: any = await axios.get(`/api/users/?username=${tokenOrUsername}`);
             console.log(response)
             return response.data;

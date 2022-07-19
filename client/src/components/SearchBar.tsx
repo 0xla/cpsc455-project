@@ -44,10 +44,7 @@ export default function FreeSolo() {
                 freeSolo
                 filterOptions={(x) => x}
                 onChange={(e,value) => {
-                    if (value === userData.username){
-                        navigate("/homepage")
-                    }
-                    else if(value) {
+                    if (value) {
                         navigate(`/${value}`)
                     }
                 }}

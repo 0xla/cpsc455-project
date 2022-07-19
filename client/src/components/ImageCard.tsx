@@ -8,10 +8,9 @@ import {selectUserData, setImages} from "../slices/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 
 
-// @ts-ignore
-export default function ImageCard({ imageData, setData}) {
+export default function ImageCard({ imageData }: { imageData: ImageData }) {
     const dispatch = useDispatch();
-    const {userId, username} = useSelector(selectUserData);
+    const {userId} = useSelector(selectUserData);
 
     const handleLike = async (postId: string, userId: string) => {
         if (imageData.likes.includes(userId)) {
@@ -19,13 +18,7 @@ export default function ImageCard({ imageData, setData}) {
                 const res = await axios.delete(
                     `http://localhost:5000/api/posts/${postId}/likes/${userId}`,
                 );
-                console.log(username +"user name is")
-                console.log("image data user name is " + imageData.username)
-                if(imageData.username !== undefined){ // liking posts of not currently logge din user, have to update local state instead of global state
-                    setData(res.data.data);
-                } else {
-                    dispatch(setImages(res.data.data));
-                }
+                dispatch(setImages(res.data.data));
             } catch (err: any) {
                 console.log("Error unliking post.")
             }
@@ -34,11 +27,8 @@ export default function ImageCard({ imageData, setData}) {
                 const res = await axios.put(
                     `http://localhost:5000/api/posts/${postId}/likes/${userId}`,
                 );
-                if(imageData.username !== undefined){ // liking posts of not currently logge din user, have to update local state instead of global state
-                    setData(res.data.data);
-                }else {
-                    dispatch(setImages(res.data.data));
-                }
+                dispatch(setImages(res.data.data));
+
             } catch (err: any) {
                 console.log("Error liking post.")
             }

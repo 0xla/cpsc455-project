@@ -24,7 +24,7 @@ const Homepage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
-    const [data, setData] = useState();
+
 
     useEffect(() => {
 
@@ -121,7 +121,7 @@ const Homepage = () => {
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                 {option === 0 && images.map((image: any) => (
                     <div className="mt-2">
-                        <ImageCard imageData={image} setData={setData} />
+                        <ImageCard imageData={image} />
                     </div>
                 ))}
             </div>
