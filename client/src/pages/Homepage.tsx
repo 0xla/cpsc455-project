@@ -4,7 +4,7 @@ import ImageCard from "../components/ImageCard";
 import { useEffect, useState } from "react";
 import TabMenu from "../components/TabMenu";
 import {
-    selectUserData, setAuthToken, 
+    selectUserData, setAuthToken,
     setFollowers, setFollowings, setUserId,
     setProfileImageUrl
 } from "../slices/userSlice"
@@ -60,9 +60,8 @@ const Homepage = () => {
 
     const userData: UserDetails = useSelector(selectUserData);
 
-    const { images, username, userBio, profileImageUrl} = userData;
+    const { images, username, userBio, profileImageUrl } = userData;
     const [option, setOption] = useState(0);
-    console.log("userData", userData);
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
@@ -92,16 +91,18 @@ const Homepage = () => {
                             <div className="">
                                 <span className="font-bold">{userData.images.length}</span> posts
                             </div>
-                            <button className="" id="followers" 
-                            onClick={() => {
-                                setModalTarget("followers");
-                                setShowModal(true)}}>
+                            <button className="" id="followers"
+                                onClick={() => {
+                                    setModalTarget("followers");
+                                    setShowModal(true)
+                                }}>
                                 <span className="font-bold">{userData.followers.length}</span> followers
                             </button>
-                            <button className="" id="followings" 
-                            onClick={() => {
-                                setModalTarget("followings");
-                                setShowModal(true)}} >
+                            <button className="" id="followings"
+                                onClick={() => {
+                                    setModalTarget("followings");
+                                    setShowModal(true)
+                                }} >
                                 <span className="font-bold">{userData.followings.length}</span> following
                             </button>
                         </div>
@@ -124,7 +125,7 @@ const Homepage = () => {
                     </div>
                 ))}
             </div>
-            <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData}/>
+            <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData} />
         </div>
     );
 }

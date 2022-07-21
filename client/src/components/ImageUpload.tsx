@@ -23,7 +23,6 @@ const ImageUpload = () => {
     const handleSubmit = async () => {
 
         if (image !== undefined && authToken) {
-
             const formData = new FormData();
             formData.append("file", image);
             const imageData = await uploadImage(formData, authToken);
@@ -31,9 +30,6 @@ const ImageUpload = () => {
                 setImage(undefined);
                 console.log(`image url: ${imageData.url}`);
                 dispatch(addImage(imageData));
-
-            } else {
-                console.log('image failed to upload')
             }
         }
     }
