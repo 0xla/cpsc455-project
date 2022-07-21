@@ -1,7 +1,7 @@
 import express from "express";
 import {resetPassword, forgotPassword, loginUser, registerUser} from "./controllers/authControllers";
 import {getUser, getAllUsers, editUser} from "./controllers/userControllers";
-import {likePost, unlikePost, uploadImage} from "./controllers/imageController";
+import {likePost, unlikePost, uploadImage, getImagesAnalysis} from "./controllers/imageController";
 
 import { protect } from "./middleware/auth";
 
@@ -25,6 +25,8 @@ router.put("/api/users/:id", editUser);
  */
 
 router.post("/api/:userid/images", uploadImage);
+// router.get("/api/:userid/analysis", getImagesAnalysis);
+router.get("/api/analysis", getImagesAnalysis);
 
 /**
  * USER ENDPOINTS
