@@ -14,9 +14,20 @@ import * as vision from "@google-cloud/vision";
 const client = new vision.ImageAnnotatorClient();
 const username: string = "mango12345";
 
-const buildImagesReqObjArray = (files: File[]): any[] => {
+type ImagesReqObjArray = {
+  image: {
+    source: {
+      imageUri: string;
+    };
+  };
+  features: {
+    type: string;
+  }[];
+};
+
+const buildImagesReqObjArray = (files: File[]): ImagesReqObjArray[] => {
   const features = [{ type: "LABEL_DETECTION" }, { type: "IMAGE_PROPERTIES" }];
-  const result: any[] = [];
+  const result: ImagesReqObjArray[] = [];
   for (let i = 1; i < files.length; i++) {
     result.push({
       image: {
@@ -98,14 +109,14 @@ export const uploadImage = async (req: Request, res: Response) => {
         url: publicUrl,
         description:
           "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        likes:[]
-      }
+        likes: [],
+      };
 
       await User.findByIdAndUpdate(
         { _id: new ObjectId(req.params.userid) },
         {
           $push: {
-            images: image
+            images: image,
           },
         }
       );
@@ -125,7 +136,7 @@ export const uploadImage = async (req: Request, res: Response) => {
       }
       res.status(200).send({
         message: "Uploaded the file successfully: " + req.file!.originalname,
-        image: image
+        image: image,
       });
     });
     blobStream.end(req.file!.buffer);
