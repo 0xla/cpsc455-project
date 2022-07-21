@@ -28,7 +28,6 @@ const ImageUpload = () => {
             const imageData = await uploadImage(formData, authToken);
             if (imageData) {
                 setImage(undefined);
-                console.log(`image url: ${imageData.url}`);
                 dispatch(addImage(imageData));
             }
         }

@@ -93,17 +93,19 @@ export const uploadImage = async (req: Request, res: Response) => {
         `https://storage.googleapis.com/${bucket.name}/${blob.name}`
       );
 
+      const image = {
+        id: uuidv4(),
+        url: publicUrl,
+        description:
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        likes:[]
+      }
+
       await User.findByIdAndUpdate(
         { _id: new ObjectId(req.params.userid) },
         {
           $push: {
-            images: {
-              id: uuidv4(),
-              url: publicUrl,
-              description:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-              likes: [],
-            },
+            images: image
           },
         }
       );
@@ -123,7 +125,7 @@ export const uploadImage = async (req: Request, res: Response) => {
       }
       res.status(200).send({
         message: "Uploaded the file successfully: " + req.file!.originalname,
-        url: publicUrl,
+        image: image
       });
     });
     blobStream.end(req.file!.buffer);
