@@ -42,44 +42,46 @@ const buildImagesReqObjArray = (files: File[]): ImagesReqObjArray[] => {
   return result;
 };
 
-const downloadAsJson = async (bucket: any, path: string) => {
-  const file = await bucket.file(path).download();
-  return JSON.parse(file[0].toString("utf8"));
-};
+// const downloadAsJson = async (bucket: any, path: string) => {
+//   const file = await bucket.file(path).download();
+//   return JSON.parse(file[0].toString("utf8"));
+// };
 
-export const getImagesAnalysis = async (req: Request, res: Response) => {
-  const outputUri = "gs://cpsc-455-images/path/to/save/results/";
+// export const getImagesAnalysis = async (req: Request, res: Response) => {
+//   const outputUri = "gs://cpsc-455-images/path/to/save/results/";
 
-  const [files]: any = await bucket.getFiles({ prefix: `${username}/images` });
-  const imagesReqObjArray: any[] = buildImagesReqObjArray(files);
+//   const [files]: any = await bucket.getFiles({ prefix: `${username}/images` });
+//   const imagesReqObjArray: any[] = buildImagesReqObjArray(files);
+//   const N = imagesReqObjArray.length;
+//   console.log(N);
 
-  const outputConfig = {
-    gcsDestination: {
-      uri: outputUri,
-    },
-    batchSize: 2, // The max number of responses to output in each JSON file
-  };
+//   const outputConfig = {
+//     gcsDestination: {
+//       uri: outputUri,
+//     },
+//     batchSize: 100, // The max number of responses to output in each JSON file
+//   };
 
-  const request = {
-    requests: imagesReqObjArray,
-    outputConfig,
-  };
-  const [operation] = await client.asyncBatchAnnotateImages(request);
-  const [filesResponse] = await operation.promise();
+//   const request = {
+//     requests: imagesReqObjArray,
+//     outputConfig,
+//   };
+//   const [operation] = await client.asyncBatchAnnotateImages(request);
+//   const [filesResponse] = await operation.promise();
 
-  if (filesResponse) {
-    const data = await downloadAsJson(
-      bucket,
-      "path/to/save/results/output-1-to-1.json"
-    );
-    res.status(200).json({
-      message: "image analysis retrieval succeeded",
-      data,
-    });
-  } else {
-    return res.status(404);
-  }
-};
+//   if (filesResponse) {
+//     const data = await downloadAsJson(
+//       bucket,
+//       `path/to/save/results/output-1-to-${N}.json`
+//     );
+//     res.status(200).json({
+//       message: "image analysis retrieval succeeded",
+//       data,
+//     });
+//   } else {
+//     return res.status(404);
+//   }
+// };
 
 export const uploadImage = async (req: Request, res: Response) => {
   try {
@@ -102,7 +104,15 @@ export const uploadImage = async (req: Request, res: Response) => {
       // Create URL for directly file access via HTTP.
       const publicUrl = util.format(
         `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-      );
+      );   
+
+      const request = {
+        image: {source: {imageUri: publicUrl}},
+        features: [{ type: "LABEL_DETECTION" }]
+      }
+
+      const [result] = await client.annotateImage(request);
+      console.log(result.labelAnnotations);
 
       const image = {
         id: uuidv4(),
