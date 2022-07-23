@@ -12,7 +12,7 @@ import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import "../App/App.css"
 import { fetchUserData } from "../util/functions";
-import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
+import { setUsername, setImages, selectAuthToken, setImageCategories } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import Popup from "../components/Popup";
 
@@ -41,7 +41,7 @@ const Homepage = () => {
 
             try {
                 const response = await fetchUserData(authToken);
-                const { username, _id, images, followers, followings, profileImageUrl } = response.data;
+                const { username, _id, images, followers, followings, profileImageUrl, imageCategories } = response.data;
 
                 dispatch(setUsername(username));
                 dispatch(setUserId(_id));
@@ -49,6 +49,7 @@ const Homepage = () => {
                 dispatch(setFollowers(followers));
                 dispatch(setFollowings(followings));
                 dispatch(setProfileImageUrl(profileImageUrl));
+                dispatch(setImageCategories(imageCategories));
             } catch (err) {
                 console.log(err);
 
@@ -66,10 +67,7 @@ const Homepage = () => {
         setOption(selected);
     };
 
-    // const openPopup = () => {
-    //     setShowFollowers(true);
-    //     return <Popup />
-    // }
+
     return (
         <div className="bg-[#FAFAFA] ">
             <div>

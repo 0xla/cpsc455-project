@@ -6,9 +6,8 @@ import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { styled } from "@mui/material/styles";
 import { uploadImage } from "../util/functions";
-import { addImage } from "../slices/userSlice";
+import { addImage, addImageCategories, selectAuthToken } from "../slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuthToken } from "../slices/userSlice";
 
 const Input = styled("input")({
     display: "none",
@@ -26,9 +25,11 @@ const ImageUpload = () => {
             const formData = new FormData();
             formData.append("file", image);
             const imageData = await uploadImage(formData, authToken);
+
             if (imageData) {
                 setImage(undefined);
                 dispatch(addImage(imageData.image));
+                dispatch(addImageCategories(imageData.imageLabels));
             }
         }
     }

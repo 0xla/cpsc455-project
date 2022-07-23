@@ -14,74 +14,24 @@ import * as vision from "@google-cloud/vision";
 const client = new vision.ImageAnnotatorClient();
 const username: string = "mango12345";
 
-type ImagesReqObjArray = {
-  image: {
-    source: {
-      imageUri: string;
-    };
+export const getImageLabels = async (url: string): Promise<string[]> => {
+  const request = {
+    image: { source: { imageUri: url } },
+    features: [{ type: "LABEL_DETECTION" }],
   };
-  features: {
-    type: string;
-  }[];
-};
 
-const buildImagesReqObjArray = (files: File[]): ImagesReqObjArray[] => {
-  const features = [{ type: "LABEL_DETECTION" }, { type: "IMAGE_PROPERTIES" }];
-  const result: ImagesReqObjArray[] = [];
-  for (let i = 1; i < files.length; i++) {
-    result.push({
-      image: {
-        source: {
-          imageUri: `gs://cpsc-455-images/${files[i].name}`,
-        },
-      },
-      features: features,
-    });
+  const [result] = await client.annotateImage(request);
+  const imageLabels: string[] = [];
+
+  if (result.labelAnnotations) {
+    for (const annotation of result.labelAnnotations) {
+      if (annotation.description) {
+        imageLabels.push(annotation.description);
+      }
+    }
   }
-
-  return result;
+  return imageLabels;
 };
-
-// const downloadAsJson = async (bucket: any, path: string) => {
-//   const file = await bucket.file(path).download();
-//   return JSON.parse(file[0].toString("utf8"));
-// };
-
-// export const getImagesAnalysis = async (req: Request, res: Response) => {
-//   const outputUri = "gs://cpsc-455-images/path/to/save/results/";
-
-//   const [files]: any = await bucket.getFiles({ prefix: `${username}/images` });
-//   const imagesReqObjArray: any[] = buildImagesReqObjArray(files);
-//   const N = imagesReqObjArray.length;
-//   console.log(N);
-
-//   const outputConfig = {
-//     gcsDestination: {
-//       uri: outputUri,
-//     },
-//     batchSize: 100, // The max number of responses to output in each JSON file
-//   };
-
-//   const request = {
-//     requests: imagesReqObjArray,
-//     outputConfig,
-//   };
-//   const [operation] = await client.asyncBatchAnnotateImages(request);
-//   const [filesResponse] = await operation.promise();
-
-//   if (filesResponse) {
-//     const data = await downloadAsJson(
-//       bucket,
-//       `path/to/save/results/output-1-to-${N}.json`
-//     );
-//     res.status(200).json({
-//       message: "image analysis retrieval succeeded",
-//       data,
-//     });
-//   } else {
-//     return res.status(404);
-//   }
-// };
 
 export const uploadImage = async (req: Request, res: Response) => {
   try {
@@ -91,7 +41,6 @@ export const uploadImage = async (req: Request, res: Response) => {
     }
 
     // Create a new blob in the bucket and upload the file data.
-
     const blob = bucket.file(`${username}/images/${req.file!.originalname}`);
     const blobStream = blob.createWriteStream({
       resumable: false,
@@ -104,15 +53,9 @@ export const uploadImage = async (req: Request, res: Response) => {
       // Create URL for directly file access via HTTP.
       const publicUrl = util.format(
         `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-      );   
-
-      const request = {
-        image: {source: {imageUri: publicUrl}},
-        features: [{ type: "LABEL_DETECTION" }]
-      }
-
-      const [result] = await client.annotateImage(request);
-      console.log(result.labelAnnotations);
+      );
+      
+      const imageLabels: string[] = await getImageLabels(publicUrl);
 
       const image = {
         id: uuidv4(),
@@ -127,12 +70,14 @@ export const uploadImage = async (req: Request, res: Response) => {
         {
           $push: {
             images: image,
+            imageCategories: {
+              $each: imageLabels
+            }
           },
         }
       );
 
       try {
-        // Make the file public
         await bucket
           .file(`${username}/images/${req.file!.originalname}`)
           .makePublic();
@@ -147,6 +92,7 @@ export const uploadImage = async (req: Request, res: Response) => {
       res.status(200).send({
         message: "Uploaded the file successfully: " + req.file!.originalname,
         image: image,
+        imageLabels: imageLabels
       });
     });
     blobStream.end(req.file!.buffer);
