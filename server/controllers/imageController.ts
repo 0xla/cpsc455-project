@@ -12,7 +12,6 @@ const bucket_name: string = process.env.BUCKET_NAME || "";
 const bucket = storage.bucket(bucket_name);
 import * as vision from "@google-cloud/vision";
 const client = new vision.ImageAnnotatorClient();
-const username: string = "mango12345";
 
 export const getImageLabels = async (url: string): Promise<string[]> => {
   const request = {
@@ -41,7 +40,7 @@ export const uploadImage = async (req: Request, res: Response) => {
     }
 
     // Create a new blob in the bucket and upload the file data.
-    const blob = bucket.file(`${username}/images/${req.file!.originalname}`);
+    const blob = bucket.file(req.file!.originalname);
     const blobStream = blob.createWriteStream({
       resumable: false,
     });
@@ -54,7 +53,7 @@ export const uploadImage = async (req: Request, res: Response) => {
       const publicUrl = util.format(
         `https://storage.googleapis.com/${bucket.name}/${blob.name}`
       );
-      
+
       const imageLabels: string[] = await getImageLabels(publicUrl);
 
       const image = {
@@ -71,16 +70,14 @@ export const uploadImage = async (req: Request, res: Response) => {
           $push: {
             images: image,
             imageCategories: {
-              $each: imageLabels
-            }
+              $each: imageLabels,
+            },
           },
         }
       );
 
       try {
-        await bucket
-          .file(`${username}/images/${req.file!.originalname}`)
-          .makePublic();
+        await bucket.file(req.file!.originalname).makePublic();
       } catch (err) {
         return res.status(500).send({
           message: `Uploaded the file successfully: ${
@@ -92,7 +89,7 @@ export const uploadImage = async (req: Request, res: Response) => {
       res.status(200).send({
         message: "Uploaded the file successfully: " + req.file!.originalname,
         image: image,
-        imageLabels: imageLabels
+        imageLabels: imageLabels,
       });
     });
     blobStream.end(req.file!.buffer);
