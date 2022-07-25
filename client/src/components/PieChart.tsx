@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectUserData } from "../slices/userSlice";
 import { UserDetails } from "../types";
