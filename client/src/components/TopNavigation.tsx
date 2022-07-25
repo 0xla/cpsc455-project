@@ -11,7 +11,7 @@ const TopNavigation = () => {
     const signOut = () => {
         window.localStorage.removeItem("authToken");
         dispatch(setAuthToken(""));
-        navigate("/")
+        navigate("/signIn")
     }
 
 
