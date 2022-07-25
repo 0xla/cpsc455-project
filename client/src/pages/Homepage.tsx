@@ -15,10 +15,11 @@ import { fetchUserData } from "../util/functions";
 import { setUsername, setImages, selectAuthToken, setImageCategories } from "../slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import Popup from "../components/Popup";
-
-
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const Homepage = () => {
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalTarget, setModalTarget] = useState("");
     const navigate = useNavigate();
@@ -26,7 +27,6 @@ const Homepage = () => {
     let authToken = useSelector(selectAuthToken);
 
     useEffect(() => {
-
         if (authToken === undefined) {
             const token: string | null = window.localStorage.getItem("authToken");
             if (token) {
@@ -42,7 +42,6 @@ const Homepage = () => {
             try {
                 const response = await fetchUserData(authToken);
                 const { username, _id, images, followers, followings, profileImageUrl, imageCategories } = response.data;
-
                 dispatch(setUsername(username));
                 dispatch(setUserId(_id));
                 dispatch(setImages(images));
@@ -52,7 +51,6 @@ const Homepage = () => {
                 dispatch(setImageCategories(imageCategories));
             } catch (err) {
                 console.log(err);
-
             }
         }
         getUserData();
@@ -60,13 +58,11 @@ const Homepage = () => {
     }, []);
 
     const userData: UserDetails = useSelector(selectUserData);
-
     const { images, username, userBio, profileImageUrl } = userData;
     const [option, setOption] = useState(0);
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
-
 
     return (
         <div className="bg-[#FAFAFA] ">
@@ -109,13 +105,16 @@ const Homepage = () => {
                             <div>{userBio}</div>
                         </div>
                     </div>
-                    <ImageUpload />
+                    <ImageUpload setIsUploadingImage={setIsUploadingImage} />
 
                 </div>
                 <div className="mt-2">
                     <TabMenu option={option} optionChange={optionChange} />
                 </div>
             </div>
+            {isUploadingImage && <Box sx={{ display: 'flex' }}>
+                <CircularProgress />
+            </Box>}
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                 {option === 0 && images.map((image: any) => (
                     <div className="mt-2">

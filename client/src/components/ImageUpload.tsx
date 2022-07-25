@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Box from "@material-ui/core/Box";
 import Button from "@mui/material/Button";
@@ -13,14 +12,13 @@ const Input = styled("input")({
     display: "none",
 });
 
-const ImageUpload = () => {
+const ImageUpload = ({ setIsUploadingImage }: { setIsUploadingImage: (value: boolean) => void }) => {
 
     const dispatch = useDispatch();
     const authToken = useSelector(selectAuthToken);
 
-
     const handleSubmit = async () => {
-
+        setIsUploadingImage(true);
         if (image !== undefined && authToken) {
             const formData = new FormData();
             formData.append("file", image);
@@ -30,6 +28,7 @@ const ImageUpload = () => {
                 setImage(undefined);
                 dispatch(addImage(imageData.image));
                 dispatch(addImageCategories(imageData.imageLabels));
+                setIsUploadingImage(false);
             }
         }
     }
