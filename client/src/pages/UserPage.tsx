@@ -48,13 +48,13 @@ const UserPage = () => {
                     response = await fetchUserData(username);
                 }
                 const {_id, images, followers, followings, profilePicture,bio} = response.data[0];
+                dispatch(setImages(images));
                 dispatch(setUsername(username));
                 dispatch(setUserId(_id));
-                dispatch(setImages(images));
+                dispatch(setUserBio(bio));
                 dispatch(setFollowers(followers));
                 dispatch(setFollowings(followings));
                 dispatch(setProfileImageUrl(profilePicture));
-                dispatch(setUserBio(bio));
             } catch (err) {
                 console.log(err);
 
