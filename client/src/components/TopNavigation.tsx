@@ -3,6 +3,7 @@ import SearchBar from "../components/SearchBar"
 import { setAuthToken } from "../slices/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {decodeToken} from "react-jwt";
 
 const TopNavigation = () => {
     const dispatch = useDispatch();
@@ -14,12 +15,18 @@ const TopNavigation = () => {
         navigate("/signIn")
     }
 
+    // @ts-ignore
+    const loggedInUsername = decodeToken(localStorage.getItem("authToken")).username;
+
+    const navigateToLoggedInUserProfile = () => {
+        navigate(`/${loggedInUsername}`)
+    }
 
     return (
         <div className="navbar w-full bg-base-100 z-50 border-b-[1px] border-[#dbdbdb]">
             <div className="w-full mx-[10vw] flex justify-between">
                 <div className="flex">
-                    <button className="btn btn-ghost normal-case text-xl">{TEXT.COMMON.TITLE}</button>
+                    <button onClick={navigateToLoggedInUserProfile} className="btn btn-ghost normal-case text-xl">{TEXT.COMMON.TITLE}</button>
                 </div>
                 <div className="flex-none gap-2">
                     <SearchBar />
