@@ -15,6 +15,7 @@ import { fetchUserData } from "../util/functions";
 import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
 import { useNavigate,useParams } from "react-router-dom";
 import Popup from "../components/Popup";
+import {decodeToken} from "react-jwt";
 
 
 
@@ -46,10 +47,11 @@ const UserPage = () => {
                 if(username) {
                     response = await fetchUserData(username);
                 }
-                const {_id, images, followers, followings, profileImageUrl } = response.data[0];
+                const {images, followers, followings, profileImageUrl } = response.data[0];
 
                 dispatch(setUsername(username));
-                // dispatch(setUserId(_id)); // this is how it determines if user has liked post or not, so shouldn't update
+                // @ts-ignore
+                dispatch(setUserId(decodeToken(authToken).id))
                 dispatch(setImages(images));
                 dispatch(setFollowers(followers));
                 dispatch(setFollowings(followings));
