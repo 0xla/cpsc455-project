@@ -57,6 +57,12 @@ export default function FreeSolo() {
                         onChange={(e) => handleInput(e)}
                         InputProps={{
                             ...params.InputProps,
+                            onKeyDown: (e) => {
+                                console.log(userSuggestions)
+                                // @ts-ignore
+                                if (e.key === 'Enter' && userSuggestions[0].username === "No results found.") {
+                                    e.stopPropagation();
+                                }},
                             startAdornment: (
                                 <>
                                     <InputAdornment position="start">
@@ -65,7 +71,8 @@ export default function FreeSolo() {
                                     {params.InputProps.startAdornment}
                                 </>
                             )
-                        }}
+                        }
+                        }
                     />
                 )}
             />
