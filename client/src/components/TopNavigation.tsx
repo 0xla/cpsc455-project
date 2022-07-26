@@ -22,6 +22,10 @@ const TopNavigation = () => {
         navigate(`/${loggedInUsername}`)
     }
 
+    const navigateToSettings = () => {
+        navigate("/settings")
+    }
+
     return (
         <div className="navbar w-full bg-base-100 z-50 border-b-[1px] border-[#dbdbdb]">
             <div className="w-full mx-[10vw] flex justify-between">
@@ -39,12 +43,12 @@ const TopNavigation = () => {
                     </label>
                     <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                         <li>
-                            <button className="justify-between">
+                            <button onClick={navigateToLoggedInUserProfile} className="justify-between">
                                 Profile
                                 <span className="badge">New</span>
                             </button>
                         </li>
-                        <li><button>Settings</button></li>
+                        <li><button onClick={navigateToSettings}>Settings</button></li>
                         <li><button onClick={signOut}>Logout</button></li>
                     </ul>
                 </div>
