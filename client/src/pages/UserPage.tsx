@@ -47,12 +47,9 @@ const UserPage = () => {
                 if(username) {
                     response = await fetchUserData(username);
                 }
-                console.log(response.data[0])
-                const {images, followers, followings, profilePicture,bio} = response.data[0];
-
+                const {_id, images, followers, followings, profilePicture,bio} = response.data[0];
                 dispatch(setUsername(username));
-                // @ts-ignore
-                dispatch(setUserId(decodeToken(authToken).id))
+                dispatch(setUserId(_id));
                 dispatch(setImages(images));
                 dispatch(setFollowers(followers));
                 dispatch(setFollowings(followings));

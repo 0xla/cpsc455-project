@@ -15,11 +15,11 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
 
-    const handleLike = async (postId: string, userId: string) => {
-        if (imageData.likes.includes(userId)) {
+    const handleLike = async (postId: string, loggedInUserId: string) => {
+        if (imageData.likes.includes(loggedInUserId)) {
             try {
                 const res = await axios.delete(
-                    `http://localhost:5000/api/posts/${postId}/likes/${userId}`,
+                    `http://localhost:5000/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
                 dispatch(setImages(res.data.data));
             } catch (err: any) {
@@ -28,7 +28,7 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
         } else {
             try {
                 const res = await axios.put(
-                    `http://localhost:5000/api/posts/${postId}/likes/${userId}`,
+                    `http://localhost:5000/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
                 dispatch(setImages(res.data.data));
 
