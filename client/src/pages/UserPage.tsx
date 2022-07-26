@@ -16,8 +16,6 @@ import { fetchUserData } from "../util/functions";
 import { useNavigate,useParams } from "react-router-dom";
 import Popup from "../components/Popup";
 import {decodeToken} from "react-jwt";
-import ReactCrop from 'react-image-crop'
-import 'react-image-crop/dist/ReactCrop.css'
   
 
 const UserPage = () => {
