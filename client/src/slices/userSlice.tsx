@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserDetails, ImageData } from "../types";
-import { images, profileImageUrl, userBio } from "../dummydata/imagesPlaceholder";
-
 
 type SliceState = {
     loading: boolean;
@@ -20,9 +18,9 @@ export const userSlice = createSlice({
         userData: {
             username: '',
             userId: '',
-            userBio: userBio,
-            profileImageUrl: profileImageUrl,
-            images: images,
+            userBio: '',
+            profileImageUrl: '',
+            images: [],
             followers: [],
             followings: [],
             imageCategories: [],

@@ -6,25 +6,31 @@ import TabMenu from "../components/TabMenu";
 import {
     selectUserData, setAuthToken,
     setFollowers, setFollowings, setUserId,
-    setProfileImageUrl, setUserBio
+    setProfileImageUrl, setUserBio, 
+    setUsername, setImages, selectAuthToken
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import "../App/App.css"
 import { fetchUserData } from "../util/functions";
-import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
 import { useNavigate,useParams } from "react-router-dom";
 import Popup from "../components/Popup";
+import {decodeToken} from "react-jwt";
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
+  
 
 const UserPage = () => {
     const {username} = useParams();
     const [showModal, setShowModal] = useState(false);
     const [modalTarget, setModalTarget] = useState("");
+    const [showFollowUpdateButton, setShowFollowUpdateButton] = useState(true);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
-
-
+    let userData = useSelector(selectUserData);
+    let decodedToken : any;
+    
     useEffect(() => {
 
         if (authToken === undefined) {
@@ -41,6 +47,7 @@ const UserPage = () => {
 
             let response;
             try {
+                console.log("coming to fetch userdata");
                 if(username) {
                     response = await fetchUserData(username);
                 }
@@ -61,11 +68,22 @@ const UserPage = () => {
             }
         }
         getUserData();
+        
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigate]);
 
-    const userData: UserDetails = useSelector(selectUserData);
-
+    
+    
+    useEffect(() => {
+        // console.log("userData", userData);
+        decodedToken = decodeToken(authToken);
+        if(decodedToken){
+            console.log("authtoken.id", decodedToken.id)
+            console.log("userData.userId", userData.userId)
+            console.log("check", decodedToken.id === userData.userId)
+            setShowFollowUpdateButton(decodedToken.id === userData.userId);
+        }
+    })
 
     const [option, setOption] = useState(0);
     const optionChange = (_event: any, selected: number) => {
@@ -82,16 +100,21 @@ const UserPage = () => {
                 <TopNavigation />
                 <div className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
                     <div className="flex flex-col lg:mr-[100px] p-2">
-                        <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2" alt={userData.profileImageUrl} src={userData.profileImageUrl} />
-                    </div>
+                        {
+                            userData.profileImageUrl !== '' ? 
+                            <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2" alt={userData.profileImageUrl} src={userData.profileImageUrl} /> 
+                                : <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2" alt="defaultProfileImage" src="https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg" />
+                        }
+                        </div>
                     <div className="flex flex-col gap-[15px] lg:mr-[100px] mr-[0px] p-2">
                         <div className="flex flex-row gap-[30px]">
                             <div className="text-xl">
                                 {username}
                             </div>
-                            <div className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium">
-                                Follow
-                            </div>
+                            {!showFollowUpdateButton &&
+                                (<button className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium">
+                                    Follow
+                            </button>)}
                         </div>
                         <div className="flex flex-row gap-[50px]">
                             <div className="">
@@ -111,18 +134,18 @@ const UserPage = () => {
                             </button>
                         </div>
                         <div className="flex flex-col items-start">
-                            <span className="font-bold">Instagram's {username}</span>
+                            <span className="font-bold">Anagram's {username}</span>
                             <div>{userData.userBio}</div>
                         </div>
                     </div>
-                    <ImageUpload />
+                    { showFollowUpdateButton && <ImageUpload />}
 
                 </div>
                 <div className="mt-2">
                     <TabMenu option={option} optionChange={optionChange} />
                 </div>
             </div>
-            <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
+            <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                 {option === 0 && userData.images.map((image: any) => (
                     <div className="mt-2">
                         <ImageCard imageData={image} />

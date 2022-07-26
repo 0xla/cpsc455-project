@@ -27,15 +27,15 @@ const TopNavigation = () => {
     }
 
     return (
-        <div className="navbar w-full bg-base-100 z-50 border-b-[1px] border-[#dbdbdb]">
-            <div className="w-full mx-[10vw] flex justify-between">
-                <div className="flex">
+        <div className="navbar flex w-full bg-base-100 z-50 border-b-[1px] border-[#dbdbdb]">
+            <div className="w-full mx-[10vw] flex sm:flex-row flex-col justify-between">
+                <div className="flex m-1">
                     <button onClick={navigateToLoggedInUserProfile} className="btn btn-ghost normal-case text-xl">{TEXT.COMMON.TITLE}</button>
                 </div>
-                <div className="flex-none gap-2">
+                <div className="flex-none gap-2 m-1">
                     <SearchBar />
                 </div>
-                <div className="dropdown dropdown-end">
+                <div className="dropdown dropdown-end m-1">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
                             <img alt="profile-pic" src="https://api.lorem.space/image/face?hash=33791" />
