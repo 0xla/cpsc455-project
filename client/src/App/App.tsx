@@ -2,7 +2,7 @@ import {Routes, Route} from "react-router-dom";
 import './App.css';
 
 import SignIn from "../pages/SignIn";
-import Homepage from "../pages/Homepage";
+
 import Signup from "../pages/Signup";
 import PasswordReset from "../pages/PasswordReset"
 import ForgotPassword from "../pages/ForgotPassword"
@@ -18,7 +18,6 @@ function App() {
                 <Route path="signIn" element={<SignIn/>}/>
                 <Route path="/forgot-password" element ={<ForgotPassword/>}/>
                 <Route path="/password-reset/:resetToken" element ={<PasswordReset/>}/>
-                <Route path="/homepage" element={<Homepage/>}/>
                 <Route path="/:username" element={<UserPage/>}/>
             </Routes>
 

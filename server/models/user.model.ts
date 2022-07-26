@@ -81,7 +81,7 @@ userSchema.statics.login = async function (usernameOrEmail, password) {
 
 userSchema.methods.getSignedToken = function () {
   // @ts-ignore
-  return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN_SECRET, {
+  return jwt.sign({ id: this._id, username: this.username }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };

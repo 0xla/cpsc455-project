@@ -23,6 +23,7 @@ import { useState } from "react";
 import TEXT from "../statics/text";
 import { setAuthToken } from "../slices/userSlice";
 import { useDispatch } from "react-redux";
+import {decodeToken} from "react-jwt";
 
 
 
@@ -64,7 +65,9 @@ export default function SignInSide() {
 
         try {
             await tryLogin(usernameOrEmail, password);
-            navigate("/homepage")
+            // @ts-ignore
+            const username = decodeToken(localStorage.getItem('authToken')).username;
+            navigate(`/${username}`)
         } catch (err) {
             console.log("Error signing in")
         }

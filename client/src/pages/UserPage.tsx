@@ -6,7 +6,7 @@ import TabMenu from "../components/TabMenu";
 import {
     selectUserData, setAuthToken,
     setFollowers, setFollowings, setUserId,
-    setProfileImageUrl
+    setProfileImageUrl, setUserBio
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,7 +47,8 @@ const UserPage = () => {
                 if(username) {
                     response = await fetchUserData(username);
                 }
-                const {images, followers, followings, profileImageUrl } = response.data[0];
+                console.log(response.data[0])
+                const {images, followers, followings, profilePicture,bio} = response.data[0];
 
                 dispatch(setUsername(username));
                 // @ts-ignore
@@ -55,7 +56,8 @@ const UserPage = () => {
                 dispatch(setImages(images));
                 dispatch(setFollowers(followers));
                 dispatch(setFollowings(followings));
-                dispatch(setProfileImageUrl(profileImageUrl));
+                dispatch(setProfileImageUrl(profilePicture));
+                dispatch(setUserBio(bio));
             } catch (err) {
                 console.log(err);
 

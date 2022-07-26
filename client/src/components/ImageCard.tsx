@@ -4,13 +4,16 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import {selectUserData, setImages} from "../slices/userSlice";
+import {setImages} from "../slices/userSlice";
 import {useDispatch, useSelector} from "react-redux";
+import {decodeToken} from "react-jwt";
 
 
 export default function ImageCard({ imageData }: { imageData: ImageData }) {
     const dispatch = useDispatch();
-    const {userId} = useSelector(selectUserData);
+
+    // @ts-ignore
+    const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
 
     const handleLike = async (postId: string, userId: string) => {
         if (imageData.likes.includes(userId)) {
@@ -40,10 +43,10 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
             <figure><img src={imageData.url}  alt={imageData.id}/></figure>
             <Box sx={{paddingTop: 5, paddingLeft: 5, display: 'flex',}}>
 
-                {imageData.likes.includes(userId) ? <FavoriteIcon fontSize="large" style={{ color: 'rgb(255,0,0)' }}
-                                                                  onClick={() =>handleLike(imageData.id,userId)}/>
+                {imageData.likes.includes(loggedInUserId) ? <FavoriteIcon fontSize="large" style={{ color: 'rgb(255,0,0)' }}
+                                                                  onClick={() =>handleLike(imageData.id,loggedInUserId)}/>
                     : <FavoriteBorderIcon fontSize="large" sx={{ "&:hover": { color: "gray"} }}
-                                          onClick={() => handleLike(imageData.id,userId)}/>}
+                                          onClick={() => handleLike(imageData.id,loggedInUserId)}/>}
             </Box>
             <Typography align="left" sx={{paddingTop: 1, paddingLeft: 6}}>{imageData.likes.length}
                 {imageData.likes.length === 1 ? " like" : " likes"} </Typography>

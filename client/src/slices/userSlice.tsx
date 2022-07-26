@@ -45,7 +45,7 @@ export const userSlice = createSlice({
             state.userData.userId = action.payload;
         },
 
-        updateUserBio(state, action) {
+        setUserBio(state, action) {
             state.userData.userBio = action.payload;
         },
         setAuthToken(state, action) {
@@ -69,7 +69,7 @@ export const userSlice = createSlice({
 });
 
 
-export const { addImage, removeImage, updateUserBio, setUsername, 
+export const { addImage, removeImage, setUserBio, setUsername,
     setImages, setAuthToken, setFollowers, setFollowings, setProfileImageUrl,setUserId } = userSlice.actions;
 
 export const selectUserData = (state: any) => state.user.userData;
