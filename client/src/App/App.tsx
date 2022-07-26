@@ -7,6 +7,7 @@ import PasswordReset from "../pages/PasswordReset"
 import ForgotPassword from "../pages/ForgotPassword"
 import UserPage from "../pages/UserPage";
 import {Settings} from "../pages/Settings";
+import {PageNotFound} from "../pages/PageNotFound";
 
 
 function App() {
@@ -20,7 +21,8 @@ function App() {
                 <Route path="/password-reset/:resetToken" element ={<PasswordReset/>}/>
                 <Route path="/:username" element={<UserPage/>}/>
                 <Route path="/settings" element={<Settings/>}/>
-
+                <Route path="/path-not-found" element={<PageNotFound/>}/>
+                <Route path="*" element={<PageNotFound/>}/>
             </Routes>
 
         </div>

@@ -44,6 +44,9 @@ const UserPage = () => {
                 if(username) {
                     response = await fetchUserData(username);
                 }
+                if(!response.data[0]){
+                    navigate('/path-not-found')
+                }
                 const {_id, images, followers, followings, profilePicture,bio} = response.data[0];
                 dispatch(setImages(images));
                 dispatch(setUsername(username));
