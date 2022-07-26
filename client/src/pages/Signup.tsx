@@ -60,8 +60,7 @@ export default function SignUp() {
 
         try {
             await trySignup(username, email, password);
-            navigate("/homepage")
-
+            navigate(`/${username}`)
         } catch (err) {
             console.log("Error signing up")
         }
