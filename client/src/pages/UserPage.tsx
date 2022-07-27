@@ -12,12 +12,13 @@ import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import "../App/App.css"
 import { fetchUserData } from "../util/functions";
-import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
-import { useNavigate,useParams } from "react-router-dom";
+import { setUsername, setImages, selectAuthToken, setImageCategories } from "../slices/userSlice";
+import { useNavigate, useParams } from "react-router-dom";
 import Popup from "../components/Popup";
+import PieChart from "../components/PieChart";
 
 const UserPage = () => {
-    const {username} = useParams();
+    const { username } = useParams();
     const [showModal, setShowModal] = useState(false);
     const [modalTarget, setModalTarget] = useState("");
     const navigate = useNavigate();
@@ -41,13 +42,13 @@ const UserPage = () => {
 
             let response;
             try {
-                if(username) {
+                if (username) {
                     response = await fetchUserData(username);
                 }
-                if(!response.data[0]){
+                if (!response.data[0]) {
                     navigate('/path-not-found')
                 }
-                const {_id, images, followers, followings, profilePicture,bio} = response.data[0];
+                const { _id, images, followers, followings, profilePicture, bio, imageCategories } = response.data[0];
                 dispatch(setImages(images));
                 dispatch(setUsername(username));
                 dispatch(setUserId(_id));
@@ -55,6 +56,7 @@ const UserPage = () => {
                 dispatch(setFollowers(followers));
                 dispatch(setFollowings(followings));
                 dispatch(setProfileImageUrl(profilePicture));
+                dispatch(setImageCategories(imageCategories));
             } catch (err) {
                 console.log(err);
 
@@ -98,15 +100,17 @@ const UserPage = () => {
                                 <span className="font-bold">{userData.images.length}</span> posts
                             </div>
                             <button className="" id="followers"
-                                    onClick={() => {
-                                        setModalTarget("followers");
-                                        setShowModal(true)}}>
+                                onClick={() => {
+                                    setModalTarget("followers");
+                                    setShowModal(true)
+                                }}>
                                 <span className="font-bold">{userData.followers.length}</span> followers
                             </button>
                             <button className="" id="followings"
-                                    onClick={() => {
-                                        setModalTarget("followings");
-                                        setShowModal(true)}} >
+                                onClick={() => {
+                                    setModalTarget("followings");
+                                    setShowModal(true)
+                                }} >
                                 <span className="font-bold">{userData.followings.length}</span> following
                             </button>
                         </div>
@@ -123,13 +127,13 @@ const UserPage = () => {
                 </div>
             </div>
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
-                {option === 0 && userData.images.map((image: any) => (
+                {option === 0 ? userData.images.map((image: any) => (
                     <div className="mt-2">
                         <ImageCard imageData={image} />
                     </div>
-                ))}
+                )) : <PieChart />}
             </div>
-            <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData}/>
+            <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData} />
         </div>
     );
 }
