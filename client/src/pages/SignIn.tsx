@@ -76,6 +76,7 @@ export default function SignInSide() {
 
     const tryLogin = async (usernameOrEmail: string, password: string) => {
         let response: any;
+        console.log(base_be_url);
         try {
             response = await fetch(`${base_be_url}/api/users/login`, {
                 method: 'POST',
