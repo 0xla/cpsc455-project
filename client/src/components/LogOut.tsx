@@ -29,7 +29,7 @@ export default function AlertDialog() {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
+          {"You are loging out."}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -38,7 +38,7 @@ export default function AlertDialog() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} >Cancle</Button>
-          <Button onClick={handleClose} autoFocus href="/">
+          <Button onClick={handleClose} autoFocus href="/signIn">
             Comfirm
           </Button>
         </DialogActions>
