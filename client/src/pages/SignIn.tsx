@@ -26,6 +26,7 @@ import { useDispatch } from "react-redux";
 import {decodeToken} from "react-jwt";
 
 
+const base_be_url = process.env.BASE_BE_URL;
 
 function Copyright(props: any) {
     return (
@@ -76,7 +77,7 @@ export default function SignInSide() {
     const tryLogin = async (usernameOrEmail: string, password: string) => {
         let response: any;
         try {
-            response = await fetch("https://web4-sm.herokuapp.com/api/users/login", {
+            response = await fetch(`${base_be_url}/api/users/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

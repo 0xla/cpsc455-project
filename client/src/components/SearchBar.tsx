@@ -7,6 +7,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
+axios.defaults.baseURL = process.env.BASE_BE_URL;
+
 export default function FreeSolo() {
 
     const [userSuggestions, setUserSuggestions] = useState([]);
@@ -14,7 +16,7 @@ export default function FreeSolo() {
 
     const getSuggestedUsers = async (user: string) => {
         try {
-            const result = await axios.get(`https://web4-sm.herokuapp.com/api/users?exact=false&username=${user}`);
+            const result = await axios.get(`/api/users?exact=false&username=${user}`);
             return result.data.data;
         } catch (err) {
             console.error(err)

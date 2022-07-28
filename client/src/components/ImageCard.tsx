@@ -8,6 +8,7 @@ import {setImages} from "../slices/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {decodeToken} from "react-jwt";
 
+axios.defaults.baseURL = process.env.BASE_BE_URL;
 
 export default function ImageCard({ imageData }: { imageData: ImageData }) {
     const dispatch = useDispatch();
@@ -18,7 +19,7 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
         if (imageData.likes.includes(loggedInUserId)) {
             try {
                 const res = await axios.delete(
-                    `https://web4-sm.herokuapp.com/api/posts/${postId}/likes/${loggedInUserId}`,
+                    `/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
                 dispatch(setImages(res.data.data));
             } catch (err: any) {
@@ -27,7 +28,7 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
         } else {
             try {
                 const res = await axios.put(
-                    `https://web4-sm.herokuapp.com/api/posts/${postId}/likes/${loggedInUserId}`,
+                    `/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
                 dispatch(setImages(res.data.data));
 

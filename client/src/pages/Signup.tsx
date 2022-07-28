@@ -21,6 +21,8 @@ import {useState} from "react";
 import {Alert} from "@mui/material";
 import TEXT from "../statics/text";
 
+const base_be_url = process.env.BASE_BE_URL;
+
 function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -69,7 +71,7 @@ export default function SignUp() {
     const trySignup = async (username: string, email: string, password: string) => {
         let response: any;
         try {
-            response = await fetch("https://web4-sm.herokuapp.com/api/users/register", {
+            response = await fetch(`${base_be_url}/api/users/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

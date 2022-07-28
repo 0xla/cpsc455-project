@@ -14,8 +14,8 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import {Alert} from "@mui/material";
-import * as React from "react";
 
+axios.defaults.baseURL = process.env.BASE_BE_URL;
 
 const PasswordReset = () => {
     const [success, setSuccess] = useState("");
@@ -39,7 +39,7 @@ const PasswordReset = () => {
         const password = values.password;
         try {
             const res = await axios.put(
-                `https://web4-sm.herokuapp.com/api/users/reset-password/${resetToken}`,
+                `/api/users/reset-password/${resetToken}`,
                 {password}
             );
             setSuccess(res.data);
