@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Box from "@material-ui/core/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
@@ -12,14 +11,15 @@ const Input = styled("input")({
     display: "none",
 });
 
-const ImageUpload = () => {
+const ImageUpload = ({ setIsUploadingImage }: 
+    { setIsUploadingImage: (value: boolean) => void }) => {
 
     const dispatch = useDispatch();
     const authToken = useSelector(selectAuthToken);
 
 
     const handleSubmit = async () => {
-
+        setIsUploadingImage(true);
         if (image !== undefined && authToken) {
             const formData = new FormData();
             formData.append("file", image);
@@ -29,13 +29,14 @@ const ImageUpload = () => {
                 setImage(undefined);
                 dispatch(addImage(imageData.image));
                 dispatch(addImageCategories(imageData.imageLabels));
+                setIsUploadingImage(false);
             }
         }
     }
 
     const [image, setImage] = useState<any>(undefined);
     return (
-        <Box>
+        <div>
             <label htmlFor="icon-button-file">
                 <Input
                     onChange={(e: any) => {
@@ -54,12 +55,12 @@ const ImageUpload = () => {
                 </IconButton>
                 <p>{image ? image.name : ""}</p>
             </label>
-            <Box padding={2}>
+            <div className="p-2">
                 <Button onClick={handleSubmit} variant="outlined">
                     Upload
                 </Button>
-            </Box>
-        </Box>
+            </div>
+        </div>
     );
 }
 

@@ -23,9 +23,7 @@ export default function PieChart() {
 
     return (
         <DonutChart
-            data={data}
-            height={1000}
-            width={1000} />
+            data={data}/>
     );
 
 }

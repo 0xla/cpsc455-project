@@ -18,12 +18,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import Popup from "../components/Popup";
 import PieChart from "../components/PieChart";
 import {decodeToken} from "react-jwt";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const UserPage = () => {
     const { username } = useParams();
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalTarget, setModalTarget] = useState("");
     const [showFollowUpdateButton, setShowFollowUpdateButton] = useState(true);
+    const [option, setOption] = useState(0);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
@@ -84,15 +88,15 @@ const UserPage = () => {
         }
     })
 
-    const [option, setOption] = useState(0);
+    
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
 
-    // const openPopup = () => {
-    //     setShowFollowers(true);
-    //     return <Popup />
-    // }
+    const handleFollow = () => {
+        console.log("follow button clicked")
+    }
+
     return (
         <div className="bg-[#FAFAFA] ">
             <div>
@@ -111,7 +115,10 @@ const UserPage = () => {
                                 {username}
                             </div>
                             {!showFollowUpdateButton &&
-                                (<button className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium">
+                                (<button 
+                                    className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium"
+                                    onClick={()=>handleFollow()}
+                                >
                                     Follow
                             </button>)}
                         </div>
@@ -139,20 +146,27 @@ const UserPage = () => {
                             <div>{userData.userBio}</div>
                         </div>
                     </div>
-                    { showFollowUpdateButton && <ImageUpload />}
+                    { showFollowUpdateButton && <ImageUpload setIsUploadingImage={setIsUploadingImage}/>}
 
                 </div>
+                </div>
+                {isUploadingImage && <div className="flex justify-center items-center">
+                    <CircularProgress />
+                </div>}
                 <div className="mt-2">
                     <TabMenu option={option} optionChange={optionChange} />
                 </div>
-            </div>
-            <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
-                {option === 0 ? userData.images.map((image: any) => (
-                    <div className="mt-2">
-                        <ImageCard imageData={image} />
-                    </div>
-                )) : <PieChart />}
-            </div>
+            {option===0 ? <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
+                {userData.images.map((image: any) => (
+                        <div className="mt-2">
+                            <ImageCard imageData={image} />
+                        </div>
+                        )
+                    )}
+                    </div> : <div className="flex items-center justify-center md:my-8 md:p-4">
+                                <PieChart />
+                        </div>}
+
             <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData} />
         </div>
     );
