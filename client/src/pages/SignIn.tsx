@@ -24,8 +24,7 @@ import TEXT from "../statics/text";
 import { setAuthToken } from "../slices/userSlice";
 import { useDispatch } from "react-redux";
 import {decodeToken} from "react-jwt";
-
-
+import { base_be_url } from "../util/constants";
 
 function Copyright(props: any) {
     return (
@@ -76,7 +75,7 @@ export default function SignInSide() {
     const tryLogin = async (usernameOrEmail: string, password: string) => {
         let response: any;
         try {
-            response = await fetch("http://localhost:5000/api/users/login", {
+            response = await fetch(`${base_be_url}/api/users/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -20,6 +20,7 @@ import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import Container from "@mui/material/Container";
 import axios from "axios";
+import { base_be_url } from "../util/constants";
 
 const ForgotPassword = () => {
     const [success, setSuccess] = useState("");
@@ -44,7 +45,7 @@ const ForgotPassword = () => {
         console.log(email)
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/users/forgot-password",
+                `${base_be_url}/api/users/forgot-password`,
                 {email}
             );
             setSuccess(res.data);
