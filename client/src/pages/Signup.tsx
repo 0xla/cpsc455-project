@@ -20,8 +20,7 @@ import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {Alert} from "@mui/material";
 import TEXT from "../statics/text";
-
-const base_be_url = process.env.REACT_APP_BASE_BE_URL;
+import { base_be_url } from '../util/constants';
 
 function Copyright(props: any) {
     return (

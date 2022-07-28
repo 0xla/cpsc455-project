@@ -1,7 +1,6 @@
 import axios from "axios";
 import {decodeToken} from "react-jwt";
-
-axios.defaults.baseURL = process.env.REACT_APP_BASE_BE_URL;
+import { base_be_url } from "./constants";
 
 type DecodedToken = {
   exp: number;
@@ -13,14 +12,14 @@ export const fetchUserData = async (tokenOrUsername: string) => {
   const decoded: DecodedToken | null = decodeToken(tokenOrUsername);
   if (decoded !== null) {
     try {
-      const response: any = await axios.get(`/api/users/${decoded.id}/`);
+      const response: any = await axios.get(`${base_be_url}/api/users/${decoded.id}/`);
       return response.data;
     } catch (err) {
       console.log(err);
     }
   } else {
     try {
-      const response: any = await axios.get(`/api/users/?username=${tokenOrUsername}`);
+      const response: any = await axios.get(`${base_be_url}/api/users/?username=${tokenOrUsername}`);
       return response.data;
     } catch (err) {
       console.log(err);
@@ -35,7 +34,7 @@ export const uploadImage = async (formData: any, token: string) => {
     if (decoded !== null) {
       try {
         let response: any = await axios.post(
-            `/api/${decoded.id}/images`,
+            `${base_be_url}/api/${decoded.id}/images`,
             formData,
             {
               headers: {

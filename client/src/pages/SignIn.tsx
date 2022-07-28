@@ -24,9 +24,7 @@ import TEXT from "../statics/text";
 import { setAuthToken } from "../slices/userSlice";
 import { useDispatch } from "react-redux";
 import {decodeToken} from "react-jwt";
-
-
-const base_be_url = process.env.REACT_APP_BASE_BE_URL;
+import { base_be_url } from "../util/constants";
 
 function Copyright(props: any) {
     return (
@@ -76,7 +74,6 @@ export default function SignInSide() {
 
     const tryLogin = async (usernameOrEmail: string, password: string) => {
         let response: any;
-        console.log(base_be_url);
         try {
             response = await fetch(`${base_be_url}/api/users/login`, {
                 method: 'POST',
