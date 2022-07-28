@@ -81,9 +81,6 @@ const UserPage = () => {
         // console.log("userData", userData);
         decodedToken = decodeToken(authToken);
         if(decodedToken){
-            console.log("authtoken.id", decodedToken.id)
-            console.log("userData.userId", userData.userId)
-            console.log("check", decodedToken.id === userData.userId)
             setShowFollowUpdateButton(decodedToken.id === userData.userId);
         }
     })
