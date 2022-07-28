@@ -1,7 +1,7 @@
 import axios from "axios";
 import {decodeToken} from "react-jwt";
 
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "https://web4-sm.herokuapp.com";
 
 type DecodedToken = {
   exp: number;

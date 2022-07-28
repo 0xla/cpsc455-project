@@ -76,7 +76,7 @@ export default function SignInSide() {
     const tryLogin = async (usernameOrEmail: string, password: string) => {
         let response: any;
         try {
-            response = await fetch("http://localhost:5000/api/users/login", {
+            response = await fetch("https://web4-sm.herokuapp.com/api/users/login", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -44,7 +44,7 @@ const ForgotPassword = () => {
         console.log(email)
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/users/forgot-password",
+                "https://web4-sm.herokuapp.com/api/users/forgot-password",
                 {email}
             );
             setSuccess(res.data);

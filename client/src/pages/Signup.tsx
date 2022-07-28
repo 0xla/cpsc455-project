@@ -69,7 +69,7 @@ export default function SignUp() {
     const trySignup = async (username: string, email: string, password: string) => {
         let response: any;
         try {
-            response = await fetch("http://localhost:5000/api/users/register", {
+            response = await fetch("https://web4-sm.herokuapp.com/api/users/register", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

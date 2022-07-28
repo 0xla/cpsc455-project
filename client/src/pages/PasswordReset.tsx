@@ -39,7 +39,7 @@ const PasswordReset = () => {
         const password = values.password;
         try {
             const res = await axios.put(
-                `http://localhost:5000/api/users/reset-password/${resetToken}`,
+                `https://web4-sm.herokuapp.com/api/users/reset-password/${resetToken}`,
                 {password}
             );
             setSuccess(res.data);

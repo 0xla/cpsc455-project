@@ -15,7 +15,7 @@ export const PageNotFound = () => {
             <Typography variant='h5'>
                 Sorry, this page isn't available.
             </Typography>
-           <Link href={`http://localhost:3000/${loggedInUsername}`}>
+           <Link href={`https://web4-sm.netlify.app/${loggedInUsername}`}>
                The link you followed may be broken, or the page may have been removed. Go back to {TEXT.COMMON.TITLE}.
            </Link>
 

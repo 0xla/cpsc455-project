@@ -14,7 +14,7 @@ export default function FreeSolo() {
 
     const getSuggestedUsers = async (user: string) => {
         try {
-            const result = await axios.get(`http://localhost:5000/api/users?exact=false&username=${user}`);
+            const result = await axios.get(`https://web4-sm.herokuapp.com/api/users?exact=false&username=${user}`);
             return result.data.data;
         } catch (err) {
             console.error(err)
