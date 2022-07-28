@@ -26,7 +26,7 @@ import { useDispatch } from "react-redux";
 import {decodeToken} from "react-jwt";
 
 
-const base_be_url = process.env.BASE_BE_URL;
+const base_be_url = process.env.REACT_APP_BASE_BE_URL;
 
 function Copyright(props: any) {
     return (

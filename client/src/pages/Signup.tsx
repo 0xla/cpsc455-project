@@ -21,7 +21,7 @@ import {useState} from "react";
 import {Alert} from "@mui/material";
 import TEXT from "../statics/text";
 
-const base_be_url = process.env.BASE_BE_URL;
+const base_be_url = process.env.REACT_APP_BASE_BE_URL;
 
 function Copyright(props: any) {
     return (

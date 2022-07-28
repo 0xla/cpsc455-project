@@ -4,7 +4,7 @@ import Link from "@mui/material/Link";
 import {decodeToken} from "react-jwt";
 import TEXT from "../statics/text";
 
-const base_fe_url = process.env.BASE_FE_URL;
+const base_fe_url = process.env.REACT_APP_BASE_FE_URL;
 
 export const PageNotFound = () => {
 

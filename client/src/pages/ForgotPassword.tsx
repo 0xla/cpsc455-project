@@ -21,7 +21,7 @@ import {useState} from "react";
 import Container from "@mui/material/Container";
 import axios from "axios";
 
-axios.defaults.baseURL = process.env.BASE_BE_URL;
+axios.defaults.baseURL = process.env.REACT_APP_BASE_BE_URL;
 
 const ForgotPassword = () => {
     const [success, setSuccess] = useState("");

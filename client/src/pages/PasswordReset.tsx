@@ -15,7 +15,7 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import {Alert} from "@mui/material";
 
-axios.defaults.baseURL = process.env.BASE_BE_URL;
+axios.defaults.baseURL = process.env.REACT_APP_BASE_BE_URL;
 
 const PasswordReset = () => {
     const [success, setSuccess] = useState("");
