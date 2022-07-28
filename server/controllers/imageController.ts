@@ -7,7 +7,7 @@ import { ObjectId } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
 dotenv.config();
-const storage = new Storage({ keyFilename: "google-cloud-key.json" });
+const storage = new Storage({ keyFilename: "google-credentials.json" });
 const bucket_name: string = process.env.BUCKET_NAME || "";
 const bucket = storage.bucket(bucket_name);
 import * as vision from "@google-cloud/vision";
