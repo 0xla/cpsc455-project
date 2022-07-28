@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import { base_be_url } from '../util/constants';
 
 export default function FreeSolo() {
 
@@ -14,7 +15,7 @@ export default function FreeSolo() {
 
     const getSuggestedUsers = async (user: string) => {
         try {
-            const result = await axios.get(`http://localhost:5000/api/users?exact=false&username=${user}`);
+            const result = await axios.get(`${base_be_url}/api/users?exact=false&username=${user}`);
             return result.data.data;
         } catch (err) {
             console.error(err)

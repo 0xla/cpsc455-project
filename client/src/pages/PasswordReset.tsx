@@ -14,8 +14,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import {Alert} from "@mui/material";
-import * as React from "react";
-
+import { base_be_url } from "../util/constants";
 
 const PasswordReset = () => {
     const [success, setSuccess] = useState("");
@@ -39,7 +38,7 @@ const PasswordReset = () => {
         const password = values.password;
         try {
             const res = await axios.put(
-                `http://localhost:5000/api/users/reset-password/${resetToken}`,
+                `${base_be_url}/api/users/reset-password/${resetToken}`,
                 {password}
             );
             setSuccess(res.data);

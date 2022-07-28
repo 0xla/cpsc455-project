@@ -7,7 +7,7 @@ import axios from "axios";
 import {setImages} from "../slices/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {decodeToken} from "react-jwt";
-
+import { base_be_url } from "../util/constants";
 
 export default function ImageCard({ imageData }: { imageData: ImageData }) {
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
         if (imageData.likes.includes(loggedInUserId)) {
             try {
                 const res = await axios.delete(
-                    `http://localhost:5000/api/posts/${postId}/likes/${loggedInUserId}`,
+                    `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
                 dispatch(setImages(res.data.data));
             } catch (err: any) {
@@ -27,7 +27,7 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
         } else {
             try {
                 const res = await axios.put(
-                    `http://localhost:5000/api/posts/${postId}/likes/${loggedInUserId}`,
+                    `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
                 dispatch(setImages(res.data.data));
 

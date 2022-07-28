@@ -20,6 +20,7 @@ import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {Alert} from "@mui/material";
 import TEXT from "../statics/text";
+import { base_be_url } from '../util/constants';
 
 function Copyright(props: any) {
     return (
@@ -69,7 +70,7 @@ export default function SignUp() {
     const trySignup = async (username: string, email: string, password: string) => {
         let response: any;
         try {
-            response = await fetch("http://localhost:5000/api/users/register", {
+            response = await fetch(`${base_be_url}/api/users/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
