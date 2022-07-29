@@ -29,6 +29,7 @@ export const getImageLabels = async (url: string): Promise<string[]> => {
       }
     }
   }
+  console.log("imageLabels", imageLabels)
   return imageLabels;
 };
 
@@ -53,7 +54,6 @@ export const uploadImage = async (req: Request, res: Response) => {
       const publicUrl = util.format(
         `https://storage.googleapis.com/${bucket.name}/${blob.name}`
       );
-
       const imageLabels: string[] = await getImageLabels(publicUrl);
 
       const image = {
