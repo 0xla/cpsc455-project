@@ -13,7 +13,7 @@ import {
 import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import "../App/App.css"
-import { fetchUserData } from "../util/functions";
+import { fetchUserData, followUser, unfollowUser } from "../util/functions";
 import { useNavigate, useParams } from "react-router-dom";
 import Popup from "../components/Popup";
 import PieChart from "../components/PieChart";
@@ -28,11 +28,15 @@ const UserPage = () => {
     const [modalTarget, setModalTarget] = useState("");
     const [showFollowUpdateButton, setShowFollowUpdateButton] = useState(true);
     const [option, setOption] = useState(0);
+    const [followAction, setFollowAction] = useState(true);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
     let userData = useSelector(selectUserData);
     let decodedToken : any;
+    let loggedInUserData: any;
+    let followersList : any;
+    let followingsList : any;
     
     useEffect(() => {
 
@@ -65,33 +69,80 @@ const UserPage = () => {
                 dispatch(setFollowings(followings));
                 dispatch(setProfileImageUrl(profilePicture));
                 dispatch(setImageCategories(imageCategories));
+
             } catch (err) {
                 console.log(err);
 
             }
         }
         getUserData();
-        
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigate]);
 
     
     
     useEffect(() => {
-        // console.log("userData", userData);
         decodedToken = decodeToken(authToken);
         if(decodedToken){
             setShowFollowUpdateButton(decodedToken.id === userData.userId);
         }
+        const checkFollow = () => {
+            if (userData["followers"].length > 0) {
+                const followersListOfUserById = userData["followers"].map((element: any) => element.id)
+                if(followersListOfUserById.includes(decodedToken.id)){
+                    console.log("inside here")
+                    setFollowAction(false);
+                }
+            }
+        }
+        checkFollow()
     })
+
+    // useEffect(() => {
+        
+    // })
+
+    // useEffect(() => {
+    //     async function getUserData() {
+
+    //         let response;
+    //         try {
+    //             if (username) {
+    //                 response = await fetchUserData(username);
+    //             }
+    //             if (!response.data[0]) {
+    //                 navigate('/path-not-found')
+    //             }
+    //             const { followers, followings } = response.data[0];
+    //             dispatch(setFollowers(followers));
+    //             dispatch(setFollowings(followings));
+
+    //         } catch (err) {
+    //             console.log(err);
+
+    //         }
+    //     }
+    //     getUserData();
+        
+    // })
 
     
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
 
-    const handleFollow = () => {
-        console.log("follow button clicked")
+    const handleFollow = async () => {
+        let response;
+        if(followAction){
+            response = await followUser({loggedInUserId: decodedToken.id, currentUserId: userData.userId});
+        }
+        else {
+            response = await unfollowUser({loggedInUserId: decodedToken.id, currentUserId: userData.userId});
+        }
+        console.log(response.status);
+        if(response.status === 200){
+            window.location.reload();
+        }
     }
 
     return (
@@ -116,7 +167,7 @@ const UserPage = () => {
                                     className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium"
                                     onClick={()=>handleFollow()}
                                 >
-                                    Follow
+                                    {followAction === true ? "Follow": "Unfollow"}
                             </button>)}
                         </div>
                         <div className="flex flex-row gap-[50px]">

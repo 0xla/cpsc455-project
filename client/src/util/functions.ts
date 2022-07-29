@@ -49,3 +49,35 @@ export const uploadImage = async (formData: any, token: string) => {
     }
   }
 };
+
+export const followUser = async ({loggedInUserId, currentUserId}: any) => {
+  try {
+    const response: any = await axios.put(
+      `${base_be_url}/api/users/${currentUserId}`, 
+        {
+          action: "follow",
+          id: loggedInUserId
+        }
+    );
+        return response;
+  }
+  catch (error: any) {
+    console.log(error);
+  }
+}
+
+export const unfollowUser = async ({loggedInUserId, currentUserId}: any) => {
+  try {
+    const response: any = await axios.put(
+      `${base_be_url}/api/users/${currentUserId}`, 
+      {
+        action: "unfollow",
+        id: loggedInUserId
+      }
+    );
+    return response;
+  }
+  catch (error: any) {
+    console.log(error);
+  }
+}
