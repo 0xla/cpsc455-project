@@ -97,35 +97,6 @@ const UserPage = () => {
         }
         checkFollow()
     })
-
-    // useEffect(() => {
-        
-    // })
-
-    // useEffect(() => {
-    //     async function getUserData() {
-
-    //         let response;
-    //         try {
-    //             if (username) {
-    //                 response = await fetchUserData(username);
-    //             }
-    //             if (!response.data[0]) {
-    //                 navigate('/path-not-found')
-    //             }
-    //             const { followers, followings } = response.data[0];
-    //             dispatch(setFollowers(followers));
-    //             dispatch(setFollowings(followings));
-
-    //         } catch (err) {
-    //             console.log(err);
-
-    //         }
-    //     }
-    //     getUserData();
-        
-    // })
-
     
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
