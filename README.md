@@ -1,3 +1,7 @@
+# Project description
+
+Our team will be building a social media type web application where users of all age groups can upload images and have their images classified into different categories using Google’s Cloud Vision API. We will then use the classifications data to create visual charts which will be included in the user’s profile. User login information, user followers and following list, and images will be stored into the database. Following specific accounts (followers / following feature) could be removed based on time constraints.
+
 # Contributor Setup
 
 1. Run npm install.
@@ -22,10 +26,6 @@ Note to not use a password that you would normally use with other apps.
 - Steven Wong - a4a3b - sww8
 
 # Project Specs
-
-## Project description
-
-Our team will be building a social media type web application where users of all age groups can upload images and have their images classified into different categories using Google’s Cloud Vision API. We will then use the classifications data to create visual charts which will be included in the user’s profile. User login information, user followers and following list, and images will be stored into the database. Following specific accounts (followers / following feature) could be removed based on time constraints.
 
 ## Project task requirements
 
