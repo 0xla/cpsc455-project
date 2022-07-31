@@ -17,6 +17,7 @@ import { useNavigate,useParams } from "react-router-dom";
 import Popup from "../components/Popup";
 import {decodeToken} from "react-jwt";
 import axios from "axios";
+import {Typography} from "@mui/material";
 
 
 
@@ -27,6 +28,7 @@ const UserPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
+    const [feedImages, setFeedImages] = useState([])
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
@@ -59,6 +61,16 @@ const UserPage = () => {
                 dispatch(setFollowers(followers));
                 dispatch(setFollowings(followings));
                 dispatch(setProfileImageUrl(profilePicture));
+
+                const res = await axios.post(
+                    `http://localhost:5000/api/images`, {
+                        followingArr: followings
+                    }
+                )
+
+                setFeedImages(res.data.data)
+
+
             } catch (err) {
                 console.log(err);
 
@@ -72,7 +84,6 @@ const UserPage = () => {
 
 
     const [option, setOption] = useState(0);
-    console.log("userData", userData);
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
@@ -158,10 +169,29 @@ const UserPage = () => {
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                 {option === 0 && userData.images.map((image: any) => (
                     <div className="mt-2">
-                        <ImageCard imageData={image} />
+                        <ImageCard username={""} imageData={image} />
                     </div>
                 ))}
             </div>
+            <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
+                {option === 2 && feedImages.map((imageObj: any) => (
+                    <div className="mt-2">
+                        {/*<Typography>{imageObj.username}</Typography>*/}
+                        {imageObj.imgArr.images.map( (img: any) => {
+                        return(
+                        <div>
+
+                        <ImageCard imageData={img} username={imageObj.username}/>
+
+                        </div>)
+                    })}
+
+                    </div>
+                ))}
+
+                    <div/>
+            </div>
+
             <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData}/>
         </div>
     );

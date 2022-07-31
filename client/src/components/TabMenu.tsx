@@ -7,6 +7,7 @@ export default function TabMenu({ option, optionChange }: { option: number, opti
             <Tabs value={option} onChange={optionChange} centered>
                 <Tab label="Photos" />
                 <Tab label="Analysis" />
+                <Tab label="Feed"/>
             </Tabs>
         </Paper>
 

@@ -9,7 +9,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {decodeToken} from "react-jwt";
 
 
-export default function ImageCard({ imageData }: { imageData: ImageData }) {
+// @ts-ignore
+export default function ImageCard({ imageData, username }) {
     const dispatch = useDispatch();
 
     // @ts-ignore
@@ -21,6 +22,7 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
                 const res = await axios.delete(
                     `http://localhost:5000/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
+                console.log(res.data.data)
                 dispatch(setImages(res.data.data));
             } catch (err: any) {
                 console.log("Error unliking post.")
@@ -30,6 +32,7 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
                 const res = await axios.put(
                     `http://localhost:5000/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
+                console.log(res.data.data)
                 dispatch(setImages(res.data.data));
 
             } catch (err: any) {
@@ -52,6 +55,7 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
                 {imageData.likes.length === 1 ? " like" : " likes"} </Typography>
             <div className="card-body">
                 <p>{imageData.description}</p>
+                <p>{username}</p>
             </div>
         </div>
     );

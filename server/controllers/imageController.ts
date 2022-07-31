@@ -152,3 +152,29 @@ export const unlikePost = async (req: Request, res: Response) => {
   });
 
 }
+
+export const getAllFollowingImages = async (req: Request, res: Response) => {
+  const imgArr = []
+  const followingArr: any = req.body.followingArr;
+  console.log(followingArr)
+
+  for (const follower of followingArr) {
+    const images = await User.findOne({username: follower.username}).select('images')
+    imgArr.push({
+      imgArr: images,
+      username: follower.username
+    }
+    )
+  }
+
+  console.log(imgArr)
+  return res.status(200).json({
+    message: "Successfully retrieved images",
+    data: imgArr
+  });
+
+  }
+
+
+
+
