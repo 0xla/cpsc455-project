@@ -6,7 +6,7 @@ import TabMenu from "../components/TabMenu";
 import {
     selectUserData, setAuthToken,
     setFollowers, setFollowings, setUserId,
-    setProfileImageUrl, setUserBio
+    setProfileImageUrl, setUserBio,
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import { setUsername, setImages, selectAuthToken } from "../slices/userSlice";
 import { useNavigate,useParams } from "react-router-dom";
 import Popup from "../components/Popup";
 import {decodeToken} from "react-jwt";
+import axios from "axios";
 
 
 
@@ -26,6 +27,9 @@ const UserPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
+
+    // @ts-ignore
+    const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
 
 
     useEffect(() => {
@@ -73,10 +77,37 @@ const UserPage = () => {
         setOption(selected);
     };
 
-    // const openPopup = () => {
-    //     setShowFollowers(true);
-    //     return <Popup />
-    // }
+    const handleFollow = async () => {
+        if (userData.followers.filter(follower => follower.id ===loggedInUserId).length > 0) {
+            try {
+                const res = await axios.put(
+                    `http://localhost:5000/api/users/unfollow/${userData.userId}`, {
+                        id: loggedInUserId
+                    }
+                )
+                console.log(res.data.followerData)
+                dispatch(setFollowers(res.data.followerData));
+
+            } catch (err: any) {
+                console.log("Error unfollowing user.")
+            }
+
+        } else {
+            try {
+                const res = await axios.put(
+                    `http://localhost:5000/api/users/follows/${userData.userId}`, {
+                        id: loggedInUserId
+                    }
+                )
+                console.log(res.data.followerData)
+                dispatch(setFollowers(res.data.followerData));
+
+            } catch (err: any) {
+                console.log("Error following user.")
+            }
+        }
+    }
+
     return (
         <div className="bg-[#FAFAFA] ">
             <div>
@@ -90,8 +121,8 @@ const UserPage = () => {
                             <div className="text-xl">
                                 {username}
                             </div>
-                            <div className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium">
-                                Follow
+                            <div className=" border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium" onClick={()=>handleFollow()}>
+                                {userData.followers.filter(follower => follower.id === loggedInUserId).length > 0 ? "Unfollow" : "Follow"}
                             </div>
                         </div>
                         <div className="flex flex-row gap-[50px]">
@@ -102,7 +133,8 @@ const UserPage = () => {
                                     onClick={() => {
                                         setModalTarget("followers");
                                         setShowModal(true)}}>
-                                <span className="font-bold">{userData.followers.length}</span> followers
+                                <span className="font-bold">{userData.followers.length}</span>
+                                {userData.followers.length === 1 ? " follower" : " followers"}
                             </button>
                             <button className="" id="followings"
                                     onClick={() => {

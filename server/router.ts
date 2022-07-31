@@ -1,6 +1,6 @@
 import express from "express";
 import {resetPassword, forgotPassword, loginUser, registerUser} from "./controllers/authControllers";
-import {getUser, getAllUsers, editUser} from "./controllers/userControllers";
+import {getUser, getAllUsers, editUser, followUser, unfollowUser} from "./controllers/userControllers";
 import {likePost, unlikePost, uploadImage} from "./controllers/imageController";
 
 import { protect } from "./middleware/auth";
@@ -32,6 +32,8 @@ router.post("/api/:userid/images", uploadImage);
 
 router.get("/api/users", getAllUsers);
 router.get("/api/users/:id", getUser);
+router.put("/api/users/follows/:id", followUser)
+router.put("/api/users/unfollow/:id", unfollowUser)
 
 /**
  * LIKE ENDPOINTS

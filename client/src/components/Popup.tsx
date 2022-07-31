@@ -1,6 +1,10 @@
 import React from "react";
+import Button from "@mui/material/Button";
+import {Stack} from "@mui/material";
+import {useNavigate} from "react-router-dom";
 
 export default function Popup({onClose, visible, target, userData}: any) {
+    const navigate = useNavigate();
     
     const dummyArray = [
         {
@@ -26,17 +30,19 @@ export default function Popup({onClose, visible, target, userData}: any) {
     let usernameList;
     
     if(userData && target){
-        console.log(target)
-        console.log("popup userdata", userData[target]);
         usernameList = (userData[target]).map((element: any) => element.username);
     }
     if(!visible)
     return null;
-    console.log(userData)
     function handleOnClick (e: any) {
         if(e.target.id === "container"){
             onClose();
         }
+    }
+
+    const findUser = (element: string) => {
+        onClose();
+        navigate(`/${element}`)
     }
 
   return (
@@ -51,13 +57,14 @@ export default function Popup({onClose, visible, target, userData}: any) {
             </span>
         {
             usernameList && usernameList.length>0 ? 
-            (<div>{
+            (<Stack>{
                 usernameList.map((element: any) => 
                 {
-                    return <li className="border-b-[1.5px]">{element}</li>
+                    return <Button onClick={()=>findUser(element)} style={{textTransform: 'none'}}>{element}</Button>
                 })
-                }</div>) : <div>No {target}</div>
+                }</Stack>) : <div>No {target}</div>
         }
+
         </ul>
       </div>
     </div>

@@ -105,6 +105,7 @@ export const likePost = async (req: Request, res: Response) => {
     });
   }
 
+
   return res.status(200).json({
     message: "Successfully liked post",
     data: result.images,

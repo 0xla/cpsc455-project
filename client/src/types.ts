@@ -5,12 +5,17 @@ export interface ImageData {
   likes: any;
 }
 
+export interface FollowerData {
+  id: string,
+  username: string
+}
+
 export interface UserDetails {
   username: string;
   userId: string;
   userBio: string;
   profileImageUrl: string;
   images: ImageData[];
-  followers: Array<string>;
-  followings: Array<string>;
+  followers: Array<FollowerData>;
+  followings: Array<object>;
 }
