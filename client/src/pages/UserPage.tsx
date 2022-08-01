@@ -6,7 +6,7 @@ import TabMenu from "../components/TabMenu";
 import {
     selectUserData, setAuthToken,
     setFollowers, setFollowings, setUserId,
-    setProfileImageUrl, setUserBio,
+    setProfileImageUrl, setUserBio, setFeedImages
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,7 @@ import Popup from "../components/Popup";
 import {decodeToken} from "react-jwt";
 import axios from "axios";
 import {Typography} from "@mui/material";
+import FeedCard from "../components/FeedCard";
 
 
 
@@ -28,7 +29,10 @@ const UserPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
-    const [feedImages, setFeedImages] = useState([])
+    const [feedImages, setFeedImages]: any = useState([])
+    const [option, setOption] = useState(0);
+    // @ts-ignore
+    const loggedInUsername = decodeToken(authToken).username;
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
@@ -61,6 +65,8 @@ const UserPage = () => {
                 dispatch(setFollowers(followers));
                 dispatch(setFollowings(followings));
                 dispatch(setProfileImageUrl(profilePicture));
+                setOption(0);
+
 
                 const res = await axios.post(
                     `http://localhost:5000/api/images`, {
@@ -68,7 +74,10 @@ const UserPage = () => {
                     }
                 )
 
+                console.log(res.data.data)
                 setFeedImages(res.data.data)
+
+
 
 
             } catch (err) {
@@ -83,7 +92,7 @@ const UserPage = () => {
     const userData: UserDetails = useSelector(selectUserData);
 
 
-    const [option, setOption] = useState(0);
+
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
@@ -118,6 +127,7 @@ const UserPage = () => {
             }
         }
     }
+
 
     return (
         <div className="bg-[#FAFAFA] ">
@@ -163,7 +173,7 @@ const UserPage = () => {
 
                 </div>
                 <div className="mt-2">
-                    <TabMenu option={option} optionChange={optionChange} />
+                    <TabMenu option={option} optionChange={optionChange} username ={username} />
                 </div>
             </div>
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
@@ -174,17 +184,14 @@ const UserPage = () => {
                 ))}
             </div>
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
-                {option === 2 && feedImages.map((imageObj: any) => (
+
+                {loggedInUsername === username && option === 2 && feedImages.map((imageObj: any) => (
                     <div className="mt-2">
-                        {/*<Typography>{imageObj.username}</Typography>*/}
-                        {imageObj.imgArr.images.map( (img: any) => {
-                        return(
-                        <div>
+                        <div className="mt-2">
+                            <FeedCard username={"asd"} imageData={imageObj} setFeedImages={setFeedImages} following = {userData.followings} />
+                        </div>
 
-                        <ImageCard imageData={img} username={imageObj.username}/>
 
-                        </div>)
-                    })}
 
                     </div>
                 ))}

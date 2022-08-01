@@ -16,6 +16,7 @@ export interface UserDetails {
   userBio: string;
   profileImageUrl: string;
   images: ImageData[];
+  feedImages: ImageData[];
   followers: Array<FollowerData>;
   followings: Array<object>;
 }
