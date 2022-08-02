@@ -21,6 +21,7 @@ import {useState} from "react";
 import {Alert} from "@mui/material";
 import TEXT from "../statics/text";
 import { base_be_url } from '../util/constants';
+import axios from "axios";
 
 function Copyright(props: any) {
     return (
@@ -69,36 +70,30 @@ export default function SignUp() {
 
     const trySignup = async (username: string, email: string, password: string) => {
         let response: any;
+
         try {
-            response = await fetch(`${base_be_url}/api/users/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password
-                })
-            })
-
-        } catch (err) {
-            console.log(err)
-        }
-
-        const data = await response.json()
-        localStorage.setItem("authToken", data.token);
-
-        if (data.errors) {
-            Object.values(data.errors).forEach((err) => {
-                if (err !== "") {
-                    setInvalidSignup(true)
+            response = await axios.post(
+                `${base_be_url}/api/users/register`, {
+                    username: username,
+                    email: email,
+                    password: password,
                 }
-            })
-            throw new Error(data.message)
+            )
+        } catch (err: any) {
+            const errors = err.response.data.errors
+            if (errors) {
+                Object.values(errors).forEach((err) => {
+                    if (err !== "") {
+                        setInvalidSignup(true)
+                    }
+                })
+                throw new Error(err.response.data.message)
+            }
         }
-    }
 
+        const data = response.data
+        localStorage.setItem("authToken", data.token);
+    }
 
     return (
 
@@ -183,7 +178,7 @@ export default function SignUp() {
                     </Box>
                 </Box>
                 {invalidSignup && <Alert variant="filled" severity="error">
-                    Sorry, that username is already taken.
+                    Sorry, that username or email is already taken.
                 </Alert>}
                 <Copyright sx={{mt: 5}}/>
             </Container>
