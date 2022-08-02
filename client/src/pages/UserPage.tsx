@@ -155,7 +155,7 @@ const UserPage = () => {
                 </div>
             {option===0 ? <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                 {userData.images.map((image: any) => (
-                        <div className="mt-2">
+                        <div key={image.id} className="mt-2">
                             <ImageCard imageData={image} />
                         </div>
                         )
