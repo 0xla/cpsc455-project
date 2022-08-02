@@ -74,9 +74,7 @@ const UserPage = () => {
             }
         }
         getUserData();
-        console.log(userData)
-        console.log(loggedInUsername)
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigate]);
 

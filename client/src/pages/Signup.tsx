@@ -21,6 +21,7 @@ import {useState} from "react";
 import {Alert} from "@mui/material";
 import TEXT from "../statics/text";
 import { base_be_url } from '../util/constants';
+import axios from "axios";
 
 function Copyright(props: any) {
     return (
@@ -69,24 +70,21 @@ export default function SignUp() {
 
     const trySignup = async (username: string, email: string, password: string) => {
         let response: any;
-        try {
-            response = await fetch(`${base_be_url}/api/users/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password
-                })
-            })
 
+
+        try {
+            response = await axios.post(
+                `${base_be_url}/api/users/register`, {
+                    username: username,
+                    email: email,
+                    password: password,
+                }
+            )
         } catch (err) {
             console.log(err)
         }
 
-        const data = await response.json()
+        const data = response.data
         localStorage.setItem("authToken", data.token);
 
         if (data.errors) {
@@ -98,7 +96,6 @@ export default function SignUp() {
             throw new Error(data.message)
         }
     }
-
 
     return (
 
