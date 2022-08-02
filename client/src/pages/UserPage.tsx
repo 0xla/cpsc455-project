@@ -19,20 +19,23 @@ import Popup from "../components/Popup";
 import PieChart from "../components/PieChart";
 import {decodeToken} from "react-jwt";
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import axios from "axios";
+import {base_be_url} from "../util/constants";
 
 const UserPage = () => {
     const { username } = useParams();
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalTarget, setModalTarget] = useState("");
-    const [showFollowUpdateButton, setShowFollowUpdateButton] = useState(true);
     const [option, setOption] = useState(0);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
-    let userData = useSelector(selectUserData);
-    let decodedToken : any;
+    let userData: UserDetails = useSelector(selectUserData);
+    // @ts-ignore
+    const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
+    // @ts-ignore
+    const loggedInUsername = decodeToken(localStorage.getItem("authToken")).username
     
     useEffect(() => {
 
@@ -71,27 +74,47 @@ const UserPage = () => {
             }
         }
         getUserData();
+        console.log(userData)
+        console.log(loggedInUsername)
         
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigate]);
 
-    
-    
-    useEffect(() => {
-        // console.log("userData", userData);
-        decodedToken = decodeToken(authToken);
-        if(decodedToken){
-            setShowFollowUpdateButton(decodedToken.id === userData.userId);
-        }
-    })
-
-    
     const optionChange = (_event: any, selected: number) => {
         setOption(selected);
     };
 
-    const handleFollow = () => {
-        console.log("follow button clicked")
+    const handleFollow = async () => {
+        if (userData.followers.filter(follower => follower.id === loggedInUserId).length > 0) {
+            try {
+                const res = await axios.put(
+                    `${base_be_url}/api/users/${loggedInUserId}/unfollows/${userData.userId}`, {
+                        unfollowingUsername: loggedInUsername,
+                        unfollowedUsername: userData.username,
+
+                    }
+                )
+                dispatch(setFollowers(res.data.followerData));
+
+            } catch (err: any) {
+                console.log("Error unfollowing user.")
+            }
+
+        } else {
+            try {
+                const res = await axios.put(
+                    `${base_be_url}/api/users/${loggedInUserId}/follows/${userData.userId}`, {
+                        followingUsername: loggedInUsername ,
+                        followedUsername: userData.username,
+
+                    }
+                )
+                dispatch(setFollowers(res.data.followerData));
+
+            } catch (err: any) {
+                console.log("Error following user.")
+            }
+        }
     }
 
     return (
@@ -111,13 +134,9 @@ const UserPage = () => {
                             <div className="text-xl">
                                 {username}
                             </div>
-                            {!showFollowUpdateButton &&
-                                (<button 
-                                    className="border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium"
-                                    onClick={()=>handleFollow()}
-                                >
-                                    Follow
-                            </button>)}
+                            {loggedInUserId !== userData.userId && <div className=" border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium" onClick={()=>handleFollow()}>
+                                {userData.followers.filter(follower => follower.id === loggedInUserId).length > 0 ? "Unfollow" : "Follow"}
+                            </div>}
                         </div>
                         <div className="flex flex-row gap-[50px]">
                             <div className="">
@@ -128,7 +147,8 @@ const UserPage = () => {
                                     setModalTarget("followers");
                                     setShowModal(true)
                                 }}>
-                                <span className="font-bold">{userData.followers.length}</span> followers
+                                <span className="font-bold">{userData.followers.length}</span>
+                                {userData.followers.length === 1 ? " follower" : " followers"}
                             </button>
                             <button className="" id="followings"
                                 onClick={() => {
@@ -143,7 +163,7 @@ const UserPage = () => {
                             <div>{userData.userBio}</div>
                         </div>
                     </div>
-                    { showFollowUpdateButton && <ImageUpload setIsUploadingImage={setIsUploadingImage}/>}
+                    { loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage}/>}
 
                 </div>
                 </div>
