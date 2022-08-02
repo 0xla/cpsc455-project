@@ -71,7 +71,6 @@ export default function SignUp() {
     const trySignup = async (username: string, email: string, password: string) => {
         let response: any;
 
-
         try {
             response = await axios.post(
                 `${base_be_url}/api/users/register`, {
@@ -80,22 +79,20 @@ export default function SignUp() {
                     password: password,
                 }
             )
-        } catch (err) {
-            console.log(err)
+        } catch (err: any) {
+            const errors = err.response.data.errors
+            if (errors) {
+                Object.values(errors).forEach((err) => {
+                    if (err !== "") {
+                        setInvalidSignup(true)
+                    }
+                })
+                throw new Error(err.response.data.message)
+            }
         }
 
         const data = response.data
-        console.log(data)
         localStorage.setItem("authToken", data.token);
-
-        if (data.errors) {
-            Object.values(data.errors).forEach((err) => {
-                if (err !== "") {
-                    setInvalidSignup(true)
-                }
-            })
-            throw new Error(data.message)
-        }
     }
 
     return (
@@ -181,7 +178,7 @@ export default function SignUp() {
                     </Box>
                 </Box>
                 {invalidSignup && <Alert variant="filled" severity="error">
-                    Sorry, that username is already taken.
+                    Sorry, that username or email is already taken.
                 </Alert>}
                 <Copyright sx={{mt: 5}}/>
             </Container>

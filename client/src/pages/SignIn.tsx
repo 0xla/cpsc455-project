@@ -82,21 +82,20 @@ export default function SignInSide() {
                     password: password
                 }
             )
-        } catch (err) {
-            console.log(err)
+        } catch (err: any) {
+            const errors = err.response.data.errors
+            if (errors) {
+                Object.values(errors).forEach((err) => {
+                    if (err !== "") {
+                        setInvalidLogin(true)
+                    }
+                })
+                throw new Error(err.response.data.message)
+            }
         }
         const data = response.data
         localStorage.setItem("authToken", data.token);
         dispatch(setAuthToken(data.token));
-
-        if (data.errors) {
-            Object.values(data.errors).forEach((err) => {
-                if (err !== "") {
-                    setInvalidLogin(true)
-                }
-            })
-            throw new Error(data.message)
-        }
     }
 
     return (
