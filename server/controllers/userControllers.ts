@@ -126,96 +126,139 @@ export const getUser = async (req: Request, res: Response) => {
         });
 }
 
+/**
+ * @param Expected request body: followingUsername: the username of the user who is currently logged in and following
+ * a user, followedUsername: the username of the user being followed
+ * request url parameters: followingUserId: the id of the user who is following a user, followedUserId: the
+ * id of the user being followed
+ *
+ * * @param Responds Responds with a success message, along with updated follower and following data or an error
+ */
 
+export const followUser = async (req: Request, res: Response) => {
+    const {followingUserId, followedUserId } = req.params;
+    const {followingUsername, followedUsername} = req.body;
+    let followerResult;
+    let followingResult;
 
-const followUser = async (req: Request, res: Response) => {
-    if(req.params.id !== req.body.id){
-        // params is storing the id of the user who is to Followed
-        // body is storing the id of the user who is doing the action of following
-        try{
-            const userToBeFollowed = await User.findById(req.params.id);
-            const userFollowing = await User.findById(req.body.id);
-            const userToBeFollowedIdList = userToBeFollowed.followers.map((element: any) => element.id);
-            // const userFollowingList = userFollowing.followers.map((element: any) => element.username);
-            if(!userToBeFollowedIdList.includes(req.body.id)){
-                await userToBeFollowed.updateOne({ $push: { followers : {
-                    id: req.body.id, 
-                    username: userFollowing.username
-                } }});
-                await userFollowing.updateOne({$push: { followings : 
-                    {
-                        id: req.params.id, 
-                        username: userToBeFollowed.username
-                    } 
-                }})
-                res.status(200).json(
-                    {
-                        message: "user has been followed",
-                    });
-            }
-            else{
-                res.status(403).json({
-                    message: "you already follow this user"
-                });
-            }
-        }
-        catch(error: any){
-            res.status(500).json({
-                message: "Error getting user from MongoDB",
-                error: error
-            });
-        }
-    }
-    else{
-        res.status(403).json({
+    if (followingUserId === followedUserId) {
+        return res.status(400).json({
             message: "You can't follow yourself",
-            error: {
-                userToBeFollowedId: req.params.id
-            }
         });
     }
+
+    try {
+        followerResult = await User.findOneAndUpdate({
+                _id: followedUserId
+            },
+            {
+                $addToSet: {
+                    "followers": {
+                        id: followingUserId,
+                        username: followingUsername
+                    }
+                }
+            },
+            {
+                new: true
+            })
+
+        followingResult = await User.findOneAndUpdate({
+                _id: followingUserId
+            },
+            {
+                $addToSet: {
+                    "followings": {
+                        id: followedUserId,
+                        username: followedUsername
+                    }
+                }
+            },
+            {
+                new: true
+            })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            message: "Error while following a user",
+            error: err,
+        });
+
+    }
+
+    return res.status(200).json({
+        message: "Successfully followed user",
+        followerData: followerResult.followers,
+        followingData: followingResult.followings,
+    });
 }
 
-const unfollowUser = async (req: Request, res: Response) => {
-    if (req.body.id !== req.params.id) {
-        try {
-          const userToBeUnfollowed = await User.findById(req.params.id);
-          const userUnfollowing = await User.findById(req.body.id);
-          const userToBeUnfollowedIdList = userToBeUnfollowed.followers.map((element: any) => element.id);
-          if (userToBeUnfollowedIdList.includes(req.body.id)) {
-            await userToBeUnfollowed.updateOne({ $pull: { followers: {
-                id: req.body.id, 
-                username: userUnfollowing.username
-            } } });
-            await userUnfollowing.updateOne({ $pull: { followings: {
-                id: req.params.id,
-                username: userToBeUnfollowed.username
-            } } });
-            res.status(200).json({
-                message: "user has been unfollowed"
-            });
-          } else {
-            res.status(403).json({
-                message: "You don't follow this user"
-            });
-          }
-        } catch (error: any) {
-          res.status(500).json({
-            message: "Error getting user from MongoDB",
-            error: error
-        });
-        }
-      } else {
-        res.status(403).json({
+/**
+ * @param Expected request body: unfollowingUsername: the username of the user who is currently logged in and unfollowing
+ * a user, unfollowedUsername: the username of the user being unfollowed
+ * request url parameters: unfollowingUserId: the id of the user who is following a user, unfollowedUserId: the
+ * id of the user being unfollowed
+ *
+ * * @param Responds Responds with a success message, along with updated follower and following data or an error
+ */
+
+export const unfollowUser = async (req: Request, res: Response) => {
+    const {unfollowingUserId, unfollowedUserId } = req.params;
+    const {unfollowingUsername, unfollowedUsername} = req.body;
+    let unfollowerResult;
+    let unfollowingResult;
+
+    if(unfollowingUserId === unfollowedUserId) {
+        return res.status(400).json({
             message: "You can't unfollow yourself",
-            error: {
-                userToBeUnfollowedId: req.params.id
-            }
         });
-      }
+    }
+
+    try {
+        unfollowerResult = await User.findOneAndUpdate({
+                "_id": unfollowedUserId
+            },
+            {
+                $pull: {
+                    followers: {
+                        id: unfollowingUserId,
+                        username: unfollowingUsername
+                    }
+                }
+            },
+            {
+                new: true
+            }
+        )
+
+        unfollowingResult = await User.findOneAndUpdate({
+                "_id": unfollowingUserId
+            },
+            {
+                $pull: {
+                    followings: {
+                        id: unfollowedUserId,
+                        username: unfollowedUsername
+                    }
+                }
+            },
+            {
+                new: true
+            }
+        )
+    } catch(err) {
+        return res.status(500).json({
+            message: "Error while unfollowing a user",
+            error: err,
+        });
+    }
+
+    return res.status(200).json({
+        message: "Successfully unfollowed user",
+        followerData: unfollowerResult.followers,
+        followingData: unfollowingResult.followings,
+    });
 }
-
-
 
 export const editUser = (req:Request, res: Response) => {
     if(req.body.action){

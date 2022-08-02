@@ -1,42 +1,27 @@
 import React from "react";
+import {useNavigate} from "react-router-dom";
+import {Stack} from "@mui/material";
+import Button from "@mui/material/Button";
 
 export default function Popup({onClose, visible, target, userData}: any) {
-    
-    const dummyArray = [
-        {
-            id: "firstID",
-            username: "firstName"
-        }, 
-        {
-            secondID: "secondID",
-            username: "secondName"
-        }, 
-        {
-            thirdID: "thirdID",
-            username: "thirdName"
-        }, 
-        {
-            fourthID: "fourthID", 
-            username: "fourthName"
-        }, 
-        {
-            fifthID: "fifthID", 
-            username: "fifthName"
-        }];
     let usernameList;
+    const navigate = useNavigate();
     
     if(userData && target){
-        console.log(target)
-        console.log("popup userdata", userData[target]);
         usernameList = (userData[target]).map((element: any) => element.username);
     }
     if(!visible)
     return null;
-    console.log(userData)
+
     function handleOnClick (e: any) {
         if(e.target.id === "container"){
             onClose();
         }
+    }
+
+    const findUser = (element: string) => {
+        onClose();
+        navigate(`/${element}`)
     }
 
   return (
@@ -50,13 +35,13 @@ export default function Popup({onClose, visible, target, userData}: any) {
                 List of {target}
             </span>
         {
-            usernameList && usernameList.length>0 ? 
-            (<div>{
-                usernameList.map((element: any) => 
-                {
-                    return <li className="border-b-[1.5px]">{element}</li>
-                })
-                }</div>) : <div>No {target}</div>
+            usernameList && usernameList.length>0 ?
+                (<Stack>{
+                    usernameList.map((element: any) =>
+                    {
+                        return <Button onClick={()=>findUser(element)} style={{textTransform: 'none'}}>{element}</Button>
+                    })
+                }</Stack>) : <div>No {target}</div>
         }
         </ul>
       </div>
