@@ -20,7 +20,7 @@ const ImageUpload = ({ setIsUploadingImage }:
     const authToken = useSelector(selectAuthToken);
 
     const handleSubmit = async () => {
-        console.log(image);
+
         if (image !== undefined && authToken) {
             setIsUploadingImage(true);
             const formData = new FormData();
@@ -48,7 +48,6 @@ const ImageUpload = ({ setIsUploadingImage }:
             <label htmlFor="icon-button-file">
                 <Input
                     onChange={(e: any) => {
-                        console.log(e.target.files[0])
                         setImage(e.target.files[0]);
                         e.target.value = null;
                     }}
