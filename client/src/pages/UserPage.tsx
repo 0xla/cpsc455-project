@@ -29,7 +29,7 @@ const UserPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let authToken = useSelector(selectAuthToken);
-    const [feedImages, setFeedImages]: any = useState([])
+    // const [feedImages, setFeedImages]: any = useState([])
     const [option, setOption] = useState(0);
     // @ts-ignore
     const loggedInUsername = decodeToken(authToken).username;
@@ -73,7 +73,9 @@ const UserPage = () => {
                 )
 
                 console.log(res.data.data)
-                setFeedImages(res.data.data)
+                // setFeedImages(res.data.data)
+                dispatch(setFeedImages(res.data.data));
+
 
 
 
@@ -183,10 +185,10 @@ const UserPage = () => {
             </div>
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
 
-                {loggedInUsername === username && option === 2 && feedImages.map((imageObj: any) => (
+                {loggedInUsername === username && option === 2 && userData.feedImages.map((imageObj: any) => (
                     <div className="mt-2">
                         <div className="mt-2">
-                            <FeedCard username={imageObj.username} imageData={imageObj.imageData} setFeedImages={setFeedImages} following = {userData.followings} />
+                            <FeedCard username={imageObj.username} imageData={imageObj.imageData} />
                         </div>
 
 

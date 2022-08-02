@@ -4,7 +4,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import {setImages} from "../slices/userSlice";
+import {setFeedImages, setImages} from "../slices/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {decodeToken} from "react-jwt";
 import Button from "@mui/material/Button";
@@ -13,7 +13,7 @@ import {useNavigate} from "react-router-dom";
 
 
 // @ts-ignore
-export default function FeedCard({ imageData, username, setFeedImages, following }) {
+export default function FeedCard({ imageData, username, }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ export default function FeedCard({ imageData, username, setFeedImages, following
                 const result = await axios.get(
                     `http://localhost:5000/api/images/${loggedInUserId}`
                 )
-               setFeedImages(result.data.data)
+                dispatch(setFeedImages(result.data.data));
             } catch (err: any) {
                 console.log("Error unliking post.")
             }
@@ -43,7 +43,7 @@ export default function FeedCard({ imageData, username, setFeedImages, following
                 const result = await axios.get(
                     `http://localhost:5000/api/images/${loggedInUserId}`
                 )
-                setFeedImages(result.data.data)
+                dispatch(setFeedImages(result.data.data));
 
             } catch (err: any) {
                 console.log("Error liking post.")
