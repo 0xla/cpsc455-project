@@ -28,7 +28,7 @@ export default function FeedCard({ imageData, username, }) {
                 );
                 console.log(res.data.data)
                 const result = await axios.get(
-                    `http://localhost:5000/api/images/${loggedInUserId}`
+                    `http://localhost:5000/api/images/following/${loggedInUserId}`
                 )
                 dispatch(setFeedImages(result.data.data));
             } catch (err: any) {
@@ -41,7 +41,7 @@ export default function FeedCard({ imageData, username, }) {
                 );
                 console.log(res.data.data)
                 const result = await axios.get(
-                    `http://localhost:5000/api/images/${loggedInUserId}`
+                    `http://localhost:5000/api/images/following/${loggedInUserId}`
                 )
                 dispatch(setFeedImages(result.data.data));
 

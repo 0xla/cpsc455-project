@@ -7,7 +7,7 @@ import {decodeToken} from "react-jwt";
 export default function TabMenu({ option, optionChange, username }: { option: number, optionChange: any, username: any }) {
     let authToken = useSelector(selectAuthToken);
     // @ts-ignore
-    const loggedInUsername = decodeToken(authToken).username;
+    const loggedInUsername = decodeToken(localStorage.getItem("authToken")).username;
 
     return (
         <Paper square className="Tabs__main">

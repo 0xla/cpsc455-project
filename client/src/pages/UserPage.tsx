@@ -32,7 +32,7 @@ const UserPage = () => {
     // const [feedImages, setFeedImages]: any = useState([])
     const [option, setOption] = useState(0);
     // @ts-ignore
-    const loggedInUsername = decodeToken(authToken).username;
+    const loggedInUsername = decodeToken(localStorage.getItem("authToken")).username;
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
@@ -69,16 +69,14 @@ const UserPage = () => {
 
 
                 const res = await axios.get(
-                    `http://localhost:5000/api/images/${loggedInUserId}`
+                    `http://localhost:5000/api/images/following/${loggedInUserId}`
                 )
 
                 console.log(res.data.data)
                 // setFeedImages(res.data.data)
                 dispatch(setFeedImages(res.data.data));
-
-
-
-
+                console.log("user data" )
+                console.log(userData)
 
             } catch (err) {
                 console.log(err);
@@ -186,16 +184,14 @@ const UserPage = () => {
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
 
                 {loggedInUsername === username && option === 2 && userData.feedImages.map((imageObj: any) => (
-                    <div className="mt-2">
-                        <div className="mt-2">
-                            <FeedCard username={imageObj.username} imageData={imageObj.imageData} />
+                    imageObj.images.map( (imgData: any) => {
+                        return <div className="mt-2">
+                            <div className="mt-2">
+                                <FeedCard username={"username"} imageData={imgData} />
+                            </div>
                         </div>
-
-
-
-                    </div>
+                    })
                 ))}
-
                     <div/>
             </div>
 

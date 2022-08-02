@@ -25,7 +25,7 @@ router.put("/api/users/:id", editUser);
  */
 
 router.post("/api/:userid/images", uploadImage);
-router.get("/api/images/:userId", getAllFollowingImages);
+router.get("/api/images/following/:userId", getAllFollowingImages);
 
 
 /**

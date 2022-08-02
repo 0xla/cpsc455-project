@@ -6,6 +6,7 @@ import { Storage } from "@google-cloud/storage";
 import { ObjectId } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import dotenv from "dotenv";
+import USER_ERR from "../errors/userErrors";
 dotenv.config()
 const storage = new Storage({ keyFilename: "google-cloud-key.json" });
 const bucket_name: string = process.env.BUCKET_NAME || '';
@@ -157,27 +158,37 @@ export const unlikePost = async (req: Request, res: Response) => {
   //user id is the id of the user we want following list images of
 export const getAllFollowingImages = async (req: Request, res: Response) => {
   const {userId} = req.params;
-  console.log(userId)
-  let followingImages = [];
+  let followingArr;
+  let imageData;
 
-  const followingArr = await User.findOne({
-    _id: userId}).select('followings -_id')
-  console.log(followingArr)
+  try {
+    followingArr = await User.findOne({
+      _id: userId
+    }).select('followings -_id')
+  } catch (err) {
+    return res.status(500).json({
+      message: "Error getting followingArr from Mongodb",
+      error: err,
+    });
 
-  for (const follower of followingArr.followings) {
-    const imageData = await User.findOne({username: follower.username}).select('images -_id')
-    for (const img of imageData.images) {
-      const imgData = {
-        imageData: img,
-        username: follower.username
-      }
-      followingImages.push(imgData)
-    }
   }
 
+  const followingIdArr = followingArr.followings.map( (following: any) => {
+    return following.id;
+  })
+  try {
+    imageData = await User.find({'_id': {$in: followingIdArr}}).select('images -_id');
+  }catch(err) {
+    return res.status(500).json({
+      message: "Error image data from Mongodb",
+      error: err,
+    });
+  }
+
+  console.log(imageData)
   return res.status(200).json({
     message: "Successfully retrieved images",
-    data: followingImages
+    data: imageData
   });
 }
 
