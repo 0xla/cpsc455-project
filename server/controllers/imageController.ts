@@ -161,9 +161,15 @@ export const getAllFollowingImages = async (req: Request, res: Response) => {
   for (const follower of followingArr) {
     user = await User.findOne({username: follower.username}).select('images -_id')
     for (const imgObj of user.images) {
-      imgObj['username'] = follower.username;
-      userArr.push(imgObj)
+      const imgData = {
+        imageData: imgObj,
+        username: follower.username
+      }
+      userArr.push(imgData)
     }
+
+    // console.log(userArr)
+    userArr.sort((a: any,b: any) => parseInt(b.createdAt) - parseInt(a.createdAt));
 
   }
 

@@ -53,6 +53,8 @@ export default function FeedCard({ imageData, username, setFeedImages, following
 
     return (
         <div className="card w-auto bg-base-100 shadow-xl">
+            <Typography fontWeight="bold" align="left">{username}</Typography>
+
             <figure><img src={imageData.url}  alt={imageData.id}/></figure>
             <Box sx={{paddingTop: 5, paddingLeft: 5, display: 'flex',}}>
 
@@ -65,7 +67,7 @@ export default function FeedCard({ imageData, username, setFeedImages, following
                 {imageData.likes.length === 1 ? " like" : " likes"} </Typography>
             <div className="card-body">
                 <p>{imageData.description}</p>
-                <p>{username}</p>
+
             </div>
         </div>
     );

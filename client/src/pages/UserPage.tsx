@@ -188,7 +188,7 @@ const UserPage = () => {
                 {loggedInUsername === username && option === 2 && feedImages.map((imageObj: any) => (
                     <div className="mt-2">
                         <div className="mt-2">
-                            <FeedCard username={"asd"} imageData={imageObj} setFeedImages={setFeedImages} following = {userData.followings} />
+                            <FeedCard username={imageObj.username} imageData={imageObj.imageData} setFeedImages={setFeedImages} following = {userData.followings} />
                         </div>
 
 

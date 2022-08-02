@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema(
         },
         images: {
             type: [{id: String, url: String, description: String, likes: []}],
+
         },
         resetPasswordToken: String,
         resetPasswordExpire: Date,
