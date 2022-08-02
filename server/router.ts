@@ -3,8 +3,6 @@ import {resetPassword, forgotPassword, loginUser, registerUser} from "./controll
 import {getUser, getAllUsers, editUser} from "./controllers/userControllers";
 import {likePost, unlikePost, uploadImage} from "./controllers/imageController";
 
-import { protect } from "./middleware/auth";
-
 
 const router = express.Router();
 

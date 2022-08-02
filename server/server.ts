@@ -3,8 +3,6 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import bodyParser from 'body-parser';
-import multer from 'multer';
 
 const app = express();
 dotenv.config();
