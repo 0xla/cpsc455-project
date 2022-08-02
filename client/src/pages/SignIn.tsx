@@ -25,6 +25,7 @@ import { setAuthToken } from "../slices/userSlice";
 import { useDispatch } from "react-redux";
 import {decodeToken} from "react-jwt";
 import { base_be_url } from "../util/constants";
+import axios from "axios";
 
 function Copyright(props: any) {
     return (
@@ -75,23 +76,16 @@ export default function SignInSide() {
     const tryLogin = async (usernameOrEmail: string, password: string) => {
         let response: any;
         try {
-            response = await fetch(`${base_be_url}/api/users/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    usernameOrEmail,
-                    password
-                })
-            })
-
+            response = await axios.post(
+                `${base_be_url}/api/users/login`, {
+                    usernameOrEmail: usernameOrEmail,
+                    password: password
+                }
+            )
         } catch (err) {
             console.log(err)
         }
-
-        const data = await response.json();
-        console.log(data);
+        const data = response.data
         localStorage.setItem("authToken", data.token);
         dispatch(setAuthToken(data.token));
 
@@ -103,7 +97,6 @@ export default function SignInSide() {
             })
             throw new Error(data.message)
         }
-
     }
 
     return (
