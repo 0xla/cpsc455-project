@@ -153,33 +153,33 @@ export const unlikePost = async (req: Request, res: Response) => {
 
 }
 
-export const getAllFollowingImages = async (req: Request, res: Response) => {
-  let userArr: any = []
-  const followingArr: any = req.body.followingArr;
-  let user;
 
-  for (const follower of followingArr) {
-    user = await User.findOne({username: follower.username}).select('images -_id')
-    for (const imgObj of user.images) {
+  //user id is the id of the user we want following list images of
+export const getAllFollowingImages = async (req: Request, res: Response) => {
+  const {userId} = req.params;
+  console.log(userId)
+  let followingImages = [];
+
+  const followingArr = await User.findOne({
+    _id: userId}).select('followings -_id')
+  console.log(followingArr)
+
+  for (const follower of followingArr.followings) {
+    const imageData = await User.findOne({username: follower.username}).select('images -_id')
+    for (const img of imageData.images) {
       const imgData = {
-        imageData: imgObj,
+        imageData: img,
         username: follower.username
       }
-      userArr.push(imgData)
+      followingImages.push(imgData)
     }
-
-    // console.log(userArr)
-    userArr.sort((a: any,b: any) => parseInt(b.createdAt) - parseInt(a.createdAt));
-
   }
 
-console.log(userArr)
   return res.status(200).json({
     message: "Successfully retrieved images",
-    data: userArr
+    data: followingImages
   });
-
-  }
+}
 
 
 

@@ -68,10 +68,8 @@ const UserPage = () => {
                 setOption(0);
 
 
-                const res = await axios.post(
-                    `http://localhost:5000/api/images`, {
-                        followingArr: followings
-                    }
+                const res = await axios.get(
+                    `http://localhost:5000/api/images/${loggedInUserId}`
                 )
 
                 console.log(res.data.data)
@@ -179,7 +177,7 @@ const UserPage = () => {
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                 {option === 0 && userData.images.map((image: any) => (
                     <div className="mt-2">
-                        <ImageCard username={""} imageData={image} />
+                        <ImageCard username={loggedInUsername} imageData={image} />
                     </div>
                 ))}
             </div>

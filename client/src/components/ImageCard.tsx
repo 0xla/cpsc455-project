@@ -7,11 +7,15 @@ import axios from "axios";
 import {setImages} from "../slices/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {decodeToken} from "react-jwt";
+import Button from "@mui/material/Button";
+import React from "react";
+import {useNavigate} from "react-router-dom";
 
 
 // @ts-ignore
 export default function ImageCard({ imageData, username }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
@@ -40,9 +44,13 @@ export default function ImageCard({ imageData, username }) {
             }
         }
     }
+    const findUser = (username: string) => {
+        navigate(`/${username}`)
+    }
 
     return (
         <div className="card w-auto bg-base-100 shadow-xl">
+            <Button  onClick={()=>findUser(username)} style={{textTransform: 'none', fontSize: "20px"}}>{username}</Button>
             <figure><img src={imageData.url}  alt={imageData.id}/></figure>
             <Box sx={{paddingTop: 5, paddingLeft: 5, display: 'flex',}}>
 
@@ -55,7 +63,7 @@ export default function ImageCard({ imageData, username }) {
                 {imageData.likes.length === 1 ? " like" : " likes"} </Typography>
             <div className="card-body">
                 <p>{imageData.description}</p>
-                <p>{username}</p>
+
             </div>
         </div>
     );
