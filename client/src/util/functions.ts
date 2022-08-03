@@ -31,14 +31,18 @@ export const fetchUserData = async (tokenOrUsername: string) => {
 };
 
 export const uploadImage = async (formData: any, token: string) => {
+    // @ts-ignore
+    const loggedInUsername = decodeToken(localStorage.getItem("authToken")).username;
     if (formData.get("file") !== "null") {
         const decoded: DecodedToken | null = decodeToken(token);
 
         if (decoded !== null) {
             try {
                 let response: any = await axios.post(
-                    `/api/${decoded.id}/images`,
-                    formData,
+                    `/api/${decoded.id}/images`, {
+                        formData,
+                        username: loggedInUsername,
+                    },
                     {
                         headers: {
                             "Content-Type": "multipart/form-data",

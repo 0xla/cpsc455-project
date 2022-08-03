@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
             maxlength: 50
         },
         images: {
-            type: [{id: String, url: String, description: String, likes: []}],
+            type: [{id: String, url: String, description: String, likes: [], createdAt: String,}],
 
         },
         resetPasswordToken: String,

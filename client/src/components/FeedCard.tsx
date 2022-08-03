@@ -8,7 +8,7 @@ import {setFeedImages, setImages} from "../slices/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {decodeToken} from "react-jwt";
 import Button from "@mui/material/Button";
-import React from "react";
+import React, {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 
 
@@ -16,6 +16,12 @@ import {useNavigate} from "react-router-dom";
 export default function FeedCard({ imageData, username, }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log(imageData)
+
+    },
+    )
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id

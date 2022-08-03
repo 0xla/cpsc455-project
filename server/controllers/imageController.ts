@@ -13,6 +13,7 @@ const bucket_name: string = process.env.BUCKET_NAME || '';
 const bucket = storage.bucket(bucket_name);
 
 export const uploadImage = async (req: Request, res: Response) => {
+  const {username} = req.body
   try {
     await processFile(req, res);
     if (!req.file) {
@@ -176,8 +177,9 @@ export const getAllFollowingImages = async (req: Request, res: Response) => {
   const followingIdArr = followingArr.followings.map( (following: any) => {
     return following.id;
   })
+
   try {
-    imageData = await User.find({'_id': {$in: followingIdArr}}).select('images -_id');
+    imageData = await User.find({'_id': {$in: followingIdArr}}).select('images -_id')
   }catch(err) {
     return res.status(500).json({
       message: "Error image data from Mongodb",
@@ -185,10 +187,17 @@ export const getAllFollowingImages = async (req: Request, res: Response) => {
     });
   }
 
-  console.log(imageData)
+  const dataArr = []
+  for (const data of imageData) {
+    dataArr.push(data.images)
+  }
+
+  const flattened = dataArr.flat();
+ const sorted = flattened.sort((imgObj1: any, imgObj2: any) => imgObj1.createdAt - imgObj2.createdAt);
+ 
   return res.status(200).json({
     message: "Successfully retrieved images",
-    data: imageData
+    data: sorted
   });
 }
 

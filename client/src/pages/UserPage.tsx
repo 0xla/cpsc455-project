@@ -183,14 +183,12 @@ const UserPage = () => {
             </div>
             <div className="mt-5 grid md:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
 
-                {loggedInUsername === username && option === 2 && userData.feedImages.map((imageObj: any) => (
-                    imageObj.images.map( (imgData: any) => {
-                        return <div className="mt-2">
+                {loggedInUsername === username && option === 2 && userData.feedImages.map((imageObj: any)=> (
+                        <div className="mt-2">
                             <div className="mt-2">
-                                <FeedCard username={"username"} imageData={imgData} />
+                                <FeedCard username={"username"} imageData={imageObj} />
                             </div>
                         </div>
-                    })
                 ))}
                     <div/>
             </div>

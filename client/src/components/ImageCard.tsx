@@ -17,6 +17,7 @@ export default function ImageCard({ imageData, username }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
 
