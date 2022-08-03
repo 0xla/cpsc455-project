@@ -79,7 +79,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
             });
         }
 
-
         const resetToken = user.getResetPasswordToken(); // creates reset token and expiration and stores the hashed token in the database
         await user.save();  // updates the document in db with newly created resetToken.
         const resetUrl = `${base_fe_url}/password-reset/${resetToken}`; // the URL the user will receive in their email

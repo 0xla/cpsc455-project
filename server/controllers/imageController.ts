@@ -182,3 +182,48 @@ export const unlikePost = async (req: Request, res: Response) => {
     data: result.images,
   });
 };
+
+
+/**
+ * @param Expected request body: None, request url parameters: id of user whose following feed images will be returned
+ * @param Responds Responds with a success message, along with user following image data or an error.
+ */
+export const getAllFollowingImages = async (req: Request, res: Response) => {
+  const {userId} = req.params;
+  let followingArr;
+  let imageData;
+
+  try {
+    followingArr = await User.findOne({
+      _id: userId
+    }).select('followings -_id')
+  } catch (err) {
+    return res.status(500).json({
+      message: "Error getting followingArr from Mongodb",
+      error: err,
+    });
+  }
+  const followingIdArr = followingArr.followings.map( (following: any) => {
+    return following.id;
+  })
+
+  try {
+    imageData = await User.find({'_id': {$in: followingIdArr}}).select('images -_id')
+  }catch(err) {
+    return res.status(500).json({
+      message: "Error getting image data from Mongodb",
+      error: err,
+    });
+  }
+
+  const imageDataArr = []
+  for (const data of imageData) {
+    imageDataArr.push(data.images)
+  }
+  const flattened = imageDataArr.flat();
+
+  return res.status(200).json({
+    message: "Successfully retrieved all following images",
+    data: flattened
+  });
+}

@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please enter a username"],
       trim: true,
       unique: true,
+        maxlength: 30
     },
     email: {
       type: String,
@@ -27,7 +28,7 @@ const userSchema = new mongoose.Schema(
     },
     followings: {
       type: Array,
-      defaul: [],
+      default: [],
     },
     profilePicture: {
       type: String,
