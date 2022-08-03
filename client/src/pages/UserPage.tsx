@@ -79,11 +79,11 @@ const UserPage = () => {
                 dispatch(setFeedImages(res.data.data));
 
                 const result = await axios.get(
-                    `${base_be_url}/api/users?limit=16`
+                    `${base_be_url}/api/users?limit=40`
                 )
 
                 const suggestedFollowing = result.data.data.filter( (user: any) => {
-                    return user.username !== loggedInUsername;
+                    return user.username !== loggedInUsername && user.images.length !== 0;
                 })
                 setSuggestedUsersToFollow(suggestedFollowing);
             } catch (err) {
