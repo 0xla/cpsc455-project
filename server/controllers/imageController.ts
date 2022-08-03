@@ -59,8 +59,7 @@ export const uploadImage = async (req: Request, res: Response) => {
       const image = {
         id: uuidv4(),
         url: publicUrl,
-        description:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        username: req.body.username,
         likes: [],
       };
 
