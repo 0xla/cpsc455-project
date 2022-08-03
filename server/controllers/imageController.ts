@@ -35,68 +35,68 @@ export const getImageLabels = async (url: string): Promise<string[]> => {
 export const uploadImage = async (req: Request, res: Response) => {
   try {
     await processFile(req, res);
-    if (!req.file) {
-      return res.status(400).send({ message: "Please upload a file!" });
-    }
-
-    // Create a new blob in the bucket and upload the file data.
-    const blob = bucket.file(req.file!.originalname);
-    const blobStream = blob.createWriteStream({
-      resumable: false,
-    });
-    blobStream.on("error", (err) => {
-      res.status(500).send({ message: err.message });
-    });
-
-    blobStream.on("finish", async (data: any) => {
-      // Create URL for directly file access via HTTP.
-      const publicUrl = util.format(
-        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-      );
-
-      const imageLabels: string[] = await getImageLabels(publicUrl);
-
-      const image = {
-        id: uuidv4(),
-        url: publicUrl,
-        username: req.body.username,
-        likes: [],
-      };
-
-      await User.findByIdAndUpdate(
-        { _id: new ObjectId(req.params.userid) },
-        {
-          $push: {
-            images: image,
-            imageCategories: {
-              $each: imageLabels,
-            },
-          },
-        }
-      );
-
-      try {
-        await bucket.file(req.file!.originalname).makePublic();
-      } catch (err) {
-        return res.status(500).send({
-          message: `Uploaded the file successfully: ${
-            req.file!.originalname
-          }, but public access is denied! error message: ${err}`,
-          url: publicUrl,
-        });
-      }
-      res.status(200).send({
-        message: "Uploaded the file successfully: " + req.file!.originalname,
-        image: image,
-        imageLabels: imageLabels,
-      });
-    });
-    blobStream.end(req.file!.buffer);
   } catch (err) {
-    res.status(500).send({
-      message: `Could not upload the file: ${req.file!.originalname}. ${err}`,
+    return res.status(500).send({
+      message: `Could not process the file ${err}`,
     });
   }
+
+  if (!req.file) {
+    return res.status(400).send({ message: "Please upload a file!" });
+  }
+  // Create a new blob in the bucket and upload the file data.
+  const blob = bucket.file(req.file!.originalname);
+  const blobStream = blob.createWriteStream({
+    resumable: false,
+  });
+  blobStream.on("error", (err) => {
+    return res.status(500).send({ message: err.message });
+  });
+
+  blobStream.on("finish", async (data: any) => {
+    // Create URL for directly file access via HTTP.
+    const publicUrl = util.format(
+      `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+    );
+
+    const imageLabels: string[] = await getImageLabels(publicUrl);
+
+    const image = {
+      id: uuidv4(),
+      url: publicUrl,
+      username: req.body.username,
+      likes: [],
+    };
+
+    await User.findByIdAndUpdate(
+      { _id: new ObjectId(req.params.userid) },
+      {
+        $push: {
+          images: image,
+          imageCategories: {
+            $each: imageLabels,
+          },
+        },
+      }
+    );
+
+    try {
+      await bucket.file(req.file!.originalname).makePublic();
+    } catch (err) {
+      return res.status(500).send({
+        message: `Uploaded the file successfully: ${
+          req.file!.originalname
+        }, but public access is denied! error message: ${err}`,
+        url: publicUrl,
+      });
+    }
+    res.status(200).send({
+      message: "Uploaded the file successfully: " + req.file!.originalname,
+      image: image,
+      imageLabels: imageLabels,
+    });
+  });
+  blobStream.end(req.file!.buffer);
 };
 
 /**

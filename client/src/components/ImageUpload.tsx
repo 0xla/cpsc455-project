@@ -6,29 +6,37 @@ import { styled } from "@mui/material/styles";
 import { uploadImage } from "../util/functions";
 import { addImage, addImageCategories, selectAuthToken } from "../slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+// @ts-ignore
+import toast from "toast-me";
 
 const Input = styled("input")({
     display: "none",
 });
 
-const ImageUpload = ({ setIsUploadingImage }: 
+const ImageUpload = ({ setIsUploadingImage }:
     { setIsUploadingImage: (value: boolean) => void }) => {
 
     const dispatch = useDispatch();
     const authToken = useSelector(selectAuthToken);
 
-
     const handleSubmit = async () => {
-        setIsUploadingImage(true);
+
         if (image !== undefined && authToken) {
+            setIsUploadingImage(true);
             const formData = new FormData();
             formData.append("file", image);
-            const imageData = await uploadImage(formData, authToken);
 
-            if (imageData) {
-                setImage(undefined);
-                dispatch(addImage(imageData.image));
-                dispatch(addImageCategories(imageData.imageLabels));
+            try {
+                const imageData = await uploadImage(formData, authToken);
+                if (imageData) {
+                    setImage(undefined);
+                    dispatch(addImage(imageData.image));
+                    dispatch(addImageCategories(imageData.imageLabels));
+                    toast("Image uploaded successfully!");
+                }
+            } catch (err: any) {
+                toast("Image failed to upload. Please try again later!")
+            } finally {
                 setIsUploadingImage(false);
             }
         }
@@ -41,6 +49,7 @@ const ImageUpload = ({ setIsUploadingImage }:
                 <Input
                     onChange={(e: any) => {
                         setImage(e.target.files[0]);
+                        e.target.value = null;
                     }}
                     accept="image/*"
                     id="icon-button-file"

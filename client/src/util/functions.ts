@@ -50,7 +50,8 @@ export const uploadImage = async (formData: any, token: string) => {
         );
         return response.data;
       } catch (error: any) {
-        console.log(error.response.data.message);
+        console.log(error.request.response);
+        throw new Error();
       }
     }
   }
