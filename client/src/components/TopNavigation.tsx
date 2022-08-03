@@ -48,7 +48,6 @@ const TopNavigation = () => {
                                 <span className="badge">New</span>
                             </button>
                         </li>
-                        <li><button onClick={navigateToSettings}>Settings</button></li>
                         <li><button onClick={signOut}>Logout</button></li>
                     </ul>
                 </div>

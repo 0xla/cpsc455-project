@@ -118,8 +118,8 @@ const UserPage = () => {
     }
 
     return (
-        <div className="bg-[#FAFAFA] ">
-            <div>
+        <div className="bg-[#FAFAFA] h-auto">
+            <div className="h-auto">
                 <TopNavigation />
                 <div className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
                     <div className="flex flex-col lg:mr-[100px] p-2">
@@ -173,16 +173,16 @@ const UserPage = () => {
                 <div className="mt-2">
                     <TabMenu option={option} optionChange={optionChange} />
                 </div>
-            {option===0 ? <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
+                {option===0 ? <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                 {userData.images.map((image: any) => (
                         <div key={image.id} className="mt-2">
                             <ImageCard imageData={image} />
                         </div>
                         )
                     )}
-                    </div> : <div className="flex items-center justify-center md:my-8 md:p-4">
+                    </div> : <div className="flex items-center justify-center md:my-8 md:m-4 z-10">
                                 <PieChart />
-                        </div>}
+                        </div>}                
 
             <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData} />
         </div>
