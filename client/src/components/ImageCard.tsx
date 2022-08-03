@@ -4,13 +4,17 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import {setImages} from "../slices/userSlice";
-import {useDispatch, useSelector} from "react-redux";
+import {setFeedImages, setImages} from "../slices/userSlice";
+import {useDispatch,} from "react-redux";
 import {decodeToken} from "react-jwt";
 import { base_be_url } from "../util/constants";
+import Button from "@mui/material/Button";
+import {useNavigate} from "react-router-dom";
 
-export default function ImageCard({ imageData }: { imageData: ImageData }) {
+export default function ImageCard({ imageData, isFeed }: { imageData: ImageData, isFeed: boolean }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    let result: any;
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
@@ -30,15 +34,31 @@ export default function ImageCard({ imageData }: { imageData: ImageData }) {
                     `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
                 dispatch(setImages(res.data.data));
-
             } catch (err: any) {
                 console.log("Error liking post.")
             }
         }
+
+        if (isFeed) {
+            try {
+                result = await axios.get(
+                    `${base_be_url}/api/images/following/${loggedInUserId}`
+                )
+            } catch (err) {
+                console.log("Error getting following images.")
+            }
+            dispatch(setFeedImages(result.data.data));
+        }
+    }
+
+    const navigateToUser = (username: string) => {
+        navigate(`/${username}`)
     }
 
     return (
         <div className="card w-auto bg-base-100 shadow-xl">
+            {isFeed && <Button onClick={() => navigateToUser(imageData.username)}
+                               style={{textTransform: 'none', fontSize: "20px"}}>{imageData.username}</Button>}
             <figure>
                 <img 
                     src={imageData.url}  
