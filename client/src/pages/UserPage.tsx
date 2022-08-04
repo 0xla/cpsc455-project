@@ -207,7 +207,7 @@ const UserPage = () => {
             {option === 2 &&
                 <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                     {loggedInUsername === username && option === 2 && userData.feedImages.map((imageObj: any)=> (
-                        <div className="mt-2">
+                        <div key={imageObj.id} className="mt-2">
                             <ImageCard isFeed={true} imageData={imageObj} />
                         </div>
                     ))}

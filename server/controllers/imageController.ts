@@ -66,6 +66,7 @@ export const uploadImage = async (req: Request, res: Response) => {
       url: publicUrl,
       username: req.body.username,
       likes: [],
+      createdAt: new Date(),
     };
 
     await User.findByIdAndUpdate(
@@ -186,7 +187,8 @@ export const unlikePost = async (req: Request, res: Response) => {
 
 /**
  * @param Expected request body: None, request url parameters: id of user whose following feed images will be returned
- * @param Responds Responds with a success message, along with user following image data or an error.
+ * @param Responds Responds with a success message, along with user following image data sorted by date (newest-oldest)
+ * or an error.
  */
 export const getAllFollowingImages = async (req: Request, res: Response) => {
   const {userId} = req.params;
@@ -221,9 +223,10 @@ export const getAllFollowingImages = async (req: Request, res: Response) => {
     imageDataArr.push(data.images)
   }
   const flattened = imageDataArr.flat();
+  const sortedImages = flattened.sort((imgObj1: any, imgObj2: any) => imgObj2.createdAt - imgObj1.createdAt);
 
   return res.status(200).json({
     message: "Successfully retrieved all following images",
-    data: flattened
+    data: sortedImages
   });
 }

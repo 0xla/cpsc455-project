@@ -4,7 +4,7 @@ export interface ImageData {
   description: string;
   likes: any;
   username: string,
-  createdAt: string
+  createdAt: Date
 }
 export interface FollowerData {
   id: string,

@@ -10,6 +10,7 @@ import {decodeToken} from "react-jwt";
 import { base_be_url } from "../util/constants";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
+import constants from "../statics/constants";
 
 export default function ImageCard({ imageData, isFeed }: { imageData: ImageData, isFeed: boolean }) {
     const dispatch = useDispatch();
@@ -55,6 +56,12 @@ export default function ImageCard({ imageData, isFeed }: { imageData: ImageData,
         navigate(`/${username}`)
     }
 
+    const date = new Date(imageData.createdAt);
+    const month = constants.MONTH_NAMES[date.getMonth()];
+    const day = date.getDay();
+    const year = date.getFullYear();
+    const formattedDate = `${month} ${day}, ${year}`
+
     return (
         <div className="card w-auto bg-base-100 shadow-xl">
             {isFeed && <Button onClick={() => navigateToUser(imageData.username)}
@@ -76,7 +83,12 @@ export default function ImageCard({ imageData, isFeed }: { imageData: ImageData,
                 {imageData.likes.length === 1 ? " like" : " likes"} </Typography>
             <div className="card-body">
                 <p>{imageData.description}</p>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary">
+                    {formattedDate}
+                </Typography>
+
             </div>
+
         </div>
     );
 }
