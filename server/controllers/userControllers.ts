@@ -14,17 +14,19 @@ const userProjection = {
 
 
 /**
- * @param Expected request body: None, request query parameters (optional): username, exact
+ * @param Expected request body: None, request query parameters (optional): username, exact, limit
  *
  * * @param Responds with all users' bio, profile image, follower and following list found in database if
  *                   no query parameters specified. Else filters users
  *  *                based on query parameters. If exact is set to false,
- *                   will only return suggested usernames as opposed to an exact match by default.
+ *                   will only return suggested usernames as opposed to an exact match by default. Results returned
+ *                   limited by limit param (if not specified, all records will be returned).
  */
  export const getAllUsers = async (req: Request, res: Response) => {
     const filter: any = {};
     const validFilters = ["username"];
     const exactMatch = req.query.exact;
+    const limit = req.query.limit;
 
     for (const [key, value] of Object.entries(req.query)) {
         if (validFilters.includes(key)) {
@@ -33,7 +35,7 @@ const userProjection = {
     }
 
     if (exactMatch === "true" || exactMatch === undefined) {
-        User.find(filter, userProjection)
+        User.find(filter, userProjection).limit(limit)
             .exec()
             .then((data: any) => {
                 res.status(200).json({

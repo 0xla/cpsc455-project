@@ -32,6 +32,7 @@ export const fetchUserData = async (tokenOrUsername: string) => {
   }
 };
 
+
 export const uploadImage = async (formData: any, token: string) => {
   if (formData.get("file") !== "null") {
     const decoded: DecodedToken | null = decodeToken(token);

@@ -3,6 +3,8 @@ export interface ImageData {
   url: string;
   description: string;
   likes: any;
+  username: string,
+  createdAt: Date
 }
 export interface FollowerData {
   id: string,
@@ -15,6 +17,7 @@ export interface UserDetails {
   userBio: string;
   profileImageUrl: string;
   images: ImageData[];
+  feedImages: ImageData[];
   followers: Array<FollowerData>;
   followings: Array<FollowerData>;
   imageCategories: Array<string>;
