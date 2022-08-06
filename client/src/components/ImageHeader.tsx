@@ -1,4 +1,4 @@
-import {Button} from "@mui/material"
+import {Button, Typography} from "@mui/material"
 import {useNavigate} from "react-router-dom";
 
 const ImageHeader = ({username}: {username: String}) => {
@@ -15,7 +15,10 @@ const ImageHeader = ({username}: {username: String}) => {
             </label>
             <Button onClick={() => navigateToUser(username)}
                     style={{textTransform: 'none', color: "black",backgroundColor: 'transparent'}}>
-                {username}
+                <Typography style={{ fontSize: "0.8rem" }} fontWeight="bold" >
+                    {username}
+                </Typography>
+
             </Button>
         </div>
     )

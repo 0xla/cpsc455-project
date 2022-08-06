@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
-import {Card} from "@mui/material";
+import {Card, Typography} from "@mui/material";
 
 const SuggestedUserCard = ({suggestedUserData}: { suggestedUserData: any, }) => {
     const navigate = useNavigate();
@@ -19,7 +19,9 @@ const SuggestedUserCard = ({suggestedUserData}: { suggestedUserData: any, }) => 
                         </div>
                     </label>
                         <Button onClick={() => navigateToUser(suggestedUserData.username)} style={{textTransform: 'none', color: "black",backgroundColor: 'transparent'}}>
-                            {suggestedUserData.username}
+                            <Typography style={{ fontSize: "0.8rem" }} fontWeight="bold" >
+                                {suggestedUserData.username}
+                            </Typography>
                         </Button>
                 </div>
             </Card>
