@@ -26,6 +26,7 @@ import { useDispatch } from "react-redux";
 import {decodeToken} from "react-jwt";
 import { base_be_url } from "../util/constants";
 import axios from "axios";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Copyright(props: any) {
     return (
@@ -43,6 +44,7 @@ const theme = createTheme();
 export default function SignInSide() {
 
     const [invalidLogin, setInvalidLogin] = useState(false);
+    const [isSigningIn, setIsSigningIn] = useState(false);
     const dispatch = useDispatch();
 
     const formik: any = useFormik({
@@ -76,6 +78,7 @@ export default function SignInSide() {
     const tryLogin = async (usernameOrEmail: string, password: string) => {
         let response: any;
         try {
+            setIsSigningIn(true)
             response = await axios.post(
                 `${base_be_url}/api/users/login`, {
                     usernameOrEmail: usernameOrEmail,
@@ -92,6 +95,8 @@ export default function SignInSide() {
                 })
                 throw new Error(err.response.data.message)
             }
+        } finally {
+            setIsSigningIn(false)
         }
         const data = response.data
         localStorage.setItem("authToken", data.token);
@@ -169,6 +174,7 @@ export default function SignInSide() {
                             >
                                 Sign In
                             </Button>
+                            {isSigningIn && <CircularProgress />}
                             <Grid container>
                                 <Grid item xs>
                                     <Link href="/forgot-password" variant="body2">
