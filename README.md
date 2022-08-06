@@ -18,8 +18,8 @@ Our team built a social media type web application where users of all age groups
 
 ## Stretch
 
-- [] Integrating application with other sign-in functions / features (Google Sign-in, Two-factor authentication)
-- [] direct messaging
+- [ ] Integrating application with other sign-in functions / features (Google Sign-in, Two-factor authentication)
+- [ ] direct messaging
 
 # Description of tech from Units 1 to 5 in the Project
 
