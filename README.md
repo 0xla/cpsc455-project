@@ -51,6 +51,8 @@ Our frontend was deployed using Netlify while our backend was deployed using Her
 
 # Description of Next Steps
 
+In order to improve our social media application, we plan to integrate a chat messaging feature to allow users to communicate with one another. We would also like to allow users to sign-in to our application using their credentials from other platforms such as their Gmail and/or Facebook account.
+
 # List of contributions
 
 ## Steven Wong a4a3b
