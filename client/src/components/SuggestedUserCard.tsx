@@ -8,12 +8,14 @@ const SuggestedUserCard = ({suggestedUserData}: { suggestedUserData: any, }) => 
         navigate(`/${username}`)
     }
 
+    const profilePictureURL = suggestedUserData.profilePicture;
+
     return (
         <div >
             <Card>
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
-                            <img alt="profile-pic" src="https://api.lorem.space/image/face?hash=33791" />
+                            <img alt="profile-pic" src="https://api.lorem.space/image/face?hash=33791"/>
                         </div>
                     </label>
                         <Button onClick={() => navigateToUser(suggestedUserData.username)} style={{textTransform: 'none',}}>

@@ -1,6 +1,14 @@
 import express from "express";
 import {resetPassword, forgotPassword, loginUser, registerUser} from "./controllers/authControllers";
-import {getUser, getAllUsers, editUser, followUser, unfollowUser} from "./controllers/userControllers";
+import {
+    getUser,
+    getAllUsers,
+    editUser,
+    followUser,
+    unfollowUser,
+    getRandomUsers,
+    getAllFollowing
+} from "./controllers/userControllers";
 import {getAllFollowingImages, likePost, unlikePost, uploadImage} from "./controllers/imageController";
 
 import { protect } from "./middleware/auth";
@@ -30,6 +38,8 @@ router.get("/api/images/following/:userId", getAllFollowingImages);
  */
 
 router.get("/api/users", getAllUsers);
+router.get("/api/users/random", getRandomUsers)
+router.get("/api/users/:id/following", getAllFollowing)
 router.get("/api/users/:id", getUser);
 router.put("/api/users/:id", editUser);
 
