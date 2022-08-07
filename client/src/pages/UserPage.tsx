@@ -23,11 +23,13 @@ import axios from "axios";
 import {base_be_url} from "../util/constants";
 import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
+import ProfilePictureUpload from "../components/ProfilePictureUpload";
 
 const UserPage = () => {
     const { username } = useParams();
     const [suggestedUsersToFollow, setSuggestedUsersToFollow] = useState([]);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [editProfile, setIsEditProfile] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalTarget, setModalTarget] = useState("");
     const [option, setOption] = useState(0);
@@ -129,10 +131,12 @@ const UserPage = () => {
         }
     }
 
+
     return (
         <div className="bg-[#FAFAFA] h-auto">
+            <ProfilePictureUpload></ProfilePictureUpload>
             <div className="h-auto">
-                <TopNavigation />
+                <TopNavigation setIsEditProfile={setIsEditProfile} />
                 <div className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
                     <div className="flex flex-col lg:mr-[100px] p-2">
                         {
@@ -142,6 +146,9 @@ const UserPage = () => {
                                 : <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
                                        alt="defaultProfileImage" src="https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg" />
                         }
+                        { editProfile &&<button>
+                            Upload Profile Picture
+                        </button>}
                         </div>
                     <div className="flex flex-col gap-[15px] lg:mr-[100px] mr-[0px] p-2">
                         <div className="flex flex-row gap-[30px]">

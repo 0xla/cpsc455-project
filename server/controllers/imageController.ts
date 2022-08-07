@@ -11,6 +11,7 @@ const storage = new Storage({ keyFilename: "google-credentials.json" });
 const bucket_name: string = process.env.BUCKET_NAME || "";
 const bucket = storage.bucket(bucket_name);
 import * as vision from "@google-cloud/vision";
+import cloudinary from "../utils/cloudinary";
 const client = new vision.ImageAnnotatorClient();
 
 export const getImageLabels = async (url: string): Promise<string[]> => {
@@ -99,6 +100,35 @@ export const uploadImage = async (req: Request, res: Response) => {
   });
   blobStream.end(req.file!.buffer);
 };
+
+export const uploadProfilePicture  = async (req: Request, res: Response) => {
+  const {userid} = req.params;
+  const {imageURL} = req.body;
+  let user;
+
+  try {
+    user = await User.findByIdAndUpdate(
+        { _id: userid },
+        {
+          $set: {
+            profilePicture: imageURL,
+          },
+        }
+    );
+  } catch (err) {
+    return res.status(500).json({
+      message: "Error uploading profile picture",
+      error: err,
+    });
+
+  }
+
+  return res.status(200).json({
+    message: "Successfully uploaded profile picture",
+    data: user
+  });
+
+}
 
 /**
  * @param Expected request body: None, request url parameters: id of user who liked the post, id of liked post
