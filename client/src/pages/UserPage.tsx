@@ -23,6 +23,8 @@ import axios from "axios";
 import {base_be_url} from "../util/constants";
 import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
+import { AvatarGenerator } from 'random-avatar-generator';
+
 
 const UserPage = () => {
     const { username } = useParams();
@@ -128,19 +130,47 @@ const UserPage = () => {
             }
         }
     }
+    
+    const handleUploadProfilePicture = async () => {
+        if(loggedInUserId === userData.userId){
+            const generator = new AvatarGenerator();
+            const avatar:any = generator.generateRandomAvatar();
+            console.log(avatar);
+            try {
+                await axios.put(
+                    `${base_be_url}/api/users/${loggedInUserId}`, {
+                        action: "profile_picture",
+                        imageLink: avatar,
+                    }
+                )
+                dispatch(setProfileImageUrl(avatar));
+
+            } catch (err: any) {
+                console.log("Error uploading the profile picture.")
+            }
+        }
+    }
+
+
 
     return (
         <div className="bg-[#FAFAFA] ">
             <div>
-                <TopNavigation />
+                <TopNavigation userData={userData} />
                 <div className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
                     <div className="flex flex-col lg:mr-[100px] p-2">
                         {
                             userData.profileImageUrl !== '' ? 
-                            <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
-                                 alt={userData.profileImageUrl} src={userData.profileImageUrl} />
+                            <div className="tooltip" data-tip="Click me to generate a new Avatar">
+                                <img 
+                                    className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2 hover:cursor-pointer hover:drop-shadow-2xl"
+                                    alt={userData.profileImageUrl} src={userData.profileImageUrl} 
+                                    onClick={()=>{handleUploadProfilePicture()} } />
+                                </div>
                                 : <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
-                                       alt="defaultProfileImage" src="https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg" />
+                                       alt="defaultProfileImage" 
+                                       src="https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg" 
+                                       onClick={()=>{handleUploadProfilePicture()} }/>
                         }
                         </div>
                     <div className="flex flex-col gap-[15px] lg:mr-[100px] mr-[0px] p-2">

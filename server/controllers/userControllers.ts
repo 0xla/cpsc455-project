@@ -262,6 +262,31 @@ export const unfollowUser = async (req: Request, res: Response) => {
     });
 }
 
+
+export const uploadProfilePicture = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { imageLink } = req.body;
+
+    try {
+        await User.findOneAndUpdate({
+            "_id": id
+        },
+        {
+            profilePicture: imageLink
+        }
+    )
+    } catch(err) {
+        return res.status(500).json({
+            message: "Error while updating the profile image",
+            error: err,
+        });
+    }
+
+    return res.status(200).json({
+        message: "Successfully update profile image",
+    });
+}
+
 export const editUser = (req:Request, res: Response) => {
     if(req.body.action){
         switch(req.body.action.toLowerCase()){
@@ -270,6 +295,9 @@ export const editUser = (req:Request, res: Response) => {
                 break;
             case "unfollow":
                 unfollowUser(req, res);
+                break;
+            case "profile_picture":
+                uploadProfilePicture(req, res);
                 break;
             default: res.status(400).json(
                 {

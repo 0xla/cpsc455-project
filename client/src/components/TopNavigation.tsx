@@ -4,6 +4,7 @@ import { setAuthToken } from "../slices/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {decodeToken} from "react-jwt";
+import { FaSnowman } from "react-icons/fa";
 
 const TopNavigation = () => {
     const dispatch = useDispatch();
@@ -36,10 +37,8 @@ const TopNavigation = () => {
                     <SearchBar />
                 </div>
                 <div className="dropdown dropdown-end m-1">
-                    <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                        <div className="w-10 rounded-full">
-                            <img alt="profile-pic" src="https://api.lorem.space/image/face?hash=33791" />
-                        </div>
+                    <label tabIndex={0} className="btn btn-ghost btn-circle">
+                        <FaSnowman className="text-5xl" />
                     </label>
                     <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                         <li>
