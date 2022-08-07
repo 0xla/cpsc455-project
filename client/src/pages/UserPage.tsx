@@ -156,7 +156,7 @@ const UserPage = () => {
     return (
         <div className="bg-[#FAFAFA] ">
             <div>
-                <TopNavigation userData={userData} />
+                <TopNavigation />
                 <div className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
                     <div className="flex flex-col lg:mr-[100px] p-2">
                         {
