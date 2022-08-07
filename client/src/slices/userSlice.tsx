@@ -21,6 +21,7 @@ export const userSlice = createSlice({
             userBio: '',
             profileImageUrl: '',
             images: [],
+            feedImages: [],
             followers: [],
             followings: [],
             imageCategories: [],
@@ -36,6 +37,9 @@ export const userSlice = createSlice({
         },
         setImages(state, action) {
             state.userData.images = action.payload;
+        },
+        setFeedImages(state, action) {
+            state.userData.feedImages = action.payload;
         },
         removeImage(state, action) {
             state.userData.images.filter((image: ImageData) => image.id !== action.payload);
@@ -75,7 +79,8 @@ export const userSlice = createSlice({
 
 
 export const { addImage, removeImage, setUserBio, setUsername,
-    setImages, setAuthToken, setFollowers, setFollowings, setProfileImageUrl,setUserId, setImageCategories, addImageCategories } = userSlice.actions;
+    setImages, setFeedImages, setAuthToken, setFollowers, setFollowings, setProfileImageUrl,setUserId,
+    setImageCategories, addImageCategories } = userSlice.actions;
 
 export const selectUserData = (state: any) => state.user.userData;
 export const selectAuthToken = (state: any) => state.user.authToken;

@@ -19,7 +19,7 @@ export default function Popup({onClose, visible, target, userData}: any) {
         }
     }
 
-    const findUser = (element: string) => {
+    const navigateToUser = (element: string) => {
         onClose();
         navigate(`/${element}`)
     }
@@ -29,7 +29,6 @@ export default function Popup({onClose, visible, target, userData}: any) {
         id="container"
         className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
       <div className="flex flex-col bg-white p-2 rounded w-72">
-        {/* <div>{userData && <div>print {userData[target]}</div>}</div> */}
         <ul className="list-none">
             <span className="font-semibold text-lg ">
                 List of {target}
@@ -39,7 +38,7 @@ export default function Popup({onClose, visible, target, userData}: any) {
                 (<Stack>{
                     usernameList.map((element: any) =>
                     {
-                        return <Button onClick={()=>findUser(element)} style={{textTransform: 'none'}}>{element}</Button>
+                        return <Button onClick={()=>navigateToUser(element)} style={{textTransform: 'none'}}>{element}</Button>
                     })
                 }</Stack>) : <div>No {target}</div>
         }

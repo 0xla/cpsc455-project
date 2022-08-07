@@ -6,6 +6,7 @@ type DecodedToken = {
   exp: number;
   iat: number;
   id: string;
+  username: string;
 };
 
 export const fetchUserData = async (tokenOrUsername: string) => {
@@ -31,11 +32,13 @@ export const fetchUserData = async (tokenOrUsername: string) => {
   }
 };
 
+
 export const uploadImage = async (formData: any, token: string) => {
   if (formData.get("file") !== "null") {
     const decoded: DecodedToken | null = decodeToken(token);
 
     if (decoded !== null) {
+      formData.append("username", decoded.username);
       try {
         let response: any = await axios.post(
           `${base_be_url}/api/${decoded.id}/images`,

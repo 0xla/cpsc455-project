@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please enter a username"],
       trim: true,
       unique: true,
+        maxlength: 30
     },
     email: {
       type: String,
@@ -27,7 +28,7 @@ const userSchema = new mongoose.Schema(
     },
     followings: {
       type: Array,
-      defaul: [],
+      default: [],
     },
     profilePicture: {
       type: String,
@@ -43,7 +44,7 @@ const userSchema = new mongoose.Schema(
       maxlength: 50,
     },
     images: {
-      type: [{ id: String, url: String, description: String, likes: [] }],
+      type: [{ id: String, url: String, username: String, likes: [], createdAt: Date,}],
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,

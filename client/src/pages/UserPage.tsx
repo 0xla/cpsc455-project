@@ -6,9 +6,9 @@ import TabMenu from "../components/TabMenu";
 import {
     selectUserData, setAuthToken,
     setFollowers, setFollowings, setUserId,
-    setProfileImageUrl, setUserBio, 
+    setProfileImageUrl, setUserBio,
     setUsername, setImages, selectAuthToken,
-    setImageCategories
+    setImageCategories, setFeedImages
 } from "../slices/userSlice"
 import { UserDetails } from "../types";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,9 +21,12 @@ import {decodeToken} from "react-jwt";
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from "axios";
 import {base_be_url} from "../util/constants";
+import Typography from "@mui/material/Typography";
+import SuggestedUserCard from "../components/SuggestedUserCard";
 
 const UserPage = () => {
     const { username } = useParams();
+    const [suggestedUsersToFollow, setSuggestedUsersToFollow] = useState([]);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalTarget, setModalTarget] = useState("");
@@ -68,15 +71,27 @@ const UserPage = () => {
                 dispatch(setFollowings(followings));
                 dispatch(setProfileImageUrl(profilePicture));
                 dispatch(setImageCategories(imageCategories));
+                setOption(0);
+
+                const res = await axios.get(
+                    `${base_be_url}/api/images/following/${loggedInUserId}`
+                )
+                dispatch(setFeedImages(res.data.data));
+
+                const result = await axios.get(
+                    `${base_be_url}/api/users?limit=40`
+                )
+
+                const suggestedFollowing = result.data.data.filter( (user: any) => {
+                    return user.username !== loggedInUsername && user.images.length !== 0;
+                })
+                setSuggestedUsersToFollow(suggestedFollowing);
             } catch (err) {
                 console.log(err);
-
             }
         }
         getUserData();
-        console.log(userData)
-        console.log(loggedInUsername)
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigate]);
 
@@ -91,7 +106,6 @@ const UserPage = () => {
                     `${base_be_url}/api/users/${loggedInUserId}/unfollows/${userData.userId}`, {
                         unfollowingUsername: loggedInUsername,
                         unfollowedUsername: userData.username,
-
                     }
                 )
                 dispatch(setFollowers(res.data.followerData));
@@ -99,14 +113,12 @@ const UserPage = () => {
             } catch (err: any) {
                 console.log("Error unfollowing user.")
             }
-
         } else {
             try {
                 const res = await axios.put(
                     `${base_be_url}/api/users/${loggedInUserId}/follows/${userData.userId}`, {
                         followingUsername: loggedInUsername ,
                         followedUsername: userData.username,
-
                     }
                 )
                 dispatch(setFollowers(res.data.followerData));
@@ -125,8 +137,10 @@ const UserPage = () => {
                     <div className="flex flex-col lg:mr-[100px] p-2">
                         {
                             userData.profileImageUrl !== '' ? 
-                            <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2" alt={userData.profileImageUrl} src={userData.profileImageUrl} /> 
-                                : <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2" alt="defaultProfileImage" src="https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg" />
+                            <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
+                                 alt={userData.profileImageUrl} src={userData.profileImageUrl} />
+                                : <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
+                                       alt="defaultProfileImage" src="https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg" />
                         }
                         </div>
                     <div className="flex flex-col gap-[15px] lg:mr-[100px] mr-[0px] p-2">
@@ -134,7 +148,9 @@ const UserPage = () => {
                             <div className="text-xl">
                                 {username}
                             </div>
-                            {loggedInUserId !== userData.userId && <div className=" border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded hover:cursor-pointer text-base font-medium" onClick={()=>handleFollow()}>
+                            {loggedInUserId !== userData.userId &&
+                                <div className=" border-[2px] py-[0.5px] px-[5px] border-gray-400 rounded
+                                hover:cursor-pointer text-base font-medium" onClick={()=>handleFollow()}>
                                 {userData.followers.filter(follower => follower.id === loggedInUserId).length > 0 ? "Unfollow" : "Follow"}
                             </div>}
                         </div>
@@ -171,19 +187,44 @@ const UserPage = () => {
                     <CircularProgress />
                 </div>}
                 <div className="mt-2">
-                    <TabMenu option={option} optionChange={optionChange} />
+                    <TabMenu option={option} optionChange={optionChange} username ={username} />
                 </div>
-                {option===0 ? <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
+            {option===0  &&
+                <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                 {userData.images.map((image: any) => (
                         <div key={image.id} className="mt-2">
-                            <ImageCard imageData={image} />
+                            <ImageCard isFeed={false} imageData={image} />
                         </div>
                         )
                     )}
-                    </div> : <div className="flex items-center justify-center md:my-8 md:m-4 z-10">
-                                <PieChart />
-                        </div>}                
-
+                    </div>
+            }
+            {option === 1 &&
+                <div className="flex items-center justify-center md:my-8 md:p-4">
+                    <PieChart/>
+                </div>
+            }
+            {option === 2 &&
+                <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
+                    {loggedInUsername === username && option === 2 && userData.feedImages.map((imageObj: any)=> (
+                        <div key={imageObj.id} className="mt-2">
+                            <ImageCard isFeed={true} imageData={imageObj} />
+                        </div>
+                    ))}
+                </div>
+            }
+            {userData.feedImages.length === 0 && option === 2 && loggedInUsername === username &&
+                <Typography fontWeight="bold">Suggested Users to Follow</Typography>}
+            {userData.feedImages.length === 0 && option === 2 && loggedInUsername === username &&
+                <div className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
+                {suggestedUsersToFollow.map((suggestedUserData) => {
+                    // @ts-ignore
+                    return <div>
+                        <SuggestedUserCard suggestedUserData={suggestedUserData}></SuggestedUserCard>
+                    </div>
+                })}
+            </div>
+            }
             <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData} />
         </div>
     );

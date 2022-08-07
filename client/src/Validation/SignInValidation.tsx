@@ -1,7 +1,8 @@
 import * as yup from "yup";
+import constants from "../statics/constants";
 
 export const validationSchema = yup.object({
-    username: yup.string().required("Username is required"),
+    username: yup.string().required("Username is required").max(constants.MAX_USERNAME_LENGTH),
     password: yup
         .string()
         .required('Please enter your password')
