@@ -68,7 +68,8 @@ export const userSlice = createSlice({
         },
         setImageCategories(state, action) {
             state.userData.imageCategories = action.payload;
-        }
+        },
+
     },
 
     extraReducers(builder) {

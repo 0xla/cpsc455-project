@@ -12,7 +12,7 @@ export const PageNotFound = () => {
 
     return (
         <div>
-            <TopNavigation setIsEditProfile={false}/>
+            {/*<TopNavigation/>*/}
             <Typography variant='h5'>
                 Sorry, this page isn't available.
             </Typography>

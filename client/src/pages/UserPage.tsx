@@ -24,13 +24,15 @@ import {base_be_url} from "../util/constants";
 import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
 import ProfilePictureUpload from "../components/ProfilePictureUpload";
+import ProfilePicturePopup from "../components/ProfilePicturePopup";
 
 const UserPage = () => {
     const { username } = useParams();
+    const [loggedInUserProfilePicture, setLoggedInUserProfilePicture] = useState("");
     const [suggestedUsersToFollow, setSuggestedUsersToFollow] = useState([]);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
-    const [editProfile, setIsEditProfile] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [isProfilePictureUpload, setIsProfilePictureUpload] = useState(false);
     const [modalTarget, setModalTarget] = useState("");
     const [option, setOption] = useState(0);
     const navigate = useNavigate();
@@ -41,7 +43,10 @@ const UserPage = () => {
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
     // @ts-ignore
     const loggedInUsername = decodeToken(localStorage.getItem("authToken")).username
-    
+
+    // @ts-ignore
+    const loggedInProfilePicture = decodeToken(localStorage.getItem("authToken")).profilePicture;
+
     useEffect(() => {
 
         if (authToken === undefined) {
@@ -74,6 +79,12 @@ const UserPage = () => {
                 dispatch(setProfileImageUrl(profilePicture));
                 dispatch(setImageCategories(imageCategories));
                 setOption(0);
+
+
+
+                const loggedInUserData = await axios.get(`${base_be_url}/api/users/${loggedInUserId}`)
+                const loggedInProfilePicture = loggedInUserData.data.data.profilePicture;
+               setLoggedInUserProfilePicture(loggedInProfilePicture);
 
                 const res = await axios.get(
                     `${base_be_url}/api/images/following/${loggedInUserId}`
@@ -131,12 +142,10 @@ const UserPage = () => {
         }
     }
 
-
     return (
         <div className="bg-[#FAFAFA] h-auto">
-            <ProfilePictureUpload></ProfilePictureUpload>
             <div className="h-auto">
-                <TopNavigation setIsEditProfile={setIsEditProfile} />
+                <TopNavigation loggedInUserProfilePicture={loggedInUserProfilePicture} />
                 <div className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
                     <div className="flex flex-col lg:mr-[100px] p-2">
                         {
@@ -144,11 +153,19 @@ const UserPage = () => {
                             <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
                                  alt={userData.profileImageUrl} src={userData.profileImageUrl} />
                                 : <img className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
-                                       alt="defaultProfileImage" src="https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg" />
+                                      />
                         }
-                        { editProfile &&<button>
+                        {loggedInUserId === userData.userId &&
+                            <button onClick={()=>setIsProfilePictureUpload(!isProfilePictureUpload)}>
                             Upload Profile Picture
                         </button>}
+                        {isProfilePictureUpload &&
+                            <ImageUpload setIsUploadingImage={setIsUploadingImage}
+                                         isProfilePictureUpload={isProfilePictureUpload}
+                                         setIsProfilePictureUpload={setIsProfilePictureUpload} setLoggedInUserProfilePicture={setLoggedInUserProfilePicture}></ImageUpload>}
+                        {isUploadingImage && isProfilePictureUpload&& <div className="flex justify-center items-center">
+                            <CircularProgress />
+                        </div>}
                         </div>
                     <div className="flex flex-col gap-[15px] lg:mr-[100px] mr-[0px] p-2">
                         <div className="flex flex-row gap-[30px]">
@@ -186,11 +203,11 @@ const UserPage = () => {
                             <div>{userData.userBio}</div>
                         </div>
                     </div>
-                    { loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage}/>}
+                    { loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage} isProfilePictureUpload={isProfilePictureUpload} setIsProfilePictureUpload={setIsProfilePictureUpload} setLoggedInUserProfilePicture={setLoggedInUserProfilePicture}/>}
 
                 </div>
                 </div>
-                {isUploadingImage && <div className="flex justify-center items-center">
+                {isUploadingImage && !isProfilePictureUpload&& <div className="flex justify-center items-center">
                     <CircularProgress />
                 </div>}
                 <div className="mt-2">

@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: "",
+      default: "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg",
     },
     imageCategories: {
       type: Array<String>,
@@ -85,7 +85,7 @@ userSchema.statics.login = async function (usernameOrEmail, password) {
 
 userSchema.methods.getSignedToken = function () {
   // @ts-ignore
-  return jwt.sign({ id: this._id, username: this.username, }, process.env.ACCESS_TOKEN_SECRET, {
+  return jwt.sign({ id: this._id, username: this.username, profilePicture: this.profilePicture }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };

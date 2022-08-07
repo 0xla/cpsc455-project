@@ -5,8 +5,7 @@ import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {decodeToken} from "react-jwt";
 
-
-const TopNavigation = ({setIsEditProfile} : {setIsEditProfile: any}) => {
+const TopNavigation = ({loggedInUserProfilePicture}: {loggedInUserProfilePicture: any}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -19,16 +18,13 @@ const TopNavigation = ({setIsEditProfile} : {setIsEditProfile: any}) => {
     // @ts-ignore
     const loggedInUsername = decodeToken(localStorage.getItem("authToken")).username;
 
+
     const navigateToLoggedInUserProfile = () => {
         navigate(`/${loggedInUsername}`)
     }
 
     const navigateToSettings = () => {
         navigate("/settings")
-    }
-
-    const handleEditProfile = () => {
-        setIsEditProfile(true)
     }
 
     return (
@@ -45,7 +41,7 @@ const TopNavigation = ({setIsEditProfile} : {setIsEditProfile: any}) => {
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
                             <img alt="profile-pic"
-                                 src="https://res.cloudinary.com/dhp7dbfmf/image/upload/v1659867786/hxwwyoqr2ifd7axove4v.jpg"/>
+                                 src={loggedInUserProfilePicture}/>
                         </div>
                     </label>
                     <ul tabIndex={0}
@@ -53,11 +49,6 @@ const TopNavigation = ({setIsEditProfile} : {setIsEditProfile: any}) => {
                         <li>
                             <button onClick={navigateToLoggedInUserProfile} className="justify-between">
                                 Profile
-                            </button>
-                        </li>
-                        <li>
-                            <button onClick={handleEditProfile} className="justify-between">
-                                Edit Profile
                             </button>
                         </li>
                         <li>
