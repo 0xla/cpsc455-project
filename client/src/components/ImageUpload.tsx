@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {styled} from "@mui/material/styles";
 import {uploadImage} from "../util/functions";
-import {addImage, addImageCategories, selectAuthToken, setProfileImageUrl} from "../slices/userSlice";
+import {addImage, addImageCategories, selectAuthToken, setImages, setProfileImageUrl} from "../slices/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 // @ts-ignore
 import toast from "toast-me";
@@ -20,11 +20,13 @@ const ImageUpload = ({
                          setIsUploadingImage,
                          isProfilePictureUpload,
                          setIsProfilePictureUpload,
+                         loggedInUserProfilePicture,
                          setLoggedInUserProfilePicture
                      }:
                          { setIsUploadingImage: (value: boolean) => void,
                              isProfilePictureUpload: boolean,
                              setIsProfilePictureUpload: any,
+                             loggedInUserProfilePicture: string,
                              setLoggedInUserProfilePicture: any }) => {
 
     // @ts-ignore
@@ -42,7 +44,7 @@ const ImageUpload = ({
 
             try {
                 if (!isProfilePictureUpload) {
-                    const imageData = await uploadImage(formData, authToken);
+                    const imageData = await uploadImage(formData, authToken, loggedInUserProfilePicture);
                     if (imageData) {
                         setImage(undefined);
                         dispatch(addImage(imageData.image));
@@ -52,15 +54,16 @@ const ImageUpload = ({
                     formData.append("upload_preset", "ladhoeso");
                     const res = await axios.post("https://api.cloudinary.com/v1_1/dhp7dbfmf/image/upload", formData);
                     const imageUrl = res.data.url;
-                    await axios.post(`${base_be_url}/api/${loggedInUserId}/images/profile`, {
+                    const userData = await axios.post(`${base_be_url}/api/${loggedInUserId}/images/profile`, {
                         imageURL: imageUrl
                     })
                     dispatch(setProfileImageUrl(imageUrl));
                     setLoggedInUserProfilePicture(imageUrl)
+                    dispatch(setImages(userData.data.data.images))
                 }
-                toast("Image uploaded successfully!");
+                toast("Image uploaded successfully!", {duration: 2000});
             } catch (err: any) {
-                toast("Image failed to upload. Please try again later!")
+                toast("Image failed to upload. Please try again later!",{duration: 2000})
             } finally {
                 setIsUploadingImage(false);
                 setIsProfilePictureUpload(false);

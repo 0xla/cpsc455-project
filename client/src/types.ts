@@ -3,7 +3,8 @@ export interface ImageData {
   url: string;
   description: string;
   likes: any;
-  username: string,
+  username: string;
+  profilePicture: string;
   createdAt: Date
 }
 export interface FollowerData {

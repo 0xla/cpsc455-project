@@ -158,7 +158,9 @@ const UserPage = () => {
                             <ImageUpload setIsUploadingImage={setIsUploadingImage}
                                          isProfilePictureUpload={isProfilePictureUpload}
                                          setIsProfilePictureUpload={setIsProfilePictureUpload}
+                                         loggedInUserProfilePicture={loggedInUserProfilePicture}
                                          setLoggedInUserProfilePicture={setLoggedInUserProfilePicture}></ImageUpload>}
+
                         {isUploadingImage && isProfilePictureUpload &&
                             <div className="flex justify-center items-center">
                                 <CircularProgress/>
@@ -203,6 +205,7 @@ const UserPage = () => {
                     {loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage}
                                                                         isProfilePictureUpload={isProfilePictureUpload}
                                                                         setIsProfilePictureUpload={setIsProfilePictureUpload}
+                                                                        loggedInUserProfilePicture={loggedInUserProfilePicture}
                                                                         setLoggedInUserProfilePicture={setLoggedInUserProfilePicture}/>}
                 </div>
             </div>
@@ -238,17 +241,17 @@ const UserPage = () => {
                     ))}
                 </div>
             }
-            {userData.feedImages.length === 0 && option === 2 && loggedInUsername === username &&
-                <Typography fontWeight="bold">Suggested Users to Follow</Typography>}
-            {userData.feedImages.length === 0 && option === 2 && loggedInUsername === username &&
+            {option === 2 && loggedInUsername === username &&
+                <div>
+                <Typography fontWeight="bold">Suggested Users to Follow</Typography>
                 <div
                     className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
                     {suggestedUsersToFollow.map((suggestedUserData) => {
-                        // @ts-ignore
                         return <div>
                             <SuggestedUserCard suggestedUserData={suggestedUserData}></SuggestedUserCard>
                         </div>
                     })}
+                </div>
                 </div>
             }
             <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData}/>
