@@ -36,6 +36,7 @@ export const fetchUserData = async (tokenOrUsername: string) => {
 export const uploadImage = async (formData: any, token: string, loggedInUserProfilePicture: any) => {
     if (formData.get("file") !== "null") {
         const decoded: DecodedToken | null = decodeToken(token);
+        console.log(loggedInUserProfilePicture);
 
         if (decoded !== null) {
             formData.append("username", decoded.username);
