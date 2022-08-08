@@ -1,6 +1,6 @@
 import React from "react";
 import {useNavigate} from "react-router-dom";
-import {Stack} from "@mui/material";
+import {Stack, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 
 export default function Popup({onClose, visible, target, userData}: any) {
@@ -38,7 +38,14 @@ export default function Popup({onClose, visible, target, userData}: any) {
                 (<Stack>{
                     usernameList.map((element: any) =>
                     {
-                        return <Button onClick={()=>navigateToUser(element)} style={{textTransform: 'none'}}>{element}</Button>
+                        return <Button style={{textTransform: 'none', color: "black",}}
+                                       onClick={()=>navigateToUser(element)} >
+                            <Typography style={{ fontSize: "0.8rem" }} fontWeight="bold" >
+                                {element}
+                            </Typography>
+                            <br/>
+                        </Button>
+
                     })
                 }</Stack>) : <div>No {target}</div>
         }

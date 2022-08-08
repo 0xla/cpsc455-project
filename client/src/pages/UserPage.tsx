@@ -24,6 +24,7 @@ import {base_be_url} from "../util/constants";
 import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
 
+
 const UserPage = () => {
     const { username } = useParams();
     const [suggestedUsersToFollow, setSuggestedUsersToFollow] = useState([]);
@@ -180,7 +181,6 @@ const UserPage = () => {
                         </div>
                     </div>
                     { loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage}/>}
-
                 </div>
                 </div>
                 {isUploadingImage && <div className="flex justify-center items-center">
