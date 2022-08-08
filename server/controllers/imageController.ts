@@ -70,6 +70,7 @@ export const uploadImage = async (req: Request, res: Response) => {
             username: req.body.username,
             likes: [],
             createdAt: new Date(),
+            profilePicture: req.body.profilePicture,
         };
 
         await User.findByIdAndUpdate(
