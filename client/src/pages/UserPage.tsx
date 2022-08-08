@@ -13,7 +13,7 @@ import {
 import {UserDetails} from "../types";
 import {useDispatch, useSelector} from "react-redux";
 import "../App/App.css"
-import {fetchUserData} from "../util/functions";
+import {fetchUserData, refreshSuggestedUsers} from "../util/functions";
 import {useNavigate, useParams} from "react-router-dom";
 import Popup from "../components/Popup";
 import PieChart from "../components/PieChart";
@@ -23,6 +23,7 @@ import axios from "axios";
 import {base_be_url} from "../util/constants";
 import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 
 const UserPage = () => {
@@ -81,14 +82,7 @@ const UserPage = () => {
                     `${base_be_url}/api/images/following/${loggedInUserId}`
                 )
                 dispatch(setFeedImages(res.data.images));
-                const loggedInUserFollowing = res.data.following;
-                const randomUsers = await axios.get(
-                    `${base_be_url}/api/users/random?limit=16`
-                )
-                const suggestedFollowing = randomUsers.data.data.filter((user: any) => {
-                    return user.username !== loggedInUsername && !loggedInUserFollowing.includes(user._id);
-                })
-                setSuggestedUsersToFollow(suggestedFollowing);
+               await refreshSuggestedUsers(loggedInUserId, loggedInUsername, setSuggestedUsersToFollow);
             } catch (err) {
                 console.log(err);
             }
@@ -233,6 +227,10 @@ const UserPage = () => {
             }
             {option === 2 && loggedInUsername === username &&
                 <div>
+                    <button onClick={() => refreshSuggestedUsers(loggedInUserId, loggedInUsername, setSuggestedUsersToFollow)} >
+                        <RefreshIcon/>
+                    </button>
+
                     <Typography fontWeight="bold">Suggested Users to Follow</Typography>
                     <div
                         className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
