@@ -55,7 +55,6 @@ const UserPage = () => {
         }
 
         async function getUserData() {
-
             let response;
             try {
                 if (username) {
@@ -82,14 +81,13 @@ const UserPage = () => {
                 const res = await axios.get(
                     `${base_be_url}/api/images/following/${loggedInUserId}`
                 )
-                dispatch(setFeedImages(res.data.data));
-
-                const result = await axios.get(
-                    `${base_be_url}/api/users?limit=40`
+                dispatch(setFeedImages(res.data.images));
+                const loggedInUserFollowing = res.data.following;
+                const randomUsers = await axios.get(
+                    `${base_be_url}/api/users/random?limit=16`
                 )
-
-                const suggestedFollowing = result.data.data.filter((user: any) => {
-                    return user.username !== loggedInUsername && user.images.length !== 0;
+                const suggestedFollowing = randomUsers.data.data.filter( (user: any) => {
+                    return user.username !== loggedInUsername && !loggedInUserFollowing.includes(user._id);
                 })
                 setSuggestedUsersToFollow(suggestedFollowing);
             } catch (err) {
@@ -206,7 +204,6 @@ const UserPage = () => {
                                                                         isProfilePictureUpload={isProfilePictureUpload}
                                                                         setIsProfilePictureUpload={setIsProfilePictureUpload}
                                                                         setLoggedInUserProfilePicture={setLoggedInUserProfilePicture}/>}
-
                 </div>
             </div>
             {isUploadingImage && !isProfilePictureUpload && <div className="flex justify-center items-center">

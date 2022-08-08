@@ -196,6 +196,53 @@ export const followUser = async (req: Request, res: Response) => {
 }
 
 /**
+ * @param Expected request body: none,
+ * request query parameters (optional): limit
+ * * @param Responds Responds with a success message, along with a random number of user's data or an error
+ */
+
+export const getRandomUsers = async (req: Request, res: Response) => {
+    const limit = Number(req.query.limit);
+    let randomUsers;
+    try {
+        randomUsers = await User.aggregate([{$sample: {size: limit}},
+            {$project: {username: 1, profilePicture: 1, _id: 1, images: 1}}]);
+    } catch (err) {
+        return res.status(500).json({
+            message: "Error while fetching random users from MongoDb",
+            error: err,
+        });
+    }
+    return res.status(200).json({
+        message: `Successfully got ${limit} random users`,
+        data: randomUsers,
+    });
+}
+
+/**
+ * @param Expected request body: none, request url parameters: id
+ * * @param Responds Responds with a success message, along with all the following of user with userid: id or an error
+ */
+export const getAllFollowing = async (req: Request, res: Response) => {
+    const {id} = req.params;
+    let followingArr;
+    try {
+        followingArr = await User.findOne({
+            _id: id
+        }).select('followings -_id')
+    } catch (err) {
+        return res.status(500).json({
+            message: "Error getting followingArr from Mongodb",
+            error: err,
+        });
+    }
+    return res.status(200).json({
+        message: `Successfully got following`,
+        data: followingArr,
+    });
+}
+
+/**
  * @param Expected request body: unfollowingUsername: the username of the user who is currently logged in and unfollowing
  * a user, unfollowedUsername: the username of the user being unfollowed
  * request url parameters: unfollowingUserId: the id of the user who is following a user, unfollowedUserId: the
@@ -283,3 +330,4 @@ export const editUser = (req:Request, res: Response) => {
     }
         
 }
+
