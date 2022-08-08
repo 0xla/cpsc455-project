@@ -50,7 +50,7 @@ export default function ImageCard({imageData, isFeed}: { imageData: ImageData, i
             } catch (err) {
                 console.log("Error getting following images.")
             }
-            dispatch(setFeedImages(result.data.data));
+            dispatch(setFeedImages(result.data.images));
         }
     }
 
