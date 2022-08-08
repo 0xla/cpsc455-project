@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
       default: "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg",
     },
     imageCategories: {
-      type: Array<String>,
+      type: [String],
       default: [],
     },
     bio: {
