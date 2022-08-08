@@ -8,7 +8,6 @@ import {setFeedImages, setImages} from "../slices/userSlice";
 import {useDispatch,} from "react-redux";
 import {decodeToken} from "react-jwt";
 import {base_be_url} from "../util/constants";
-import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import constants from "../statics/constants";
 import ImageHeader from "./ImageHeader";
@@ -66,7 +65,7 @@ export default function ImageCard({imageData, isFeed}: { imageData: ImageData, i
 
     return (
         <div className="card w-auto bg-base-100 shadow-xl">
-            <ImageHeader username={imageData.username}></ImageHeader>
+            <ImageHeader username={imageData.username} profilePicture={imageData.profilePicture} ></ImageHeader>
             <figure>
                 <img
                     src={imageData.url}

@@ -8,12 +8,12 @@ import {
     setFollowers, setFollowings, setUserId,
     setProfileImageUrl, setUserBio,
     setUsername, setImages, selectAuthToken,
-    setImageCategories, setFeedImages
+    setImageCategories, setFeedImages, setLoggedInUserProfilePicture
 } from "../slices/userSlice"
 import {UserDetails} from "../types";
 import {useDispatch, useSelector} from "react-redux";
 import "../App/App.css"
-import {fetchUserData} from "../util/functions";
+import {fetchUserData, refreshSuggestedUsers} from "../util/functions";
 import {useNavigate, useParams} from "react-router-dom";
 import Popup from "../components/Popup";
 import PieChart from "../components/PieChart";
@@ -23,11 +23,12 @@ import axios from "axios";
 import {base_be_url} from "../util/constants";
 import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 
 
 const UserPage = () => {
     const {username} = useParams();
-    const [loggedInUserProfilePicture, setLoggedInUserProfilePicture] = useState("");
     const [suggestedUsersToFollow, setSuggestedUsersToFollow] = useState([]);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -76,20 +77,13 @@ const UserPage = () => {
 
                 const loggedInUserData = await axios.get(`${base_be_url}/api/users/${loggedInUserId}`)
                 const loggedInProfilePicture = loggedInUserData.data.data.profilePicture;
-                setLoggedInUserProfilePicture(loggedInProfilePicture);
+                dispatch(setLoggedInUserProfilePicture(loggedInProfilePicture))
 
                 const res = await axios.get(
                     `${base_be_url}/api/images/following/${loggedInUserId}`
                 )
                 dispatch(setFeedImages(res.data.images));
-                const loggedInUserFollowing = res.data.following;
-                const randomUsers = await axios.get(
-                    `${base_be_url}/api/users/random?limit=16`
-                )
-                const suggestedFollowing = randomUsers.data.data.filter( (user: any) => {
-                    return user.username !== loggedInUsername && !loggedInUserFollowing.includes(user._id);
-                })
-                setSuggestedUsersToFollow(suggestedFollowing);
+               await refreshSuggestedUsers(loggedInUserId, loggedInUsername, setSuggestedUsersToFollow);
             } catch (err) {
                 console.log(err);
             }
@@ -137,18 +131,14 @@ const UserPage = () => {
     return (
         <div className="bg-[#FAFAFA] h-auto">
             <div className="h-auto">
-                <TopNavigation loggedInUserProfilePicture={loggedInUserProfilePicture}/>
+                <TopNavigation loggedInUserProfilePicture={userData.loggedInUserProfilePicture}/>
                 <div
                     className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
                     <div className="flex flex-col lg:mr-[100px] p-2">
                         {
-                            userData.profileImageUrl !== '' ?
-                                <img
-                                    className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
-                                    alt={userData.profileImageUrl} src={userData.profileImageUrl}/>
-                                : <img
-                                    className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
-                                />
+                            <img
+                                className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
+                                alt={userData.profileImageUrl} src={userData.profileImageUrl}/>
                         }
                         {loggedInUserId === userData.userId &&
                             <button onClick={() => setIsProfilePictureUpload(!isProfilePictureUpload)}>
@@ -157,8 +147,7 @@ const UserPage = () => {
                         {isProfilePictureUpload &&
                             <ImageUpload setIsUploadingImage={setIsUploadingImage}
                                          isProfilePictureUpload={isProfilePictureUpload}
-                                         setIsProfilePictureUpload={setIsProfilePictureUpload}
-                                         setLoggedInUserProfilePicture={setLoggedInUserProfilePicture}></ImageUpload>}
+                                         setIsProfilePictureUpload={setIsProfilePictureUpload}></ImageUpload>}
                         {isUploadingImage && isProfilePictureUpload &&
                             <div className="flex justify-center items-center">
                                 <CircularProgress/>
@@ -202,8 +191,7 @@ const UserPage = () => {
                     </div>
                     {loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage}
                                                                         isProfilePictureUpload={isProfilePictureUpload}
-                                                                        setIsProfilePictureUpload={setIsProfilePictureUpload}
-                                                                        setLoggedInUserProfilePicture={setLoggedInUserProfilePicture}/>}
+                                                                        setIsProfilePictureUpload={setIsProfilePictureUpload}/>}
                 </div>
             </div>
             {isUploadingImage && !isProfilePictureUpload && <div className="flex justify-center items-center">
@@ -212,6 +200,11 @@ const UserPage = () => {
             <div className="mt-2">
                 <TabMenu option={option} optionChange={optionChange} username={username}/>
             </div>
+            {option === 0 && userData.images.length === 0 && userData.userId === loggedInUserId &&
+            <div>
+                <Typography sx={{paddingTop: 5}} variant="h5">Click the {<PhotoCamera color="primary"/>} above to upload a picture and have it analyzed by Google Cloud Vision AI!</Typography>
+
+            </div>}
             {option === 0 &&
                 <div
                     className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
@@ -238,17 +231,21 @@ const UserPage = () => {
                     ))}
                 </div>
             }
-            {userData.feedImages.length === 0 && option === 2 && loggedInUsername === username &&
-                <Typography fontWeight="bold">Suggested Users to Follow</Typography>}
-            {userData.feedImages.length === 0 && option === 2 && loggedInUsername === username &&
-                <div
-                    className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
-                    {suggestedUsersToFollow.map((suggestedUserData) => {
-                        // @ts-ignore
-                        return <div>
-                            <SuggestedUserCard suggestedUserData={suggestedUserData}></SuggestedUserCard>
-                        </div>
-                    })}
+            {option === 2 && loggedInUsername === username &&
+                <div>
+                    <button onClick={() => refreshSuggestedUsers(loggedInUserId, loggedInUsername, setSuggestedUsersToFollow)} >
+                        <RefreshIcon/>
+                    </button>
+
+                    <Typography fontWeight="bold">Suggested Users to Follow</Typography>
+                    <div
+                        className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
+                        {suggestedUsersToFollow.map((suggestedUserData) => {
+                            return <div>
+                                <SuggestedUserCard suggestedUserData={suggestedUserData}></SuggestedUserCard>
+                            </div>
+                        })}
+                    </div>
                 </div>
             }
             <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData}/>
