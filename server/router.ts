@@ -9,7 +9,13 @@ import {
     getRandomUsers,
     getAllFollowing
 } from "./controllers/userControllers";
-import {getAllFollowingImages, likePost, unlikePost, uploadImage} from "./controllers/imageController";
+import {
+    getAllFollowingImages,
+    likePost,
+    unlikePost,
+    uploadImage,
+    uploadProfilePicture
+} from "./controllers/imageController";
 import { protect } from "./middleware/auth";
 
 
