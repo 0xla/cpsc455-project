@@ -22,6 +22,7 @@ import {Alert} from "@mui/material";
 import TEXT from "../statics/text";
 import { base_be_url } from '../util/constants';
 import axios from "axios";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Copyright(props: any) {
     return (
@@ -39,6 +40,7 @@ const theme = createTheme();
 export default function SignUp() {
 
     const [invalidSignup, setInvalidSignup] = useState(false);
+    const [isSigningUp, setIsSigningUp] = useState(false);
 
     const navigate = useNavigate();
 
@@ -72,6 +74,7 @@ export default function SignUp() {
         let response: any;
 
         try {
+            setIsSigningUp(true)
             response = await axios.post(
                 `${base_be_url}/api/users/register`, {
                     username: username,
@@ -89,6 +92,8 @@ export default function SignUp() {
                 })
                 throw new Error(err.response.data.message)
             }
+        } finally {
+            setIsSigningUp(false)
         }
 
         const data = response.data
@@ -168,6 +173,7 @@ export default function SignUp() {
                         >
                             Sign Up
                         </Button>
+                        {isSigningUp && <CircularProgress />}
                         <Grid container justifyContent="flex-end">
                             <Grid item>
                                 <Link href="/signIn" variant="body2">

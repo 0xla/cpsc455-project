@@ -8,9 +8,10 @@ import {setFeedImages, setImages} from "../slices/userSlice";
 import {useDispatch,} from "react-redux";
 import {decodeToken} from "react-jwt";
 import { base_be_url } from "../util/constants";
-import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import constants from "../statics/constants";
+import ImageHeader from "./ImageHeader";
+
 
 export default function ImageCard({ imageData, isFeed }: { imageData: ImageData, isFeed: boolean }) {
     const dispatch = useDispatch();
@@ -64,29 +65,25 @@ export default function ImageCard({ imageData, isFeed }: { imageData: ImageData,
 
     return (
         <div className="card w-auto bg-base-100 shadow-xl">
-            {isFeed && <Button onClick={() => navigateToUser(imageData.username)}
-                               style={{textTransform: 'none', fontSize: "20px"}}>{imageData.username}</Button>}
+            <ImageHeader username={imageData.username}></ImageHeader>
             <figure>
                 <img 
                     src={imageData.url}  
                     alt={imageData.id} 
                     className="object-cover object-top aspect-square" />
             </figure>
-            <Box sx={{paddingTop: 5, paddingLeft: 5, display: 'flex',}}>
+            <Box sx={{paddingTop: 1, paddingLeft: 1, display: 'flex',}}>
 
                 {imageData.likes.includes(loggedInUserId) ? <FavoriteIcon fontSize="large" style={{ color: 'rgb(255,0,0)' }}
                                                                           onClick={() =>handleLike(imageData.id,loggedInUserId)}/>
                     : <FavoriteBorderIcon fontSize="large" sx={{ "&:hover": { color: "gray"} }}
                                           onClick={() => handleLike(imageData.id,loggedInUserId)}/>}
             </Box>
-            <Typography align="left" sx={{paddingTop: 1, paddingLeft: 6}}>{imageData.likes.length}
-                {imageData.likes.length === 1 ? " like" : " likes"} </Typography>
-            <div className="card-body">
-                <p>{imageData.description}</p>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                    {formattedDate}
-                </Typography>
-
+            <Typography align="left" sx={{paddingTop: 1, paddingLeft: 3}}>{imageData.likes.length}
+                {imageData.likes.length === 1 ? " like" : " likes"}
+            </Typography>
+            <div className="flex pl-6 pb-2 text-xs text-[#666666]">
+                {formattedDate}
             </div>
 
         </div>

@@ -57,3 +57,5 @@ export const uploadImage = async (formData: any, token: string) => {
     }
   }
 };
+
+

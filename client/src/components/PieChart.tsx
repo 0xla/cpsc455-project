@@ -23,7 +23,13 @@ export default function PieChart() {
 
     return (
         <DonutChart
-            data={data}/>
+            className="text-3xl"
+            height={1000}
+            data={data}
+            interactive={true}
+            legend={false}
+            clickToggle={false}
+            />
     );
 
 }

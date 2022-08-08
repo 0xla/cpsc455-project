@@ -24,6 +24,7 @@ import {base_be_url} from "../util/constants";
 import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
 
+
 const UserPage = () => {
     const { username } = useParams();
     const [suggestedUsersToFollow, setSuggestedUsersToFollow] = useState([]);
@@ -128,8 +129,8 @@ const UserPage = () => {
     }
 
     return (
-        <div className="bg-[#FAFAFA] ">
-            <div>
+        <div className="bg-[#FAFAFA] h-auto">
+            <div className="h-auto">
                 <TopNavigation />
                 <div className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
                     <div className="flex flex-col lg:mr-[100px] p-2">
@@ -178,7 +179,6 @@ const UserPage = () => {
                         </div>
                     </div>
                     { loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage}/>}
-
                 </div>
                 </div>
                 {isUploadingImage && <div className="flex justify-center items-center">
