@@ -8,6 +8,8 @@ const SuggestedUserCard = ({suggestedUserData}: { suggestedUserData: any, }) => 
         navigate(`/${username}`)
     }
 
+    const profilePictureURL = suggestedUserData.profilePicture;
+
     return (
             <Card style={{cursor: 'pointer'}} onClick={() => navigateToUser(suggestedUserData.username)} sx={{
                 width: 250

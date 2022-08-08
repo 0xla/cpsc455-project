@@ -227,6 +227,7 @@ export const getAllFollowingImages = async (req: Request, res: Response) => {
 
   return res.status(200).json({
     message: "Successfully retrieved all following images",
-    data: sortedImages
+    images: sortedImages,
+    following: followingIdArr,
   });
 }
