@@ -24,6 +24,7 @@ import {base_be_url} from "../util/constants";
 import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 
 
 const UserPage = () => {
@@ -199,6 +200,11 @@ const UserPage = () => {
             <div className="mt-2">
                 <TabMenu option={option} optionChange={optionChange} username={username}/>
             </div>
+            {option === 0 && userData.images.length === 0 && userData.userId === loggedInUserId &&
+            <div>
+                <Typography sx={{paddingTop: 5}} variant="h5">Click the {<PhotoCamera color="primary"/>} above to upload a picture and have it analyzed by Google Cloud Vision AI!</Typography>
+
+            </div>}
             {option === 0 &&
                 <div
                     className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">

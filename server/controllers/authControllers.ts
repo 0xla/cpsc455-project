@@ -81,7 +81,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
         const resetToken = user.getResetPasswordToken(); // creates reset token and expiration and stores the hashed token in the database
         await user.save();  // updates the document in db with newly created resetToken.
-        const resetUrl = `${base_fe_url}/password-reset/${resetToken}`; // the URL the user will receive in their email
+        const resetUrl = `https://web4-sm.netlify.app/password-reset/${resetToken}`; // the URL the user will receive in their email
         const emailBody = `
         <h1>There was recently a request to change the password for your account. Please click on the following link to reset your password:</h1>
         <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
