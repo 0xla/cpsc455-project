@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import { styled } from "@mui/material/styles";
-import { uploadImage } from "../util/functions";
+import {styled} from "@mui/material/styles";
+import {uploadImage} from "../util/functions";
 import {addImage, addImageCategories, selectAuthToken, setProfileImageUrl} from "../slices/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 // @ts-ignore
 import toast from "toast-me";
 import axios from "axios";
@@ -16,8 +16,16 @@ const Input = styled("input")({
     display: "none",
 });
 
-const ImageUpload = ({ setIsUploadingImage, isProfilePictureUpload, setIsProfilePictureUpload, setLoggedInUserProfilePicture}:
-    { setIsUploadingImage: (value: boolean) => void, isProfilePictureUpload: any, setIsProfilePictureUpload: any, setLoggedInUserProfilePicture: any }) => {
+const ImageUpload = ({
+                         setIsUploadingImage,
+                         isProfilePictureUpload,
+                         setIsProfilePictureUpload,
+                         setLoggedInUserProfilePicture
+                     }:
+                         { setIsUploadingImage: (value: boolean) => void,
+                             isProfilePictureUpload: boolean,
+                             setIsProfilePictureUpload: any,
+                             setLoggedInUserProfilePicture: any }) => {
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
@@ -78,7 +86,7 @@ const ImageUpload = ({ setIsUploadingImage, isProfilePictureUpload, setIsProfile
                     aria-label="upload picture"
                     component="span"
                 >
-                    <PhotoCamera />
+                    <PhotoCamera/>
                 </IconButton>
                 <p>{image ? image.name : ""}</p>
             </label>

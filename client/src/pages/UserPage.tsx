@@ -23,8 +23,7 @@ import axios from "axios";
 import {base_be_url} from "../util/constants";
 import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
-import ProfilePictureUpload from "../components/ProfilePictureUpload";
-import ProfilePicturePopup from "../components/ProfilePicturePopup";
+
 
 const UserPage = () => {
     const { username } = useParams();
@@ -44,11 +43,7 @@ const UserPage = () => {
     // @ts-ignore
     const loggedInUsername = decodeToken(localStorage.getItem("authToken")).username
 
-    // @ts-ignore
-    const loggedInProfilePicture = decodeToken(localStorage.getItem("authToken")).profilePicture;
-
     useEffect(() => {
-
         if (authToken === undefined) {
             const token: string | null = window.localStorage.getItem("authToken");
             if (token) {
@@ -80,11 +75,9 @@ const UserPage = () => {
                 dispatch(setImageCategories(imageCategories));
                 setOption(0);
 
-
-
                 const loggedInUserData = await axios.get(`${base_be_url}/api/users/${loggedInUserId}`)
                 const loggedInProfilePicture = loggedInUserData.data.data.profilePicture;
-               setLoggedInUserProfilePicture(loggedInProfilePicture);
+                setLoggedInUserProfilePicture(loggedInProfilePicture);
 
                 const res = await axios.get(
                     `${base_be_url}/api/images/following/${loggedInUserId}`
