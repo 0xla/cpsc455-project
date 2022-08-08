@@ -32,10 +32,10 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: "",
+      default: "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg",
     },
     imageCategories: {
-      type: Array<String>,
+      type: [String],
       default: [],
     },
     bio: {

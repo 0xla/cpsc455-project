@@ -12,7 +12,6 @@ export const PageNotFound = () => {
 
     return (
         <div>
-            <TopNavigation/>
             <Typography variant='h5'>
                 Sorry, this page isn't available.
             </Typography>

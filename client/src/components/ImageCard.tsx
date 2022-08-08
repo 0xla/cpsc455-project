@@ -1,4 +1,4 @@
-import { ImageData } from "../types";
+import {ImageData} from "../types";
 import Box from "@mui/material/Box";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -7,13 +7,14 @@ import axios from "axios";
 import {setFeedImages, setImages} from "../slices/userSlice";
 import {useDispatch,} from "react-redux";
 import {decodeToken} from "react-jwt";
-import { base_be_url } from "../util/constants";
+import {base_be_url} from "../util/constants";
+import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import constants from "../statics/constants";
 import ImageHeader from "./ImageHeader";
 
 
-export default function ImageCard({ imageData, isFeed }: { imageData: ImageData, isFeed: boolean }) {
+export default function ImageCard({imageData, isFeed}: { imageData: ImageData, isFeed: boolean }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     let result: any;
@@ -67,17 +68,18 @@ export default function ImageCard({ imageData, isFeed }: { imageData: ImageData,
         <div className="card w-auto bg-base-100 shadow-xl">
             <ImageHeader username={imageData.username}></ImageHeader>
             <figure>
-                <img 
-                    src={imageData.url}  
-                    alt={imageData.id} 
-                    className="object-cover object-top aspect-square" />
+                <img
+                    src={imageData.url}
+                    alt={imageData.id}
+                    className="object-cover object-top aspect-square"/>
             </figure>
             <Box sx={{paddingTop: 1, paddingLeft: 1, display: 'flex',}}>
 
-                {imageData.likes.includes(loggedInUserId) ? <FavoriteIcon fontSize="large" style={{ color: 'rgb(255,0,0)' }}
-                                                                          onClick={() =>handleLike(imageData.id,loggedInUserId)}/>
-                    : <FavoriteBorderIcon fontSize="large" sx={{ "&:hover": { color: "gray"} }}
-                                          onClick={() => handleLike(imageData.id,loggedInUserId)}/>}
+                {imageData.likes.includes(loggedInUserId) ?
+                    <FavoriteIcon fontSize="large" style={{color: 'rgb(255,0,0)'}}
+                                  onClick={() => handleLike(imageData.id, loggedInUserId)}/>
+                    : <FavoriteBorderIcon fontSize="large" sx={{"&:hover": {color: "gray"}}}
+                                          onClick={() => handleLike(imageData.id, loggedInUserId)}/>}
             </Box>
             <Typography align="left" sx={{paddingTop: 1, paddingLeft: 3}}>{imageData.likes.length}
                 {imageData.likes.length === 1 ? " like" : " likes"}

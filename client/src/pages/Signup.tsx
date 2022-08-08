@@ -145,7 +145,7 @@ export default function SignUp() {
                                     autoComplete="email"
                                     value={formik.values.email}
                                     onChange = {formik.handleChange}
-                                    error={formik.touched.email && Boolean(formik.errors.email)} // avoids form loading and showing errors without form being touched
+                                    error={formik.touched.email && Boolean(formik.errors.email)}
                                     helperText={formik.touched.email && formik.errors.email}
                                 />
                             </Grid>

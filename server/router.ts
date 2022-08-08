@@ -10,7 +10,6 @@ import {
     getAllFollowing
 } from "./controllers/userControllers";
 import {getAllFollowingImages, likePost, unlikePost, uploadImage} from "./controllers/imageController";
-
 import { protect } from "./middleware/auth";
 
 
@@ -30,8 +29,10 @@ router.put("/api/users/reset-password/:resetToken", resetPassword);
  * IMAGE ENDPOINTS
  */
 
+router.post("/api/:userid/images/profile", uploadProfilePicture);
 router.post("/api/:userid/images", uploadImage);
 router.get("/api/images/following/:userId", getAllFollowingImages);
+
 
 /**
  * USER ENDPOINTS
