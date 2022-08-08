@@ -8,7 +8,7 @@ import {
     setFollowers, setFollowings, setUserId,
     setProfileImageUrl, setUserBio,
     setUsername, setImages, selectAuthToken,
-    setImageCategories, setFeedImages
+    setImageCategories, setFeedImages, setLoggedInUserProfilePicture
 } from "../slices/userSlice"
 import {UserDetails} from "../types";
 import {useDispatch, useSelector} from "react-redux";
@@ -27,7 +27,6 @@ import SuggestedUserCard from "../components/SuggestedUserCard";
 
 const UserPage = () => {
     const {username} = useParams();
-    const [loggedInUserProfilePicture, setLoggedInUserProfilePicture] = useState("");
     const [suggestedUsersToFollow, setSuggestedUsersToFollow] = useState([]);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -76,7 +75,7 @@ const UserPage = () => {
 
                 const loggedInUserData = await axios.get(`${base_be_url}/api/users/${loggedInUserId}`)
                 const loggedInProfilePicture = loggedInUserData.data.data.profilePicture;
-                setLoggedInUserProfilePicture(loggedInProfilePicture);
+                dispatch(setLoggedInUserProfilePicture(loggedInProfilePicture))
 
                 const res = await axios.get(
                     `${base_be_url}/api/images/following/${loggedInUserId}`
@@ -86,7 +85,7 @@ const UserPage = () => {
                 const randomUsers = await axios.get(
                     `${base_be_url}/api/users/random?limit=16`
                 )
-                const suggestedFollowing = randomUsers.data.data.filter( (user: any) => {
+                const suggestedFollowing = randomUsers.data.data.filter((user: any) => {
                     return user.username !== loggedInUsername && !loggedInUserFollowing.includes(user._id);
                 })
                 setSuggestedUsersToFollow(suggestedFollowing);
@@ -137,18 +136,14 @@ const UserPage = () => {
     return (
         <div className="bg-[#FAFAFA] h-auto">
             <div className="h-auto">
-                <TopNavigation loggedInUserProfilePicture={loggedInUserProfilePicture}/>
+                <TopNavigation loggedInUserProfilePicture={userData.loggedInUserProfilePicture}/>
                 <div
                     className="flex lg:flex-row flex-col lg:gap-0 gap-[30px] justify-center items-center lg:mx-0 mx-[10vw]">
                     <div className="flex flex-col lg:mr-[100px] p-2">
                         {
-                            userData.profileImageUrl !== '' ?
-                                <img
-                                    className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
-                                    alt={userData.profileImageUrl} src={userData.profileImageUrl}/>
-                                : <img
-                                    className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
-                                />
+                            <img
+                                className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
+                                alt={userData.profileImageUrl} src={userData.profileImageUrl}/>
                         }
                         {loggedInUserId === userData.userId &&
                             <button onClick={() => setIsProfilePictureUpload(!isProfilePictureUpload)}>
@@ -157,10 +152,7 @@ const UserPage = () => {
                         {isProfilePictureUpload &&
                             <ImageUpload setIsUploadingImage={setIsUploadingImage}
                                          isProfilePictureUpload={isProfilePictureUpload}
-                                         setIsProfilePictureUpload={setIsProfilePictureUpload}
-                                         loggedInUserProfilePicture={loggedInUserProfilePicture}
-                                         setLoggedInUserProfilePicture={setLoggedInUserProfilePicture}></ImageUpload>}
-
+                                         setIsProfilePictureUpload={setIsProfilePictureUpload}></ImageUpload>}
                         {isUploadingImage && isProfilePictureUpload &&
                             <div className="flex justify-center items-center">
                                 <CircularProgress/>
@@ -204,9 +196,7 @@ const UserPage = () => {
                     </div>
                     {loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage}
                                                                         isProfilePictureUpload={isProfilePictureUpload}
-                                                                        setIsProfilePictureUpload={setIsProfilePictureUpload}
-                                                                        loggedInUserProfilePicture={loggedInUserProfilePicture}
-                                                                        setLoggedInUserProfilePicture={setLoggedInUserProfilePicture}/>}
+                                                                        setIsProfilePictureUpload={setIsProfilePictureUpload}/>}
                 </div>
             </div>
             {isUploadingImage && !isProfilePictureUpload && <div className="flex justify-center items-center">
@@ -243,15 +233,15 @@ const UserPage = () => {
             }
             {option === 2 && loggedInUsername === username &&
                 <div>
-                <Typography fontWeight="bold">Suggested Users to Follow</Typography>
-                <div
-                    className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
-                    {suggestedUsersToFollow.map((suggestedUserData) => {
-                        return <div>
-                            <SuggestedUserCard suggestedUserData={suggestedUserData}></SuggestedUserCard>
-                        </div>
-                    })}
-                </div>
+                    <Typography fontWeight="bold">Suggested Users to Follow</Typography>
+                    <div
+                        className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
+                        {suggestedUsersToFollow.map((suggestedUserData) => {
+                            return <div>
+                                <SuggestedUserCard suggestedUserData={suggestedUserData}></SuggestedUserCard>
+                            </div>
+                        })}
+                    </div>
                 </div>
             }
             <Popup onClose={() => setShowModal(false)} visible={showModal} target={modalTarget} userData={userData}/>

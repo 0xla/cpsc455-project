@@ -1,6 +1,8 @@
 import axios from "axios";
 import { decodeToken } from "react-jwt";
 import { base_be_url } from "./constants";
+import {useSelector} from "react-redux";
+import {selectAuthToken, setLoggedInUserProfilePicture} from "../slices/userSlice";
 
 type DecodedToken = {
   exp: number;
@@ -8,6 +10,8 @@ type DecodedToken = {
   id: string;
   username: string;
 };
+
+
 
 export const fetchUserData = async (tokenOrUsername: string) => {
   const decoded: DecodedToken | null = decodeToken(tokenOrUsername);
@@ -33,7 +37,7 @@ export const fetchUserData = async (tokenOrUsername: string) => {
 };
 
 
-export const uploadImage = async (formData: any, token: string, loggedInUserProfilePicture: string) => {
+export const uploadImage = async (formData: any, token: string, loggedInUserProfilePicture: any) => {
   if (formData.get("file") !== "null") {
     const decoded: DecodedToken | null = decodeToken(token);
 

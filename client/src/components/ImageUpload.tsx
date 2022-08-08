@@ -4,7 +4,14 @@ import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {styled} from "@mui/material/styles";
 import {uploadImage} from "../util/functions";
-import {addImage, addImageCategories, selectAuthToken, setImages, setProfileImageUrl} from "../slices/userSlice";
+import {
+    addImage,
+    addImageCategories,
+    selectAuthToken,
+    setImages,
+    setLoggedInUserProfilePicture,
+    setProfileImageUrl
+} from "../slices/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 // @ts-ignore
 import toast from "toast-me";
@@ -16,23 +23,22 @@ const Input = styled("input")({
     display: "none",
 });
 
+
 const ImageUpload = ({
                          setIsUploadingImage,
                          isProfilePictureUpload,
                          setIsProfilePictureUpload,
-                         loggedInUserProfilePicture,
-                         setLoggedInUserProfilePicture
                      }:
                          { setIsUploadingImage: (value: boolean) => void,
                              isProfilePictureUpload: boolean,
                              setIsProfilePictureUpload: any,
-                             loggedInUserProfilePicture: string,
-                             setLoggedInUserProfilePicture: any }) => {
+                             }) => {
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
     const dispatch = useDispatch();
     const authToken = useSelector(selectAuthToken);
+    const loggedInUserProfilePicture = useSelector(setLoggedInUserProfilePicture);
 
     const handleSubmit = async () => {
         let formData;
@@ -58,7 +64,7 @@ const ImageUpload = ({
                         imageURL: imageUrl
                     })
                     dispatch(setProfileImageUrl(imageUrl));
-                    setLoggedInUserProfilePicture(imageUrl)
+                    dispatch(setLoggedInUserProfilePicture(imageUrl))
                     dispatch(setImages(userData.data.data.images))
                 }
                 toast("Image uploaded successfully!", {duration: 2000});

@@ -22,4 +22,5 @@ export interface UserDetails {
   followers: Array<FollowerData>;
   followings: Array<FollowerData>;
   imageCategories: Array<string>;
+  loggedInUserProfilePicture: string;
 }
