@@ -59,7 +59,7 @@ export default function ImageCard({imageData, isFeed}: { imageData: ImageData, i
 
     const date = new Date(imageData.createdAt);
     const month = constants.MONTH_NAMES[date.getMonth()];
-    const day = date.getDay();
+    const day = date.getDate();
     const year = date.getFullYear();
     const formattedDate = `${month} ${day}, ${year}`
 
