@@ -67,9 +67,9 @@ const ImageUpload = ({
                     dispatch(setLoggedInUserProfilePicture(imageUrl))
                     dispatch(setImages(userData.data.data.images))
                 }
-                toast("Image uploaded successfully!", {duration: 2000});
+                toast("Image uploaded successfully!", {duration: 1500});
             } catch (err: any) {
-                toast("Image failed to upload. Please try again later!",{duration: 2000})
+                toast("Image failed to upload. Please try again later!",{duration: 1500})
             } finally {
                 setIsUploadingImage(false);
                 setIsProfilePictureUpload(false);

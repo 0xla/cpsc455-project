@@ -1,6 +1,7 @@
 import axios from "axios";
 import {decodeToken} from "react-jwt";
 import {base_be_url} from "./constants";
+import constants from "../statics/constants";
 
 type DecodedToken = {
     exp: number;
@@ -39,7 +40,7 @@ export const uploadImage = async (formData: any, token: string, loggedInUserProf
         console.log(loggedInUserProfilePicture)
 
         if(loggedInUserProfilePicture === undefined || loggedInUserProfilePicture === "") {
-            loggedInUserProfilePicture = "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg";
+            loggedInUserProfilePicture = constants.DEFAULT_PROFILE_PICTURE;
         }
 
         if (decoded !== null) {
