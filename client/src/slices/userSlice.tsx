@@ -25,7 +25,7 @@ export const userSlice = createSlice({
             followers: [],
             followings: [],
             imageCategories: [],
-            loggedInUserProfilePicture: "",
+            loggedInUserProfilePicture: "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg",
         },
         authToken: undefined,
     } as SliceState,
