@@ -41,7 +41,7 @@ Our backend was built using Express, a node framework, for handling RESTful api 
 
 ## Unit 4: Mongodb
 
-We used MongoDB as our database for storing user information. We also used the Mongoose library that provides syntax to make it easier to interface with our database.
+We used MongoDB as our database for storing user information. We also used the Mongoose library that provides syntax to make it easier to interface with our database. Examples of data which we stored into our database includes the user's followers and followings lists, their login credentials and their uploaded images.
 
 ## Unit 5: Release Engineering
 
