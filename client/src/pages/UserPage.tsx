@@ -25,6 +25,7 @@ import Typography from "@mui/material/Typography";
 import SuggestedUserCard from "../components/SuggestedUserCard";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import {isExpired} from "react-jwt";
 
 
 const UserPage = () => {
@@ -47,11 +48,12 @@ const UserPage = () => {
     useEffect(() => {
         if (authToken === undefined) {
             const token: string | null = window.localStorage.getItem("authToken");
-            if (token) {
+            if (token && !isExpired(token)) {
                 dispatch(setAuthToken(token));
                 authToken = token;
             } else {
-                navigate("/")
+                window.localStorage.removeItem("authToken");
+                navigate("/signIn")
             }
         }
 
