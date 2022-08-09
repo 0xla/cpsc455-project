@@ -139,11 +139,13 @@ const UserPage = () => {
                     <div className="flex flex-col lg:mr-[100px] p-2">
                         {
                             <img
-                                className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2"
+                                className="flex-none md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full p-2 object-cover object-top"
                                 alt={userData.profileImageUrl} src={userData.profileImageUrl}/>
                         }
                         {loggedInUserId === userData.userId &&
-                            <button onClick={() => setIsProfilePictureUpload(!isProfilePictureUpload)}>
+                            <button 
+                                className="btn btn-ghost"
+                                onClick={() => setIsProfilePictureUpload(!isProfilePictureUpload)}>
                                 Upload Profile Picture
                             </button>}
                         {isProfilePictureUpload &&
@@ -186,10 +188,10 @@ const UserPage = () => {
                                 <span className="font-bold">{userData.followings.length}</span> following
                             </button>
                         </div>
-                        <div className="flex flex-col items-start">
+                        {/* <div className="flex flex-col items-start">
                             <span className="font-bold">Anagram's {username}</span>
                             <div>{userData.userBio}</div>
-                        </div>
+                        </div> */}
                     </div>
                     {loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage}
                                                                         isProfilePictureUpload={isProfilePictureUpload}
@@ -204,7 +206,9 @@ const UserPage = () => {
             </div>
             {option === 0 && userData.images.length === 0 && userData.userId === loggedInUserId &&
             <div>
-                <Typography sx={{paddingTop: 5}} variant="h5">Click the {<PhotoCamera color="primary"/>} above to upload a picture and have it analyzed by Google Cloud Vision AI!</Typography>
+                <div 
+                className="text-lg p-5"
+                >Click the {<PhotoCamera color="primary"/>} above to upload a picture and have it analyzed by Google Cloud Vision AI!</div>
 
             </div>}
             {option === 0 &&
