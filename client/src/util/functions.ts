@@ -1,6 +1,7 @@
 import axios from "axios";
 import {decodeToken} from "react-jwt";
 import {base_be_url} from "./constants";
+import constants from "../statics/constants";
 
 type DecodedToken = {
     exp: number;
@@ -36,6 +37,11 @@ export const fetchUserData = async (tokenOrUsername: string) => {
 export const uploadImage = async (formData: any, token: string, loggedInUserProfilePicture: any) => {
     if (formData.get("file") !== "null") {
         const decoded: DecodedToken | null = decodeToken(token);
+        console.log(loggedInUserProfilePicture)
+
+        if(loggedInUserProfilePicture === undefined || loggedInUserProfilePicture === "") {
+            loggedInUserProfilePicture = constants.DEFAULT_PROFILE_PICTURE;
+        }
 
         if (decoded !== null) {
             formData.append("username", decoded.username);

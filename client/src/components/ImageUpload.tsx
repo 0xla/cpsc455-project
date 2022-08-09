@@ -7,7 +7,7 @@ import {uploadImage} from "../util/functions";
 import {
     addImage,
     addImageCategories,
-    selectAuthToken,
+    selectAuthToken, selectLoggedInUserProfilePicture,
     setImages,
     setLoggedInUserProfilePicture,
     setProfileImageUrl
@@ -38,7 +38,7 @@ const ImageUpload = ({
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
     const dispatch = useDispatch();
     const authToken = useSelector(selectAuthToken);
-    const loggedInUserProfilePicture = useSelector(setLoggedInUserProfilePicture);
+    const loggedInUserProfilePicture = useSelector(selectLoggedInUserProfilePicture);
 
     const handleSubmit = async () => {
         let formData;
@@ -67,9 +67,9 @@ const ImageUpload = ({
                     dispatch(setLoggedInUserProfilePicture(imageUrl))
                     dispatch(setImages(userData.data.data.images))
                 }
-                toast("Image uploaded successfully!", {duration: 2000});
+                toast("Image uploaded successfully!", {duration: 1500});
             } catch (err: any) {
-                toast("Image failed to upload. Please try again later!",{duration: 2000})
+                toast("Image failed to upload. Please try again later!",{duration: 1500})
             } finally {
                 setIsUploadingImage(false);
                 setIsProfilePictureUpload(false);
