@@ -57,7 +57,7 @@ const ImageUpload = ({
                     }
                 } else {
                     formData.append("upload_preset", "ladhoeso");
-                    const res = await axios.post("https://api.cloudinary.com/v1_1/dhp7dbfmf/image/upload", formData);
+                    const res = await axios.post("https://api.cloudinary.com/v1_1/dhp7dbfmf/image/upload/", formData);
                     const imageUrl = res.data.url;
                     const userData = await axios.post(`${base_be_url}/api/${loggedInUserId}/images/profile`, {
                         imageURL: imageUrl
