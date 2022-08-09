@@ -75,9 +75,9 @@ export default function ImageCard({imageData, isFeed}: { imageData: ImageData, i
             <Box sx={{paddingTop: 1, paddingLeft: 1, display: 'flex',}}>
 
                 {imageData.likes.includes(loggedInUserId) ?
-                    <FavoriteIcon fontSize="large" style={{color: 'rgb(255,0,0)'}}
+                    <FavoriteIcon fontSize="large" style={{color: 'rgb(255,0,0)', cursor: 'pointer'}}
                                   onClick={() => handleLike(imageData.id, loggedInUserId)}/>
-                    : <FavoriteBorderIcon fontSize="large" sx={{"&:hover": {color: "gray"}}}
+                    : <FavoriteBorderIcon fontSize="large" sx={{"&:hover": {color: "gray"}, cursor: 'pointer'}}
                                           onClick={() => handleLike(imageData.id, loggedInUserId)}/>}
             </Box>
             <Typography align="left" sx={{paddingTop: 1, paddingLeft: 3}}>{imageData.likes.length}
