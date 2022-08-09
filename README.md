@@ -59,3 +59,7 @@ In order to improve our social media application, we plan to integrate a chat me
 
 I was responsible for and took a leadership role in the features related to uploading images to Google Cloudstore and image analysis using Google Vision Api. I also contributed to the frontend by building reusable react components and hooking them to redux.
 
+## Lakshya Agarwal i6d2d
+
+Initially, I took the initiative of setting up our code repositories and structuring them to fit our tech stack. I contributed heavily to frontend styling and code. Towards the end, I worked on the deployment majorly for both FE and BE. 
+
