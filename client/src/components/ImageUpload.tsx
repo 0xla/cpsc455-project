@@ -7,7 +7,7 @@ import {uploadImage} from "../util/functions";
 import {
     addImage,
     addImageCategories,
-    selectAuthToken, selectLoggedInUserProfilePicture,
+    selectAuthToken,
     setImages,
     setLoggedInUserProfilePicture,
     setProfileImageUrl
@@ -38,7 +38,6 @@ const ImageUpload = ({
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
     const dispatch = useDispatch();
     const authToken = useSelector(selectAuthToken);
-    const loggedInUserProfilePicture = useSelector(selectLoggedInUserProfilePicture);
 
     const handleSubmit = async () => {
         let formData;
@@ -50,7 +49,7 @@ const ImageUpload = ({
 
             try {
                 if (!isProfilePictureUpload) {
-                    const imageData = await uploadImage(formData, authToken, loggedInUserProfilePicture);
+                    const imageData = await uploadImage(formData, authToken);
                     if (imageData) {
                         setImage(undefined);
                         dispatch(addImage(imageData.image));

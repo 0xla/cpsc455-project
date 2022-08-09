@@ -12,7 +12,7 @@ const storage = new Storage({keyFilename: "google-credentials.json"});
 const bucket_name: string = process.env.BUCKET_NAME || "";
 const bucket = storage.bucket(bucket_name);
 import * as vision from "@google-cloud/vision";
-import cloudinary from "../utils/cloudinary";
+
 
 const client = new vision.ImageAnnotatorClient();
 
