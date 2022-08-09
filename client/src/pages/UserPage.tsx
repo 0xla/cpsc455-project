@@ -85,7 +85,7 @@ const UserPage = () => {
                     `${base_be_url}/api/images/following/${loggedInUserId}`
                 )
                 dispatch(setFeedImages(res.data.images));
-               await refreshSuggestedUsers(loggedInUserId, loggedInUsername, setSuggestedUsersToFollow);
+                await refreshSuggestedUsers(loggedInUserId, loggedInUsername, setSuggestedUsersToFollow);
             } catch (err) {
                 console.log(err);
             }
@@ -101,8 +101,8 @@ const UserPage = () => {
     };
 
     const handleFollow = async () => {
-        if (userData.followers.filter(follower => follower.id === loggedInUserId).length > 0) {
-            try {
+        try {
+            if (userData.followers.filter(follower => follower.id === loggedInUserId).length > 0) {
                 const res = await axios.put(
                     `${base_be_url}/api/users/${loggedInUserId}/unfollows/${userData.userId}`, {
                         unfollowingUsername: loggedInUsername,
@@ -111,11 +111,7 @@ const UserPage = () => {
                 )
                 dispatch(setFollowers(res.data.followerData));
 
-            } catch (err: any) {
-                console.log("Error unfollowing user.")
-            }
-        } else {
-            try {
+            } else {
                 const res = await axios.put(
                     `${base_be_url}/api/users/${loggedInUserId}/follows/${userData.userId}`, {
                         followingUsername: loggedInUsername,
@@ -123,10 +119,9 @@ const UserPage = () => {
                     }
                 )
                 dispatch(setFollowers(res.data.followerData));
-
-            } catch (err: any) {
-                console.log("Error following user.")
             }
+        } catch (err) {
+            console.log(err)
         }
     }
 
@@ -143,7 +138,7 @@ const UserPage = () => {
                                 alt={userData.profileImageUrl} src={userData.profileImageUrl}/>
                         }
                         {loggedInUserId === userData.userId &&
-                            <button 
+                            <button
                                 className="btn btn-ghost"
                                 onClick={() => setIsProfilePictureUpload(!isProfilePictureUpload)}>
                                 Upload Profile Picture
@@ -188,10 +183,6 @@ const UserPage = () => {
                                 <span className="font-bold">{userData.followings.length}</span> following
                             </button>
                         </div>
-                        {/* <div className="flex flex-col items-start">
-                            <span className="font-bold">Anagram's {username}</span>
-                            <div>{userData.userBio}</div>
-                        </div> */}
                     </div>
                     {loggedInUserId === userData.userId && <ImageUpload setIsUploadingImage={setIsUploadingImage}
                                                                         isProfilePictureUpload={isProfilePictureUpload}
@@ -205,12 +196,14 @@ const UserPage = () => {
                 <TabMenu option={option} optionChange={optionChange} username={username}/>
             </div>
             {option === 0 && userData.images.length === 0 && userData.userId === loggedInUserId &&
-            <div>
-                <div 
-                className="text-lg p-5"
-                >Click the {<PhotoCamera color="primary"/>} above to upload a picture and have it analyzed by Google Cloud Vision AI!</div>
+                <div>
+                    <div
+                        className="text-lg p-5"
+                    >Click the {<PhotoCamera color="primary"/>} above to upload a picture and have it analyzed by Google
+                        Cloud Vision AI!
+                    </div>
 
-            </div>}
+                </div>}
             {option === 0 &&
                 <div
                     className="mt-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 p-10 grid-cols-1 mx-[10vw]">
@@ -239,7 +232,8 @@ const UserPage = () => {
             }
             {option === 2 && loggedInUsername === username &&
                 <div>
-                    <button onClick={() => refreshSuggestedUsers(loggedInUserId, loggedInUsername, setSuggestedUsersToFollow)} >
+                    <button
+                        onClick={() => refreshSuggestedUsers(loggedInUserId, loggedInUsername, setSuggestedUsersToFollow)}>
                         <RefreshIcon/>
                     </button>
 

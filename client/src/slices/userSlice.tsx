@@ -73,8 +73,6 @@ export const userSlice = createSlice({
         setLoggedInUserProfilePicture(state, action) {
             state.userData.loggedInUserProfilePicture = action.payload;
         }
-
-
     },
 
     extraReducers(builder) {

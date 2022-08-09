@@ -8,53 +8,39 @@ import {setFeedImages, setImages} from "../slices/userSlice";
 import {useDispatch,} from "react-redux";
 import {decodeToken} from "react-jwt";
 import {base_be_url} from "../util/constants";
-import {useNavigate} from "react-router-dom";
 import constants from "../statics/constants";
 import ImageHeader from "./ImageHeader";
 
 
 export default function ImageCard({imageData, isFeed}: { imageData: ImageData, isFeed: boolean }) {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     let result: any;
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
     const handleLike = async (postId: string, loggedInUserId: string) => {
-        if (imageData.likes.includes(loggedInUserId)) {
-            try {
-                const res = await axios.delete(
+        let res;
+        try {
+            if (imageData.likes.includes(loggedInUserId)) {
+                res = await axios.delete(
+                    `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`,);
+            } else {
+                res = await axios.put(
                     `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`,
                 );
-                dispatch(setImages(res.data.data));
-            } catch (err: any) {
-                console.log("Error unliking post.")
             }
-        } else {
-            try {
-                const res = await axios.put(
-                    `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`,
-                );
+            if (!isFeed) {
                 dispatch(setImages(res.data.data));
-            } catch (err: any) {
-                console.log("Error liking post.")
             }
-        }
-
-        if (isFeed) {
-            try {
-                result = await axios.get(
+            if (isFeed) {
+                res = await axios.get(
                     `${base_be_url}/api/images/following/${loggedInUserId}`
                 )
-            } catch (err) {
-                console.log("Error getting following images.")
+                dispatch(setFeedImages(res.data.images));
             }
-            dispatch(setFeedImages(result.data.images));
+        } catch (err) {
+            console.log(err);
         }
-    }
-
-    const navigateToUser = (username: string) => {
-        navigate(`/${username}`)
     }
 
     const date = new Date(imageData.createdAt);
@@ -65,7 +51,7 @@ export default function ImageCard({imageData, isFeed}: { imageData: ImageData, i
 
     return (
         <div className="card w-auto bg-base-100 shadow-xl">
-            <ImageHeader username={imageData.username} profilePicture={imageData.profilePicture} ></ImageHeader>
+            <ImageHeader username={imageData.username} profilePicture={imageData.profilePicture}></ImageHeader>
             <figure>
                 <img
                     src={imageData.url}

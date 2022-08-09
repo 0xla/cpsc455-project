@@ -11,27 +11,22 @@ type DecodedToken = {
 
 export const fetchUserData = async (tokenOrUsername: string) => {
     const decoded: DecodedToken | null = decodeToken(tokenOrUsername);
-    if (decoded !== null) {
-        try {
+    try {
+        if (decoded !== null) {
             const response: any = await axios.get(
                 `${base_be_url}/api/users/${decoded.id}/`
             );
             return response.data;
-        } catch (err) {
-            console.log(err);
-        }
-    } else {
-        try {
+        } else {
             const response: any = await axios.get(
                 `${base_be_url}/api/users/?username=${tokenOrUsername}`
             );
             return response.data;
-        } catch (err) {
-            console.log(err);
         }
+    } catch (err) {
+        console.log(err);
     }
 };
-
 
 export const uploadImage = async (formData: any, token: string) => {
     if (formData.get("file") !== "null") {
