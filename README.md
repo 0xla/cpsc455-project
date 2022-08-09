@@ -59,3 +59,8 @@ In order to improve our social media application, we plan to integrate a chat me
 
 I was responsible for and took a leadership role in the features related to uploading images to Google Cloudstore and image analysis using Google Vision Api. I also contributed to the frontend by building reusable react components and hooking them to redux.
 
+## Daniel Crookall j3o1b
+
+I worked on user authentication and security (login, sign-up, password reset, JWT, protect middelware, Mongoose schema) and setup the layout of the backend, MongoDB Atlas and React Router. I also implemented backend and frontend functionality for liking/unliking posts, viewing/searching for other user profiles, uploading a profile picture, viewing user feeds, displaying headers on posts, suggesting users to follow and assisted with the unfollow/follow logic.   
+
+
