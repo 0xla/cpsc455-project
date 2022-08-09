@@ -38,6 +38,10 @@ export const uploadImage = async (formData: any, token: string, loggedInUserProf
         const decoded: DecodedToken | null = decodeToken(token);
         console.log(loggedInUserProfilePicture)
 
+        if(loggedInUserProfilePicture === undefined || loggedInUserProfilePicture === "") {
+            loggedInUserProfilePicture = "https://icon-library.com/images/default-user-icon/default-user-icon-8.jpg";
+        }
+
         if (decoded !== null) {
             formData.append("username", decoded.username);
             formData.append("profilePicture", loggedInUserProfilePicture);
