@@ -13,7 +13,7 @@ import {
 import {UserDetails} from "../types";
 import {useDispatch, useSelector} from "react-redux";
 import "../App/App.css"
-import {fetchUserData, refreshSuggestedUsers} from "../util/functions";
+import {fetchUserData, protectedRouteRedirect, refreshSuggestedUsers} from "../util/functions";
 import {useNavigate, useParams} from "react-router-dom";
 import Popup from "../components/Popup";
 import PieChart from "../components/PieChart";
@@ -107,6 +107,10 @@ const UserPage = () => {
                     `${base_be_url}/api/users/${loggedInUserId}/unfollows/${userData.userId}`, {
                         unfollowingUsername: loggedInUsername,
                         unfollowedUsername: userData.username,
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`
+                        }
                     }
                 )
                 dispatch(setFollowers(res.data.followerData));
@@ -116,11 +120,16 @@ const UserPage = () => {
                     `${base_be_url}/api/users/${loggedInUserId}/follows/${userData.userId}`, {
                         followingUsername: loggedInUsername,
                         followedUsername: userData.username,
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`
+                        }
                     }
                 )
                 dispatch(setFollowers(res.data.followerData));
             }
         } catch (err) {
+            protectedRouteRedirect(err);
             console.log(err)
         }
     }
