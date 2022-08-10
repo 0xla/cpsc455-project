@@ -43,6 +43,7 @@ export const uploadImage = async (formData: any, token: string) => {
                     {
                         headers: {
                             "Content-Type": "multipart/form-data",
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`
                         },
                     }
                 );
@@ -74,6 +75,13 @@ export const refreshSuggestedUsers = async (loggedInUserId: string, loggedInUser
         setSuggestedUsersToFollow(suggestedFollowing);
     } catch (err) {
         console.log(err)
+    }
+}
+
+export const protectedRouteRedirect = (err: any) => {
+    if(err.response.status === 401 || err.response.status === 404 ){
+        window.localStorage.removeItem("authToken");
+        window.location.href = "https://web4-sm.netlify.app/signIn"
     }
 }
 

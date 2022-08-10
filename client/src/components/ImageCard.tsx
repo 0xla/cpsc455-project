@@ -10,6 +10,7 @@ import {decodeToken} from "react-jwt";
 import {base_be_url} from "../util/constants";
 import constants from "../statics/constants";
 import ImageHeader from "./ImageHeader";
+import {protectedRouteRedirect} from "../util/functions";
 
 
 export default function ImageCard({imageData, isFeed}: { imageData: ImageData, isFeed: boolean }) {
@@ -23,10 +24,20 @@ export default function ImageCard({imageData, isFeed}: { imageData: ImageData, i
         try {
             if (imageData.likes.includes(loggedInUserId)) {
                 res = await axios.delete(
-                    `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`,);
+                    `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`
+                        }
+                    });
             } else {
                 res = await axios.put(
-                    `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`,
+                    `${base_be_url}/api/posts/${postId}/likes/${loggedInUserId}`, {
+
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`
+                        }
+                    }
                 );
             }
             if (!isFeed) {
@@ -39,6 +50,7 @@ export default function ImageCard({imageData, isFeed}: { imageData: ImageData, i
                 dispatch(setFeedImages(res.data.images));
             }
         } catch (err) {
+            protectedRouteRedirect(err);
             console.log(err);
         }
     }

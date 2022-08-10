@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import {styled} from "@mui/material/styles";
-import {uploadImage} from "../util/functions";
+import {protectedRouteRedirect, uploadImage} from "../util/functions";
 import {
     addImage,
     addImageCategories,
@@ -29,10 +29,11 @@ const ImageUpload = ({
                          isProfilePictureUpload,
                          setIsProfilePictureUpload,
                      }:
-                         { setIsUploadingImage: (value: boolean) => void,
+                         {
+                             setIsUploadingImage: (value: boolean) => void,
                              isProfilePictureUpload: boolean,
                              setIsProfilePictureUpload: any,
-                             }) => {
+                         }) => {
 
     // @ts-ignore
     const loggedInUserId = decodeToken(localStorage.getItem("authToken")).id
@@ -58,9 +59,13 @@ const ImageUpload = ({
                 } else {
                     formData.append("upload_preset", "ladhoeso");
                     const res = await axios.post("https://api.cloudinary.com/v1_1/dhp7dbfmf/image/upload", formData);
-                    const imageUrl = res.data.url;
+                    const imageUrl = res.data.secure_url;
                     const userData = await axios.post(`${base_be_url}/api/${loggedInUserId}/images/profile`, {
                         imageURL: imageUrl
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`
+                        }
                     })
                     dispatch(setProfileImageUrl(imageUrl));
                     dispatch(setLoggedInUserProfilePicture(imageUrl))
@@ -68,7 +73,8 @@ const ImageUpload = ({
                 }
                 toast("Image uploaded successfully!", {duration: 1500});
             } catch (err: any) {
-                toast("Image failed to upload. Please try again later!",{duration: 1500})
+                protectedRouteRedirect(err);
+                toast("Image failed to upload. Please try again later!", {duration: 1500})
             } finally {
                 setIsUploadingImage(false);
                 setIsProfilePictureUpload(false);
