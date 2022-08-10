@@ -75,4 +75,8 @@ I worked on user authentication and security (login, sign-up, password reset, JW
 
 Initially, I took the initiative of setting up our code repositories and structuring them to fit our tech stack. I contributed heavily to frontend styling and code. Towards the end, I worked on the deployment majorly for both FE and BE. 
 
+## Esther Hsueh e9x8k
+
+I am incharge of designing the appearence and flow of our app. The blueprint of our work was structed by serval pages and I organized how the pages connect to each other. Besides, I also help test and check the every function.    
+
 
